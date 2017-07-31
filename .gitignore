@@ -1,0 +1,8 @@
+.DS_Store
+build
+extension/coverage
+extension/node_modules
+.idea/
+npm-debug.log
+.eslintrc.json
+node_modules/
