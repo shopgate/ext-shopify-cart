@@ -1,0 +1,246 @@
+swagger: "2.0"
+info:
+  title: Shopgate User Pipelines
+  version: "1.0"
+basePath: /
+produces:
+  - application/json
+consumes:
+  - application/json
+paths:
+  /login_v1:
+    post:
+      tags:
+        - Login
+      description: Makes an attempt to log in the user. The user can choose betweeen multiple login strategies.
+      parameters:
+        - $ref: '#/parameters/login'
+      responses:
+        '200':
+          description: Returns all resulting messages and a success indicator.
+          schema:
+           $ref: '#definitions/ResponseMessagesWithSuccessIndicator'
+        '500':
+          description: Returns one or multiple error messages.
+          schema:
+            $ref: '#/definitions/ResponseMessages'
+  /logout_v1:
+    post:
+      tags:
+        - Login
+      description: Tries to log out the user.
+      responses:
+        '200':
+          description: Returns all resulting messages and a success indicator.
+          schema:
+           $ref: '#definitions/ResponseMessagesWithSuccessIndicator'
+        '500':
+          description: Returns one or multiple error messages.
+          schema:
+            $ref: '#/definitions/ResponseMessages'
+  /getUser_v1:
+    post:
+      tags:
+        - Login
+      responses:
+        '200':
+          description: Returns information about the current user.
+          schema:
+            $ref: '#/definitions/User'
+        'EACCESS':
+          description: User is not logged in.
+          schema:
+            $ref: '#/definitions/AccessError'
+        '500':
+          description: Returns one or multiple error messages.
+          schema:
+            $ref: '#/definitions/ResponseMessages'
+parameters:
+  login:
+    name: login
+    in: body
+    required: true
+    description: Login parameter.
+    schema:
+      type: object
+      required:
+        - strategy
+        - parameters
+      properties:
+        strategy:
+          type: string
+          enum: ['basic', 'facebook']
+          example: basic
+        parameters:
+          description: Parameters for `Login`. They differ depending on the strategy.
+          type: object
+          example:
+            login: info@shopgate.com
+            password: secret
+
+definitions:
+  Message:
+    type: object
+    description: Message to be shown to the user.
+    required:
+      - type
+      - message
+    properties:
+      type:
+        type: string
+        enum: ['error', 'warning', 'info']
+        example: error
+      message:
+        type: string
+        example: Some error occured.
+      code:
+        type: string
+        description: Message code, mapped within the extension. It can be used to react in a specific way or to allow for message translation.
+        example: EUNKNOWN
+  AccessError:
+    type: object
+    required:
+      - serial
+      - error
+    properties:
+      serial:
+        type: string
+        example: "30a8e45b0bab4189d547fcda4f78b6af"
+      error:
+        type: object
+        required:
+          - code
+        properties:
+          code:
+            type: string
+            enum: ['EACCESS']
+            example: EACCESS
+          message:
+            type: string
+            example: User is not logged in.
+  ResponseMessagesWithSuccessIndicator:
+    type: object
+    required:
+      - messages
+    properties:
+      success:
+        type: boolean
+        example: true
+        description: Describes if the the action was performed successfully or not.
+      messages:
+        type: array
+        items:
+          $ref: '#/definitions/Message'
+  User:
+    type: object
+    required:
+      - id
+      - mail
+      - firstName
+      - lastName
+    properties:
+      id:
+        type: string
+        description: Unique identifier for the user.
+        example: 87ddbbdb-5b09-4dc4-b1b0-214f4b0fdaa1
+      mail:
+        type: string
+        description: Users email address.
+        example: developer@shopgate.com
+      firstName:
+        type: string
+        description: Users first name.
+        example: John
+      lastName:
+        type: string
+        description: Users last name.
+        example: Doe
+      gender:
+        type: string
+        enum: ['m','f']
+        description: Users gender.
+        example: m
+      birthday:
+        type: string
+        format: date
+        description: Users birthday.
+        example: '2017-01-01'
+      phone:
+        type: string
+        description: Users phone number.
+        example: +1-800-490-2467
+      customerGroups:
+        type: array
+        items:
+          type: object
+          required:
+            - id
+            - name
+          properties:
+            id:
+              type: string
+              example: 3
+            name:
+              type: string
+              example: Retailer
+      addresses:
+        type: array
+        items:
+          type: object
+          required:
+            - id
+            - type
+            - firstName
+            - lastName
+            - company
+            - street1
+            - city
+          properties:
+            id:
+              type: string
+              example: 1
+            type:
+              type: string
+              enum: ['shipping', 'invoice']
+              example: invoice
+            firstName:
+              type: string
+              example: Jane
+            lastName:
+              type: string
+              example: Doe
+            company:
+              type: string
+              example: Shopgate Inc
+            street1:
+              type: string
+              example: 804 Congress Ave.
+            street2:
+              type: string
+            city:
+              type: string
+              example: Austin
+            state:
+              type: string
+              description: Shorthand form of the state.
+              example: TX
+            phone:
+              type: string
+              example: +1-800-490-2467
+            isDefault:
+              type: boolean
+              description: Indicates if the current address is the default address of the given type.
+              example: true
+            alias:
+              type: string
+              description: The user can specify an alias for the address.
+              example: Homeaddress
+  ResponseMessages:
+    type: object
+    required:
+      - messages
+    properties:
+      messages:
+        type: array
+        items:
+          $ref: '#/definitions/Message'

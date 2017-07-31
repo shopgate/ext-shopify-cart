@@ -1,0 +1,22 @@
+{
+  "name": "shopify-cart",
+  "version": "1.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@stash.localdev.cc:7999/sgx/shopify-cart.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "shopify-api-node": "^2.5.0",
+    "shopify-node-api": "^1.7.6",
+    "underscore": "latest",
+    "request": "latest"
+  },
+  "standard": {
+    "env": {
+      "mocha": true
+    }
+  }
+}

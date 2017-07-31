@@ -1,0 +1,431 @@
+swagger: "2.0"
+info:
+  title: Shopgate Cart Pipelines
+  version: "1.0"
+basePath: /
+produces:
+  - application/json
+consumes:
+  - application/json
+paths:
+  /getCart_v1:
+    post:
+      tags:
+        - Cart
+      description: Retrieves the whole cart, belonging to a customer, from a fixed endpoint, like an API.
+      responses:
+        '200':
+          description: Returns the cart of the current user.
+          schema:
+            $ref: '#/definitions/Cart'
+        '500':
+          description: An internal error occured.
+          schema:
+            $ref: '#/definitions/UnknownError'
+  /addProductsToCart_v1:
+    post:
+      tags:
+        - Cart Products
+      description: Adds one ore multiple products to the cart.
+      parameters:
+        - $ref: '#/parameters/products'
+      responses:
+        '200':
+          description: No return. The cart needs to be fetched by the frontend afterwards.
+        '500':
+          description: An internal error occured.
+          schema:
+            $ref: '#/definitions/UnknownError'
+  /updateProductsInCart_v1:
+    post:
+      tags:
+        - Cart Products
+      description: Updates the quantity for one or multiple cart items referenced by their respective CartItemId.
+      parameters:
+        - $ref: '#/parameters/cartItem'
+      responses:
+        '200':
+          description: No return. The cart needs to be fetched by the frontend afterwards.
+        '500':
+          description: An internal error occured.
+          schema:
+            $ref: '#/definitions/UnknownError'
+  /deleteProductsFromCart_v1:
+    post:
+      tags:
+        - Cart Products
+      description: Deletes one or multiple cart items referenced by their respective CartItemId.
+      parameters:
+        - $ref: '#/parameters/cartItemIds'
+      responses:
+        '200':
+           description: No return. The cart needs to be fetched by the frontend afterwards.
+        '500':
+          description: An internal error occured.
+          schema:
+            $ref: '#/definitions/UnknownError'
+  /addCouponsToCart_v1:
+    post:
+      tags:
+        - Cart Coupons
+      description: Adds multiple coupons to the cart. The coupon code needs to be unique. There can't be two coupons with identical code exist in the cart at any given time.
+      parameters:
+        - $ref: '#/parameters/couponCodes'
+      responses:
+        '200':
+          description: No return. The cart needs to be fetched by the frontend afterwards.
+        '500':
+          description: An internal error occured.
+          schema:
+            $ref: '#/definitions/UnknownError'
+  /deleteCouponsFromCart_v1:
+    post:
+      tags:
+        - Cart Coupons
+      description: Deletes multiple coupons from the cart.
+      parameters:
+        - $ref: '#/parameters/couponCodes'
+      responses:
+        '200':
+          description: No return. The cart needs to be fetched by the frontend afterwards.
+        '500':
+          description: An internal error occured.
+          schema:
+            $ref: '#/definitions/UnknownError'
+  /getCheckoutUrl_v1:
+    post:
+      tags:
+        - Checkout
+      responses:
+        '200':
+          description: Returns checkout url.
+          schema:
+            $ref: '#/definitions/Url'
+        '500':
+          description: An internal error occured.
+          schema:
+            $ref: '#/definitions/UnknownError'
+parameters:
+  products:
+    name: products
+    in: body
+    required: true
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          productId:
+            type: string
+            example: 10080466570
+          quantity:
+            type: number
+            example : 5
+          properties:
+            type: array
+            items:
+              $ref: '#/definitions/ProductCartItemProperty'
+  cartItem:
+    name: CartItem
+    in: body
+    required: true
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          CartItemId:
+            type: string
+          quantity:
+            type: number
+  cartItemIds:
+    name: CartItemIds
+    in: body
+    required: true
+    schema:
+      type: array
+      description: Id of the cart item to be deleted.
+      items:
+        type: string
+  couponCodes:
+    name: couponCodes
+    in: body
+    required: true
+    schema:
+      type: array
+      description: Code of the coupon.
+      items:
+        type: string
+  login:
+    name: login
+    in: body
+    required: true
+    description: Login parameter.
+    schema:
+      type: object
+      required:
+        - strategie
+        - parameters
+      properties:
+        strategie:
+          type: string
+          enum: ['basic', 'facebook']
+          example: basic
+        parameters:
+          description: Parameters for `Login`. They differ depending on strategy.
+          type: object
+          example:
+            login: info@shopgate.com
+            password: secret
+
+definitions:
+  Cart:
+    type: object
+    required:
+      - cartItems
+      - currency
+      - totals
+      - isOrderable
+    properties:
+      messages:
+        type: array
+        items:
+          $ref: '#/definitions/Message'
+      cartItems:
+        type: array
+        items:
+          $ref: '#/definitions/CartItem'
+      currency:
+        $ref: '#/definitions/Currency'
+      totals:
+        type: array
+        items:
+          $ref: '#/definitions/CartTotal'
+      text:
+        $ref: '#/definitions/CartText'
+      isTaxIncluded:
+        type: boolean
+        description: Indicates if cart prices include tax or not.
+        default: false
+      isOrderable:
+        type: boolean
+        description: Indicated if the cart can be ordered or if it's blocked by one or more conditions like minimun order value.
+        default: true
+  CartItem:
+    type: object
+    description: The cart item can be a product OR a coupon. The property `type` defines which one it is. The key `coupon` is not set if the type is `product` and vice versa.
+    required:
+      - id
+      - quantity
+      - type
+    properties:
+      id:
+        type: string
+        description: Unique identifier of the cart item. It can be used to remove/manipulate the respective cart item.
+        example: a84de7d7-2b7d-4aa8-a64d-9558ca791b86
+      quantity:
+        type: number
+        description: Quantity of the cart item.
+        example: 5
+      type:
+        type: string
+        enum: ["product", "coupon"]
+        example: product
+      coupon:
+        $ref: '#/definitions/CouponCartItem'
+      product:
+        $ref: '#/definitions/ProductCartItem'
+      messages:
+        type: array
+        description: All messages specific to the current cart item.
+        items:
+          $ref: '#/definitions/Message'
+  CouponCartItem:
+      $ref: '#/definitions/AppliedDiscount'
+  ProductCartItem:
+    type: object
+    required:
+      - id
+      - name
+      - featuredImageUrl
+      - price
+    properties:
+      id:
+        type: string
+        description: The id of the product. It`s NOT a database id but the item_number, unique within the scope of a specific shop.
+        example: 10080466570
+      name:
+        type: string
+        description: Name of the product.
+        example: Awesome T-Shirt
+      addtionalInfo:
+        type: array
+        description: Some additional info for the product to be shown on the cart page. E.g. basePrice, SKU, weight, ...
+        items:
+          type: object
+          properties:
+            label:
+              type: string
+              example: Manufacturer
+            value:
+              type: string
+              example: H&M
+      featuredImageUrl:
+        type: string
+        description: The image of the product.
+        example: https://testurl.com/testimg.png
+      properties:
+        type: array
+        description: Selected properties of the current cart item.
+        items:
+          $ref: '#/definitions/ProductCartItemProperty'
+      price:
+        $ref: '#/definitions/ProductCartItemPrice'
+      appliedDiscounts:
+        type: array
+        description: All discouts applied to the current line item.
+        items:
+          $ref: '#/definitions/AppliedDiscount'
+  AppliedDiscount:
+    type: object
+    required:
+      - savedPrice
+    properties:
+      code:
+        description: Code of the coupon.
+        type: string
+        example: 20OFF
+      description:
+        description: Description of the coupon.
+        type: string
+        example: Reduces the cost of all products by 20%.
+      label:
+        description: Label of the coupon.
+        type: string
+        example: 20% off of all products.
+      savedPrice:
+        type: object
+        properties:
+          value:
+            type: number
+            example: 20
+          type:
+            type: string
+            enum: ['fixed', 'percentage']
+            example: percentage
+  ProductCartItemPrice:
+    type: object
+    required:
+      - unit
+      - default
+    properties:
+      unit:
+        type: number
+        description: Price of a single product. With or without tax, depending on the shop settings.
+        example: 10
+      default:
+        type: number
+        description: The price of a single product multiplied by the quantity of he cart item WITHOUT any discounts. With or without tax, depending on the shop settings.
+        example: 50
+      special:
+        type: number
+        description: The special price of a single product multiplied by the cart item quantity. It's only set if a discount is applied to the product.
+        example: 40
+  ProductCartItemProperty:
+    type: object
+    required:
+      - type
+      - value
+    properties:
+      type:
+        type: string
+        enum: ["option", "input"]
+        example: option
+      label:
+        description: Display label of the property.
+        type: string
+        example: Color
+      value:
+        type: string
+        description: The selected value of the property.
+        example: Red
+  Currency:
+    type: string
+    enum: ["EUR", "CHF", "USD", "RON", "PLN", "AUD", "GBP", "CAD", "SEK", "DKK", "NOK"]
+  CartText:
+    type: object
+    description: 'Additional texts for the current cart like legal text. It can contain HTML content.'
+    properties:
+      legal:
+        type: string
+        example: By placing your order you agree to our <b><u>Privacy Policy</u></b>, our <b><u>Terms and Conditions</u></b> as well as our <b><u>Cancellation Policy</u></b>.
+  Total:
+    type: object
+    required:
+      - type
+      - label
+      - amount
+    properties:
+      type:
+        type: string
+        enum: ["subTotal", "shipping", "tax", "payment", "discount", "grandTotal"]
+        example: tax
+      label:
+        type: string
+        example: Tax (19%)
+      amount:
+        type: number
+        example: 7.6
+  CartTotal:
+    type: object
+    allOf:
+      - $ref: '#/definitions/Total'
+      - type: object
+        properties:
+          subTotals:
+            type: array
+            items:
+              $ref: '#/definitions/Total'
+  Message:
+    type: object
+    description: Message to be shown to the customer.
+    required:
+      - type
+      - message
+    properties:
+      type:
+        type: string
+        enum: ['error', 'warning', 'info']
+        example: error
+      message:
+        type: string
+        example: Some error occured.
+      code:
+        type: string
+        description: Message code, mapped by the extension. It can be used to react in a specific way for certain messages and/or to enable the possibility for message translations.
+        example: EUNKNOWN
+  Url:
+    type: object
+    required:
+      - url
+    properties:
+      url:
+        type: string
+        description: Url
+  UnknownError:
+    type: object
+    required:
+      - error
+    properties:
+      error:
+        type: object
+        required:
+          - code
+        properties:
+          code:
+            type: string
+            enum: ['EUNKNOWN']
+            example: EUNKNOWN
+          message:
+            type: string
+            example: User is not logged in.

@@ -1,0 +1,26 @@
+{
+  "version": "1",
+  "pipeline": {
+    "id": "deleteCouponsFromCart_v1",
+    "public": true,
+    "input": [
+      {"key": "couponCodes", "id": "1020"}
+    ],
+    "output": [
+      {"key": "messages", "id": "1010", "optional" : true}
+    ],
+    "steps": [
+      {
+        "type": "extension",
+        "id": "shopify-cart",
+        "path": "shopify-cart/cart/deleteCouponsFromCart_v1.js",
+        "input": [
+          {"key": "couponCodes", "id": "1020"}
+        ],
+        "output": [
+          {"key": "messages", "id": "1010", "optional": true}
+        ]
+      }
+    ]
+  }
+}

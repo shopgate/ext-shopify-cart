@@ -1,0 +1,20 @@
+{
+  "version": "1",
+  "pipeline": {
+    "id": "getCheckoutUrl_v1",
+    "public": true,
+    "output": [
+      {"key": "url", "id": "1010"}
+    ],
+    "steps": [
+      {
+        "type": "extension",
+        "id": "shopify-cart",
+        "path": "shopify-cart/cart/getCheckoutUrl_v1.js",
+        "output": [
+          {"key": "url", "id": "1010"}
+        ]
+      }
+    ]
+  }
+}
