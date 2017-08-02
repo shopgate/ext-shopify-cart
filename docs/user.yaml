@@ -55,6 +55,19 @@ paths:
           description: Returns one or multiple error messages.
           schema:
             $ref: '#/definitions/ResponseMessages'
+  /getRegistrationUrl_v1:
+    post:
+      tags:
+        - Registration
+      responses:
+        '200':
+          description: Returns the registration url.
+          schema:
+            $ref: '#/definitions/Url'
+        '500':
+          description: Returns one or multiple error messages.
+          schema:
+            $ref: '#/definitions/ResponseMessages'
 parameters:
   login:
     name: login
@@ -235,6 +248,14 @@ definitions:
               type: string
               description: The user can specify an alias for the address.
               example: Homeaddress
+  Url:
+    type: object
+    required:
+      - url
+    properties:
+      url:
+        type: string
+        description: Url
   ResponseMessages:
     type: object
     required:
