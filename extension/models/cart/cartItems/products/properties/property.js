@@ -12,7 +12,7 @@ class Property {
   }
 
   /**
-   * @return {{id: {number}, type: {string}, label: {string}, value: {string}}}
+   * @return {{type: {string}, label: {string}, value: {string}}}
    */
   toJson () {
     return {

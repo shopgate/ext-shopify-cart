@@ -12,8 +12,7 @@ class Coupon {
   }
 
   /**
-   *
-   * @returns {{code: *, description: *, label: *, savedPrice: Number}}
+   * @return {{code: {string}, description: {string}, label: {string}, savedPrice: {number}}}
    */
   toJson () {
     return {

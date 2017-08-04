@@ -28,8 +28,7 @@ class SubTotal {
   }
 
   /**
-   *
-   * @returns {{label: *, amount: Number, type: *}}
+   * @return {{label: {string}, amount: {number}, type: {string}}}
    */
   toJson () {
     return {

@@ -5,7 +5,7 @@ class Login {
   /**
    * @param strategy
    */
-  constructor (strategy) {
+  constructor (strategy = 'basic') {
     this._strategy = strategy
     this._parameters = {}
     this._login = null

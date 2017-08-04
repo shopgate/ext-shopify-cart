@@ -1,6 +1,8 @@
+const STORAGE_ID = 'cartId'
+
 class Cart {
   constructor () {
-    this.STORAGE_ID = 'cartId'
+    this.STORAGE_ID = STORAGE_ID
     this._id = null
     this._currency = null
     this._isOrderable = false
