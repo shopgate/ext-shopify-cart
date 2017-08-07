@@ -97,11 +97,11 @@ paths:
       tags:
         - Checkout
       responses:
-        '200':
-          description: Returns checkout url.
+        '':
+          description: Returns the checkout url.
           schema:
             $ref: '#/definitions/Url'
-        '500':
+        'EUNKNOWN':
           description: An internal error occured.
           schema:
             $ref: '#/definitions/UnknownError'
@@ -412,6 +412,11 @@ definitions:
       url:
         type: string
         description: Url
+        example: "http://example.com/"
+      expires:
+        type: string
+        description: An optional date-string in the format ISO 8601 (YYYY-MM-DDTH:i:s). The url does not expire if this field os not set.
+        example: "2017-12-31T23:59:59"
   UnknownError:
     type: object
     required:
@@ -428,4 +433,4 @@ definitions:
             example: EUNKNOWN
           message:
             type: string
-            example: User is not logged in.
+            example: An internal error occured.
