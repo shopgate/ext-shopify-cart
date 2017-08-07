@@ -408,10 +408,16 @@ definitions:
     type: object
     required:
       - url
+      - expires
     properties:
       url:
         type: string
         description: Url
+        example: "http://example.com/"
+      expires:
+        type: string
+        description: "A datestring in the format ISO 8601 (YYYY-MM-DDTH:i:s). 0000-00-00T00:00:00 for no expiration"
+        example: "2017-12-31T23:59:59"
   UnknownError:
     type: object
     required:
@@ -428,4 +434,4 @@ definitions:
             example: EUNKNOWN
           message:
             type: string
-            example: User is not logged in.
+            example: An internal error occured.
