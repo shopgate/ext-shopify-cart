@@ -415,8 +415,8 @@ definitions:
         example: "http://example.com/"
       expires:
         type: string
-        description: An optional date-string in the format ISO 8601 (YYYY-MM-DDTH:i:s). The url does not expire if this field os not set.
-        example: "2017-12-31T23:59:59"
+        description: "An optional date-time-string in the format ISO 8601 (YYYY-MM-DDTH:i:sZ). The url does not expire if this field os not set. The returned timezone is always UTC (+00:00)"
+        example: "2017-12-31T23:59:59Z"
   UnknownError:
     type: object
     required:
