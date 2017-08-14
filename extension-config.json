@@ -1,7 +1,7 @@
 
 {
   "version": "1.0.0",
-  "id": "shopify-cart",
+  "id": "@shopgate/shopify-cart",
 
   "steps": [
   ],

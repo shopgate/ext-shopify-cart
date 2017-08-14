@@ -12,8 +12,8 @@
     "steps": [
       {
         "type": "extension",
-        "id": "shopify-cart",
-        "path": "shopify-cart/cart/addCouponsToCart_v1.js",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/addCouponsToCart_v1.js",
         "input": [
           {"key": "couponCodes", "id": "1020"}
         ],

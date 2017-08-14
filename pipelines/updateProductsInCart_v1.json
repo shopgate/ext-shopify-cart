@@ -12,8 +12,8 @@
     "steps": [
       {
         "type": "extension",
-        "id": "shopify-cart",
-        "path": "shopify-cart/cart/getShopifyCartData_v1.js",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/getShopifyCartData_v1.js",
         "output": [
           {"key": "shopifyCartData", "id": "100"},
           {"key": "shopifyRequestErr", "id": "101", "optional": true}
@@ -21,8 +21,8 @@
       },
       {
         "type": "extension",
-        "id": "shopify-cart",
-        "path": "shopify-cart/cart/getShopifyCartProducts_v1.js",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/getShopifyCartProducts_v1.js",
         "input": [
           {"key": "shopifyCartData", "id": "100"},
           {"key": "shopifyRequestErr", "id": "101", "optional": true}
@@ -33,8 +33,8 @@
       },
       {
         "type": "extension",
-        "id": "shopify-cart",
-        "path": "shopify-cart/products/getProducts_v1.js",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/products/getProducts_v1.js",
         "input": [
           {"key": "products", "id": "102"}
         ],
@@ -48,8 +48,8 @@
       },
       {
         "type": "extension",
-        "id": "shopgate-bigapi",
-        "path": "shopgate-bigapi/big-api/getBigApiResult.js",
+        "id": "@shopgate/bigapi",
+        "path": "@shopgate/bigapi/big-api/getBigApiResult.js",
         "input": [
           {"key": "service", "id": "10"},
           {"key": "version", "id": "11"},
@@ -63,8 +63,8 @@
       },
       {
         "type": "extension",
-        "id": "shopify-cart",
-        "path": "shopify-cart/cart/getCart_v1.js",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/getCart_v1.js",
         "input": [
           {"key": "shopifyCartData", "id": "100"},
           {"key": "shopifyRequestErr", "id": "101", "optional": true},
@@ -76,8 +76,8 @@
       },
       {
         "type": "extension",
-        "id": "shopify-cart",
-        "path": "shopify-cart/cart/updateProductsInCart_v1.js",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/updateProductsInCart_v1.js",
         "input": [
           {"key": "importedProductsInCart", "id": "103", "optional": true},
           {"key": "cartItems", "id": "1060"},
