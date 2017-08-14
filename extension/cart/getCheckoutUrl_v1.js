@@ -27,6 +27,7 @@ module.exports = function (context, input, cb) {
         return cb(new UnknownError())
       }
 
+      // limit expiry time to two hours from "now", because we don't have any info about the real expiry time
       let date = new Date()
       date.setTime(date.getTime() + 1000 * 60 * 60 * 2)
 
