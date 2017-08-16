@@ -256,6 +256,11 @@ definitions:
       url:
         type: string
         description: Url
+        example: "http://example.com/"
+      expires:
+        type: string
+        description: "An optional date-time-string in the format ISO 8601 (YYYY-MM-DDTH:i:s.fZ). The url does not expire if this field os not set. The returned timezone is always UTC (+00:00)"
+        example: "2017-12-31T23:59:59.999Z"
   ResponseMessages:
     type: object
     required:
