@@ -3,6 +3,18 @@ const CartItem = require('../models/cart/cartItems/cartItem')
 const Tools = require('../lib/tools')
 const _ = require('underscore')
 
+/**
+ * @typedef {object} input
+ * @property {Array} shopifyCartItems
+ * @property {Array} cartItems
+ * @property {Array} importedProductsInCart
+ */
+
+/**
+ * @param context
+ * @param input
+ * @param cb
+ */
 module.exports = function (context, input, cb) {
   const Shopify = require('../lib/shopify.api.js')(context.config)
   const existCartItems = input.cartItems
@@ -43,6 +55,11 @@ module.exports = function (context, input, cb) {
     _.each(existCartItems, function (existCartItem) {
       if (existCartItem.type === cartItem.TYPE_PRODUCT) {
         let found = false
+        /**
+         * @typedef {object} item
+         * @property {string} CartItemId
+         * @property {int} quantity
+         */
         updateCartItems.find(function (item) {
           if (item.CartItemId === existCartItem.id) {
             checkoutCartItems.push(

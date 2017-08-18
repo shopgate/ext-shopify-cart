@@ -1,10 +1,14 @@
+const _ = require('underscore')
 const Message = require('../models/messages/message')
 const Tools = require('../lib/tools')
-const _ = require('underscore')
 
 /**
  * @typedef {object} input
  * @property {Array} products
+ * @property {Array} importedProductsAddedToCart
+ * @property {Array} importedProductsInCart
+ * @property {Array} products
+ * @property {Array} cartItems
  *
  * @param {object} context
  * @param {object} input
