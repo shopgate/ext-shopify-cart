@@ -1,3 +1,4 @@
+const _ = require('underscore')
 const Cart = require('../models/cart/cart')
 const Total = require('../models/cart/totals/total')
 const SubTotal = require('../models/cart/totals/subTotals/subTotal')
@@ -10,6 +11,18 @@ const AdditionalInfo = require('../models/cart/cartItems/products/additionalInfo
 const Message = require('../models/messages/message')
 const Tools = require('../lib/tools')
 
+/**
+ * @typedef {object} input
+ * @property {object} shopifyRequestErr
+ * @property {Array} importedProductsInCart
+ * @property {Array} importedChildProductsInCart
+ */
+
+/**
+ * @param context
+ * @param input
+ * @param cb
+ */
 module.exports = function (context, input, cb) {
   const shopifyCartData = input.shopifyCartData
   const shopifyRequestErr = input.shopifyRequestErr
@@ -50,7 +63,14 @@ module.exports = function (context, input, cb) {
       cart.isTaxIncluded = checkout.taxes_included
       cart.currency = data.checkout.currency
       cart.id = data.checkout.token
-      cart.isOrderable = data.checkout.web_url ? 1 : 0
+
+      // Deactivate checkout if there are no cart items available (line items in Shopify)
+      if (_.isEmpty(checkout.line_items)) {
+        cart.isOrderable = false
+      }
+
+      // Disallow checkout if there was no checkout url set by Shopify
+      cart.isOrderable = !!data.checkout.web_url
 
       /* totals */
       const subtotalPrice = new Total()
@@ -103,6 +123,11 @@ module.exports = function (context, input, cb) {
        * cartItems */
       checkout.line_items.forEach(function (item) {
         const cartItem = new CartItem()
+        /**
+         * @typedef {object} shopifyProduct
+         * @property {Array} variants
+         * @property {Array} options
+         */
         let shopifyProduct = null
         let shopifyProductVariant = null
 
@@ -130,6 +155,12 @@ module.exports = function (context, input, cb) {
         // item number mapping: use variant_id for children and product id for parents and normal products
         let productId = item.variant_id
         let isChild = true
+
+        /**
+         * @typedef {object} importedProductInCart
+         * @property {int} id
+         * @property {string} customData
+         */
         importedProductsInCart.forEach(function (importedProductInCart) {
           let customData = JSON.parse(importedProductInCart.customData)
           if (customData.variant_id === item.variant_id) {

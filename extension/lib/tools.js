@@ -47,7 +47,6 @@ class Tools {
   }
 
   /**
-   *
    * @param {object} context
    * @param {function} cb
    * @return {string}
