@@ -32,7 +32,7 @@ module.exports = function (context, input, cb) {
    *
    * @param {string} cartId
    */
-  let addProducts = function (cartId) {
+  function addProducts (cartId) {
     let items = {}
     _.each(existingCartItems, function (existingCartItem) {
       if (Tools.isObjectDefined(existingCartItem, 'product.id')) {
