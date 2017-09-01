@@ -1,11 +1,26 @@
 const ShopifyAPI = require('shopify-node-api')
 
 /**
+ * @typedef {object} config
+ * @property {string} shopifyShopDomain
+ * @property {string} shopifyApiKey
+ * @property {string} shopifyAccessToken
+ */
+
+/**
  * @param {object} config
  * @return {{}}
  */
 module.exports = function (config) {
   const module = {}
+
+  /**
+   * @typedef {object} SGShopifyApi
+   * @property {function} get
+   * @property {function} put
+   * @property {function} delete
+   * @property {function} post
+   */
   const SGShopifyApi = ShopifyAPI({
     shop: config.shopifyShopDomain.replace(/^https?:\/\//, ''),
     shopify_api_key: config.shopifyApiKey,
