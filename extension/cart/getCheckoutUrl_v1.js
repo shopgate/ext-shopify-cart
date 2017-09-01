@@ -4,6 +4,14 @@ const Tools = require('../lib/tools')
 const UnknownError = require('../models/Errors/UnknownError')
 
 /**
+ * @typedef {object} context
+ * @property {object} config
+ *
+ * @typedef {object} config
+ * @property {string} shopifyShopDomain
+ */
+
+/**
  *
  * @param {object} context
  * @param {object} input
@@ -30,11 +38,14 @@ module.exports = function (context, input, cb) {
       // limit expiry time to two hours from "now", because we don't have any info about the real expiry time
       const date = new Date()
       date.setTime(date.getTime() + 1000 * 60 * 60 * 2)
-
       const expires = date.toISOString()
-      const url = new Url(data.checkout.web_url, expires)
 
-      cb(null, url)
+      // We need to replace the web_url from data.checkout with the shopifyShopDomain from our config
+      const shopifyWebUrl = data.checkout.web_url
+      const shopifyShopDomain = context.config.shopifyShopDomain
+      const newShopifyShopDomain = shopifyWebUrl.replace(/(https:\/\/checkout\.shopify\.com)/, shopifyShopDomain)
+
+      cb(null, new Url(newShopifyShopDomain, expires))
     })
   })
 }
