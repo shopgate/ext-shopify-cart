@@ -14,11 +14,6 @@ module.exports = function (context, input, cb) {
   let deletedCartItems = 0
   let resultMessages = []
 
-  Tools.getCurrentCartId(context, (err, cartId) => {
-    if (err) cb(err)
-    removeProducts(cartId)
-  })
-
   /**
    * @param {string} cartId
    */
@@ -90,4 +85,9 @@ module.exports = function (context, input, cb) {
       })
     }
   }
+
+  Tools.getCurrentCartId(context, (err, cartId) => {
+    if (err) cb(err)
+    removeProducts(cartId)
+  })
 }
