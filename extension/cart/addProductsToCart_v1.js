@@ -35,7 +35,7 @@ module.exports = function (context, input, cb) {
   function addProducts (cartId) {
     let items = {}
     _.each(existingCartItems, function (existingCartItem) {
-      if (Tools.isObjectDefined(existingCartItem, 'product.id')) {
+      if (Tools.propertyExists(existingCartItem, 'product.id')) {
         items[existingCartItem.product.id] = existingCartItem.quantity
       }
     })

@@ -90,7 +90,7 @@ module.exports = function (context, input, cb) {
       tax.amount = checkout.total_tax
       tax.type = tax.TYPE_TAX
 
-      if (Tools.isObjectDefined(checkout, 'tax_lines')) {
+      if (Tools.propertyExists(checkout, 'tax_lines')) {
         checkout.tax_lines.forEach(function (subTaxItem) {
           let subTotal = new SubTotal()
           subTotal.label = subTaxItem.title
@@ -102,7 +102,7 @@ module.exports = function (context, input, cb) {
       }
       cart.addTotal(tax.toJson())
 
-      if (Tools.isObjectDefined(checkout, 'shipping_line')) {
+      if (Tools.propertyExists(checkout, 'shipping_line')) {
         const shipping = new Total()
         shipping.label = checkout.shipping_line.title
         shipping.amount = checkout.shipping_line.price
@@ -253,7 +253,7 @@ module.exports = function (context, input, cb) {
         cart.addCartItem(cartItem)
       })
 
-      if (Tools.isObjectDefined(checkout, 'applied_discount')) {
+      if (Tools.propertyExists(checkout, 'applied_discount')) {
         if (checkout.applied_discount.applicable) {
           const discount = new Total()
           discount.label = checkout.applied_discount.title

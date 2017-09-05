@@ -1,12 +1,12 @@
 class Tools {
   /**
-   * @property {function} context.storage.device
-   * @param obj
-   * @param path
-   * @return {boolean}
+   * @property {Object} path.storage.device
+   * @param {Object} obj
+   * @param {String} path
+   * @return {Boolean}
    * @public
    */
-  static isObjectDefined (obj, path) {
+  static propertyExists (obj, path) {
     if (!obj) return false
     if (obj && !path) return true
 
@@ -22,34 +22,31 @@ class Tools {
   }
 
   /**
-   * @param {object} obj
-   * @return {boolean}
+   * Checks if the given parameter is an object
+   *
+   * @param {Object} obj
+   * @return {Boolean}
+   * @public
    */
-  static objectIsEmpty (obj) {
-    /* Speed up calls to hasOwnProperty */
-    let hasOwnProperty = Object.prototype.hasOwnProperty
-    /* null and undefined are "empty" */
-    if (obj === null) return true
-
-    /* Objects with a length greater than zero cannot be empty. */
-    if (obj.length > 0) return false
-    if (obj.length === 0) return true
-
-    /* Never treat non-objects as empty */
-    if (typeof obj !== 'object') return true
-
-    /* Check if any properties are available */
-    for (let key in obj) {
-      if (hasOwnProperty.call(obj, key)) return false
-    }
-
-    return true
+  static isObject (obj) {
+    return obj !== undefined && obj !== null && typeof obj === 'object'
   }
 
   /**
-   * @param {object} context
-   * @param {function} cb
-   * @return {string}
+   * Checks if the given object has no properties or if it is undefined, null, false, empty string or 0
+   *
+   * @param {Object} obj
+   * @return {Boolean}
+   * @public
+   */
+  static isEmpty (obj) {
+    return (!obj || Object.keys(obj).length <= 0)
+  }
+
+  /**
+   * @param {Object} context
+   * @param {callback} cb
+   * @public
    */
   static getCurrentCartId (context, cb) {
     const userId = context.meta.userId
@@ -66,10 +63,10 @@ class Tools {
 
   /**
    *
-   * @param {object} context
-   * @param {string} cartId
-   * @param {function} cb
-   * @return {string}
+   * @param {Object} context
+   * @param {String} cartId
+   * @param {callback} cb
+   * @public
    */
   static setCurrentCartId (context, cartId, cb) {
     const userId = context.meta.userId
