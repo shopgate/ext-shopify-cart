@@ -1,5 +1,5 @@
 module.exports = function (context, input, cb) {
-  const shopifyCartData = {checkout: input.checkout}
+  const shopifyCartData = input.shopifyCartData
   const shopifyRequestErr = input.shopifyRequestErr
 
   if (shopifyRequestErr) cb(shopifyRequestErr, {})

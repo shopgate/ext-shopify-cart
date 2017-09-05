@@ -24,7 +24,10 @@ const Tools = require('../lib/tools')
  * @param cb
  */
 module.exports = function (context, input, cb) {
-  const shopifyCartData = {checkout: input.checkout}
+  const shopifyCartData = input.shopifyCartData
+  console.log('########################')
+  console.log(shopifyCartData)
+  console.log('########################')
   const shopifyRequestErr = input.shopifyRequestErr
   const importedProductsInCart = input.importedProductsInCart
   const importedChildProductsInCart = input.importedChildProductsInCart
