@@ -55,7 +55,7 @@ module.exports = function (config) {
    */
   module.createCheckout = function (cb) {
     this.post('/admin/checkouts.json', {}, function (err, data) {
-      cb(err, data)
+      return cb(err, data)
     })
   }
 
@@ -65,7 +65,7 @@ module.exports = function (config) {
    */
   module.getCheckout = function (checkoutToken, cb) {
     this.get('/admin/checkouts/' + checkoutToken + '.json', {}, function (err, data) {
-      cb(err, data)
+      return cb(err, data)
     })
   }
 
