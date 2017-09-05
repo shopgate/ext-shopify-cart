@@ -18,9 +18,26 @@
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/getShopifyCartData_v1.js",
         "output": [
-          {"key": "shopifyCartData", "id": "100"},
-          {"key": "shopifyRequestErr", "id": "101", "optional": true}
+          {"key": "shopifyCartData", "id": "100", "optional": true},
+          {"key": "shopifyRequestErr", "id": "101", "optional": true},
+          {"key": "alreadyOrdered", "id": "106"}
         ]
+      },
+      {
+        "type": "conditional",
+        "input": [
+          {"key": "alreadyOrdered", "id": "106"}
+        ],
+        "expression": {
+          "ok": [
+            {"name": "alreadyOrdered" }
+          ]
+        },
+        "then": {
+          "type": "extension",
+          "id": "@shopgate/shopify-cart",
+          "path": "@shopgate/shopify-cart/cart/fetchCartId_v1.js"
+        }
       },
       {
         "type": "extension",
