@@ -5,7 +5,7 @@ const Tools = require('../lib/tools')
 /**
  * @param {Object} context
  * @param {Object} input
- * @param {callback} cb
+ * @param {function} cb
  */
 module.exports = function (context, input, cb) {
   const Shopify = require('../lib/shopify.api.js')(context.config)
@@ -76,7 +76,7 @@ function fetchCheckout (Shopify, createNew, context, cb) {
  * @param {Object} context
  * @param {function({Object}, {int})} cb
  */
-function loadCheckoutToken(context, cb) {
+function loadCheckoutToken (context, cb) {
   if (context.meta.userId) {
     // load from user storage if logged in
     context.storage.user.get('checkoutToken', (err, checkoutToken) => {
@@ -97,7 +97,7 @@ function loadCheckoutToken(context, cb) {
  * @param {Object} context
  * @param {function({Object})} cb
  */
-function saveCheckoutToken(checkoutToken, context, cb) {
+function saveCheckoutToken (checkoutToken, context, cb) {
   // save to user storage if logged in
   if (context.meta.userId) {
     context.storage.user.set('checkoutToken', checkoutToken, function (err) {

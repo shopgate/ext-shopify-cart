@@ -19,24 +19,14 @@ module.exports = function (context, input, cb) {
       Shopify.post('/admin/checkouts.json', {}, function (err, data) {
         cb(null, {
           shopifyCartData: data,
-          shopifyCartErr: err,
-          alreadyOrdered: 'notok'
+          shopifyCartErr: err
         })
       })
     } else {
       Shopify.get('/admin/checkouts/' + cartId + '.json', {}, function (err, data) {
-        /*
-         * If the checkout is already ordered, we need to return a flag in order to call a conditional-step for
-         * creating a new checkout for the user
-         */
-        if (data.checkout.completed_at !== null) {
-          return cb(null, {alreadyOrdered: 'ok'})
-        }
-
         cb(null, {
           shopifyCartData: data,
-          shopifyCartErr: err,
-          alreadyOrdered: 'notok'
+          shopifyCartErr: err
         })
       })
     }
