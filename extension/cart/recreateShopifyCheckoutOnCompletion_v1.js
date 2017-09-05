@@ -14,4 +14,6 @@ module.exports = function (context, input, cb) {
     input.createNew = true
     return fetchCheckout(context, input, cb)
   }
+
+  return cb(null, {checkout: checkout})
 }
