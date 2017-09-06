@@ -77,17 +77,15 @@ function fetchCheckout (Shopify, createNew, context, cb) {
  * @param {function({Object}, {int})} cb
  */
 function loadCheckoutToken (context, cb) {
+  // select storage to use: device or user, if logged in
+  let storage = context.storage.device
   if (context.meta.userId) {
-    // load from user storage if logged in
-    context.storage.user.get('cartId', (err, checkoutToken) => {
-      return cb(err, checkoutToken)
-    })
-  } else {
-    // fall back to device storage if no user available
-    context.storage.device.get('cartId', (err, checkoutToken) => {
-      return cb(err, checkoutToken)
-    })
+    storage = context.storage.user
   }
+
+  storage.get('checkoutToken', (err, checkoutToken) => {
+    return cb(err, checkoutToken)
+  })
 }
 
 /**
@@ -98,15 +96,13 @@ function loadCheckoutToken (context, cb) {
  * @param {function({Object})} cb
  */
 function saveCheckoutToken (checkoutToken, context, cb) {
-  // save to user storage if logged in
+  // select storage to use: device or user, if logged in
+  let storage = context.storage.device
   if (context.meta.userId) {
-    context.storage.user.set('cartId', checkoutToken, (err) => {
-      return cb(err || null)
-    })
-  } else {
-    // fall back to device storage if no user available
-    context.storage.device.set('cartId', checkoutToken, (err) => {
-      return cb(err || null)
-    })
+    storage = context.storage.user
   }
+
+  storage.set('checkoutToken', checkoutToken, (err) => {
+    return cb(err || null)
+  })
 }

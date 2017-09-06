@@ -51,11 +51,11 @@ class Tools {
   static getCurrentCartId (context, cb) {
     const userId = context.meta.userId
     if (userId) {
-      context.storage.user.get('cartId', (sErr, cartId) => {
+      context.storage.user.get('checkoutToken', (sErr, cartId) => {
         return cb(sErr, cartId)
       })
     } else {
-      context.storage.device.get('cartId', (sErr, cartId) => {
+      context.storage.device.get('checkoutToken', (sErr, cartId) => {
         return cb(sErr, cartId)
       })
     }
@@ -71,12 +71,12 @@ class Tools {
   static setCurrentCartId (context, cartId, cb) {
     const userId = context.meta.userId
     if (userId) {
-      context.storage.user.set('cartId', cartId, function (sErr) {
+      context.storage.user.set('checkoutToken', cartId, function (sErr) {
         if (sErr) return cb(sErr)
         return cb(null)
       })
     } else {
-      context.storage.device.set('cartId', cartId, function (sErr) {
+      context.storage.device.set('checkoutToken', cartId, function (sErr) {
         if (sErr) return cb(sErr)
         return cb(null)
       })
