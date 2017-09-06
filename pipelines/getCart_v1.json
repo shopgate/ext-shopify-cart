@@ -16,10 +16,31 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/getShopifyCartData_v1.js",
+        "path": "@shopgate/shopify-cart/cart/fetchShopifyCheckout_v1.js",
         "output": [
-          {"key": "shopifyCartData", "id": "100"},
-          {"key": "shopifyRequestErr", "id": "101", "optional": true}
+          {"key": "checkout", "id": "100"}
+        ]
+      },
+      {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/recreateShopifyCheckoutOnCompletion_v1.js",
+        "input": [
+          {"key": "checkout", "id": "100"}
+        ],
+        "output": [
+          {"key": "checkout", "id": "100", "optional": true}
+        ]
+      },
+      {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/remapCheckoutToShopifyCartData_v1.js",
+        "input": [
+          {"key": "checkout", "id": "100"}
+        ],
+        "output": [
+          {"key": "shopifyCartData", "id": "106"}
         ]
       },
       {
@@ -27,7 +48,7 @@
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/getShopifyCartProducts_v1.js",
         "input": [
-          {"key": "shopifyCartData", "id": "100"},
+          {"key": "shopifyCartData", "id": "106"},
           {"key": "shopifyRequestErr", "id": "101", "optional": true}
         ],
         "output": [
@@ -110,7 +131,7 @@
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/getCart_v1.js",
         "input": [
-          {"key": "shopifyCartData", "id": "100"},
+          {"key": "shopifyCartData", "id": "106"},
           {"key": "shopifyRequestErr", "id": "101", "optional": true},
           {"key": "importedProductsInCart", "id": "103", "optional": true},
           {"key": "importedChildProductsInCart", "id": "104", "optional": true},

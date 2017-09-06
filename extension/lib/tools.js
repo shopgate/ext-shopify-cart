@@ -1,12 +1,12 @@
 class Tools {
   /**
-   * @property {function} context.storage.device
-   * @param obj
-   * @param path
-   * @return {boolean}
+   * @property {Object} path.storage.device
+   * @param {Object} obj
+   * @param {String} path
+   * @return {Boolean}
    * @public
    */
-  static isObjectDefined (obj, path) {
+  static propertyExists (obj, path) {
     if (!obj) return false
     if (obj && !path) return true
 
@@ -22,43 +22,41 @@ class Tools {
   }
 
   /**
-   * @param {object} obj
-   * @return {boolean}
+   * Checks if the given parameter is an object
+   *
+   * @param {Object} obj
+   * @return {Boolean}
+   * @public
    */
-  static objectIsEmpty (obj) {
-    /* Speed up calls to hasOwnProperty */
-    let hasOwnProperty = Object.prototype.hasOwnProperty
-    /* null and undefined are "empty" */
-    if (obj === null) return true
-
-    /* Objects with a length greater than zero cannot be empty. */
-    if (obj.length > 0) return false
-    if (obj.length === 0) return true
-
-    /* Never treat non-objects as empty */
-    if (typeof obj !== 'object') return true
-
-    /* Check if any properties are available */
-    for (let key in obj) {
-      if (hasOwnProperty.call(obj, key)) return false
-    }
-
-    return true
+  static isObject (obj) {
+    return obj !== undefined && obj !== null && typeof obj === 'object'
   }
 
   /**
-   * @param {object} context
+   * Checks if the given object has no properties or if it is undefined, null, false, empty string or 0
+   *
+   * @param {Object} obj
+   * @return {Boolean}
+   * @public
+   */
+  static isEmpty (obj) {
+    return (!obj || Object.keys(obj).length <= 0)
+  }
+
+  /**
+   * @property {string | int} context.meta.userId
+   * @param {Object} context
    * @param {function} cb
-   * @return {string}
+   * @public
    */
   static getCurrentCartId (context, cb) {
     const userId = context.meta.userId
     if (userId) {
-      context.storage.user.get('cartId', (sErr, cartId) => {
+      context.storage.user.get('checkoutToken', (sErr, cartId) => {
         return cb(sErr, cartId)
       })
     } else {
-      context.storage.device.get('cartId', (sErr, cartId) => {
+      context.storage.device.get('checkoutToken', (sErr, cartId) => {
         return cb(sErr, cartId)
       })
     }
@@ -66,20 +64,20 @@ class Tools {
 
   /**
    *
-   * @param {object} context
-   * @param {string} cartId
+   * @param {Object} context
+   * @param {String} cartId
    * @param {function} cb
-   * @return {string}
+   * @public
    */
   static setCurrentCartId (context, cartId, cb) {
     const userId = context.meta.userId
     if (userId) {
-      context.storage.user.set('cartId', cartId, function (sErr) {
+      context.storage.user.set('checkoutToken', cartId, function (sErr) {
         if (sErr) return cb(sErr)
         return cb(null)
       })
     } else {
-      context.storage.device.set('cartId', cartId, function (sErr) {
+      context.storage.device.set('checkoutToken', cartId, function (sErr) {
         if (sErr) return cb(sErr)
         return cb(null)
       })
