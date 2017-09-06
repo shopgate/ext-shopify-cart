@@ -72,7 +72,7 @@ module.exports = function (config) {
   /**
    * @param {int} checkoutToken
    * @param {Array} productList
-   * @param {callback} cb
+   * @param {function} cb
    */
   module.setCheckoutProducts = function (checkoutToken, productList, cb) {
     const data = {
@@ -91,44 +91,44 @@ module.exports = function (config) {
   /**
    * @param {string} endpoint
    * @param {object} params
-   * @param {function} callback
+   * @param {function} cb
    */
-  module.get = function (endpoint, params, callback) {
+  module.get = function (endpoint, params, cb) {
     SGShopifyApi.get(endpoint, params, function (err, data) {
-      callback(err, data)
+      cb(err, data)
     })
   }
 
   /**
    * @param {string} endpoint
    * @param {object} params
-   * @param {function} callback
+   * @param {function} cb
    */
-  module.put = function (endpoint, params, callback) {
+  module.put = function (endpoint, params, cb) {
     SGShopifyApi.put(endpoint, params, function (err, data) {
-      callback(err, data)
+      cb(err, data)
     })
   }
 
   /**
    * @param {string} endpoint
    * @param {object} params
-   * @param {function} callback
+   * @param {function} cb
    */
-  module.delete = function (endpoint, params, callback) {
+  module.delete = function (endpoint, params, cb) {
     SGShopifyApi.delete(endpoint, params, function (err, data) {
-      callback(err, data)
+      cb(err, data)
     })
   }
 
   /**
    * @param {string} endpoint
    * @param {object} params
-   * @param {function} callback
+   * @param {function} cb
    */
-  module.post = function (endpoint, params, callback) {
+  module.post = function (endpoint, params, cb) {
     SGShopifyApi.post(endpoint, params, function (err, data) {
-      callback(err, data)
+      cb(err, data)
     })
   }
 
