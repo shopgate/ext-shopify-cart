@@ -281,11 +281,6 @@ module.exports = function (context, input, cb) {
         }
       }
 
-      Tools.setCurrentCartId(context, cart.id, function (err) {
-        if (err) return cb(err)
-        createResponse()
-      })
-
       let createResponse = function () {
         cb(null, {
           messages: cart.messages,
@@ -297,6 +292,11 @@ module.exports = function (context, input, cb) {
           isOrderable: cart.isOrderable
         })
       }
+
+      Tools.setCurrentCartId(context, cart.id, function (err) {
+        if (err) return cb(err)
+        createResponse()
+      })
     }
 
     createCart(shopifyRequestErr, shopifyCartData)

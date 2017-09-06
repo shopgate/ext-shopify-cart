@@ -5,11 +5,6 @@ module.exports = function (context, input, cb) {
   const Shopify = require('../lib/shopify.api.js')(context.config)
   let resultMessages = []
 
-  Tools.getCurrentCartId(context, (err, cartId) => {
-    if (err) cb(err)
-    removeCoupons(cartId)
-  })
-
   /**
    *
    * @param {string} cartId
@@ -50,4 +45,9 @@ module.exports = function (context, input, cb) {
       return cb(null, {messages: resultMessages})
     })
   }
+
+  Tools.getCurrentCartId(context, (err, cartId) => {
+    if (err) cb(err)
+    removeCoupons(cartId)
+  })
 }
