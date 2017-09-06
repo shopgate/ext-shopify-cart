@@ -38,7 +38,7 @@ module.exports = function (context, input, cb) {
  * @param {Object} Shopify
  * @param {Boolean} createNew
  * @param {Object} context
- * @param {function ({Object}, {Boolean}, {Object})} cb
+ * @param {function ({Object}, {Boolean}, {Object}) | function({UnknownError})} cb
  */
 function fetchCheckout (Shopify, createNew, context, cb) {
   loadCheckoutToken(context, (err, checkoutToken) => {
@@ -74,7 +74,7 @@ function fetchCheckout (Shopify, createNew, context, cb) {
  * Loads the current checkout token from internal storage (user or device)
  *
  * @param {Object} context
- * @param {function({Object}, {int})} cb
+ * @param {function({Object}, {string})} cb
  */
 function loadCheckoutToken (context, cb) {
   // select storage to use: device or user, if logged in
@@ -91,7 +91,7 @@ function loadCheckoutToken (context, cb) {
 /**
  * Saves the current checkout token into internal storage (user or device)
  *
- * @param checkoutToken
+ * @param {string} checkoutToken
  * @param {Object} context
  * @param {function({Object})} cb
  */
