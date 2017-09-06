@@ -70,7 +70,7 @@ module.exports = function (config) {
   }
 
   /**
-   * @param {int} checkoutToken
+   * @param {string} checkoutToken
    * @param {Array} productList
    * @param {function} cb
    */

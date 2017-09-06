@@ -44,8 +44,9 @@ class Tools {
   }
 
   /**
+   * @property {string | int} context.meta.userId
    * @param {Object} context
-   * @param {callback} cb
+   * @param {function} cb
    * @public
    */
   static getCurrentCartId (context, cb) {
@@ -65,7 +66,7 @@ class Tools {
    *
    * @param {Object} context
    * @param {String} cartId
-   * @param {callback} cb
+   * @param {function} cb
    * @public
    */
   static setCurrentCartId (context, cartId, cb) {
