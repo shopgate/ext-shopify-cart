@@ -1,51 +1,28 @@
 const Url = require('../models/url')
-const Tools = require('../lib/tools')
-
-const UnknownError = require('../models/Errors/UnknownError')
 
 /**
- * @typedef {object} context
- * @property {object} config
+ * @typedef {Object} context
+ * @property {Object} config
  *
- * @typedef {object} config
- * @property {string} shopifyShopDomain
+ * @typedef {Object} config
+ * @property {String} shopifyShopDomain
  */
 
 /**
  *
- * @param {object} context
- * @param {object} input
- * @param {function} cb
+ * @param {Object} context
+ * @param {Object} input
+ * @param {callback} cb
  */
 module.exports = function (context, input, cb) {
-  const Shopify = require('../lib/shopify.api.js')(context.config)
-  Tools.getCurrentCartId(context, (err, cartId) => {
-    if (err) {
-      context.log.error('Retrieving the current cart id failed with error: ' + err.toString())
-      return cb(new UnknownError())
-    }
+  // limit expiry time to two hours from "now", because we don't have any info about the real expiry time
+  const date = new Date()
+  date.setTime(date.getTime() + 1000 * 60 * 60 * 2)
+  const expires = date.toISOString()
 
-    const shopifyResourceUri = '/admin/checkouts/' + cartId + '.json'
-    Shopify.get(shopifyResourceUri, {}, function (err, data) {
-      if (err) {
-        context.log.error(
-          'Call to Shopify resource uri "' + shopifyResourceUri + '" failed with error: ' +
-          '[' + err.code.toString() + '] ' + err.error.toString()
-        )
-        return cb(new UnknownError())
-      }
+  // We need to replace the web_url from data.checkout with the shopifyShopDomain from our config
+  const shopifyShopDomain = context.config.shopifyShopDomain
+  const newShopifyShopDomain = input.checkout.web_url.replace(/(https:\/\/checkout\.shopify\.com)/, shopifyShopDomain)
 
-      // limit expiry time to two hours from "now", because we don't have any info about the real expiry time
-      const date = new Date()
-      date.setTime(date.getTime() + 1000 * 60 * 60 * 2)
-      const expires = date.toISOString()
-
-      // We need to replace the web_url from data.checkout with the shopifyShopDomain from our config
-      const shopifyWebUrl = data.checkout.web_url
-      const shopifyShopDomain = context.config.shopifyShopDomain
-      const newShopifyShopDomain = shopifyWebUrl.replace(/(https:\/\/checkout\.shopify\.com)/, shopifyShopDomain)
-
-      cb(null, new Url(newShopifyShopDomain, expires))
-    })
-  })
+  return cb(null, new Url(newShopifyShopDomain, expires))
 }
