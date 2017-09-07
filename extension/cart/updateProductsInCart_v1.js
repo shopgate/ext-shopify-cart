@@ -25,11 +25,6 @@ module.exports = function (context, input, cb) {
 
   let checkoutCartItems = []
 
-  Tools.getCurrentCartId(context, (err, cartId) => {
-    if (err) cb(err)
-    updateProducts(cartId)
-  })
-
   /**
    * @param {string} cartId
    */
@@ -108,4 +103,9 @@ module.exports = function (context, input, cb) {
       return cb(null, {messages: resultMessages})
     })
   }
+
+  Tools.getCurrentCartId(context, (err, cartId) => {
+    if (err) cb(err)
+    updateProducts(cartId)
+  })
 }
