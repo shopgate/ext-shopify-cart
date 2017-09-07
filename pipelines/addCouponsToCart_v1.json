@@ -13,9 +13,29 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/addCouponsToCart_v1.js",
+        "path": "@shopgate/shopify-cart/cart/fetchShopifyCheckout_v1.js",
+        "output": [
+          {"key": "checkout", "id": "100"}
+        ]
+      },
+      {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/recreateShopifyCheckoutOnCompletion_v1.js",
         "input": [
-          {"key": "couponCodes", "id": "1020"}
+          {"key": "checkout", "id": "100"}
+        ],
+        "output": [
+          {"key": "checkout", "id": "100", "optional": true}
+        ]
+      },
+      {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/addDiscountToCheckout_v1.js",
+        "input": [
+          {"key": "checkout", "id": "100"},
+          {"key": "discountCodes", "id": "1020"}
         ],
         "output": [
           {"key": "messages", "id": "1100", "optional": true}

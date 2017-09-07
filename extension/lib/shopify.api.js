@@ -31,7 +31,7 @@ module.exports = function (config) {
   // -------------------------------------------------------------------------------------------------------------------
 
   /**
-   * @return {string}
+   * @return {String}
    */
   module.getGraphQlUrl = function () {
     let shopDomain = config.shopifyShopDomain.replace(/\/$/, '')
@@ -51,7 +51,7 @@ module.exports = function (config) {
   }
 
   /**
-   * @param {function} cb
+   * @param {callback} cb
    */
   module.createCheckout = function (cb) {
     this.post('/admin/checkouts.json', {}, function (err, data) {
@@ -70,9 +70,9 @@ module.exports = function (config) {
   }
 
   /**
-   * @param {string} checkoutToken
+   * @param {String} checkoutToken
    * @param {Array} productList
-   * @param {function} cb
+   * @param {callback} cb
    */
   module.setCheckoutProducts = function (checkoutToken, productList, cb) {
     const data = {
@@ -86,12 +86,29 @@ module.exports = function (config) {
     })
   }
 
+  /**
+   * @param {String} checkoutToken
+   * @param {String|null} discountCode
+   * @param {callback} cb
+   */
+  module.setCheckoutDiscount = function (checkoutToken, discountCode, cb) {
+    const data = {
+      'checkout': {
+        'line_items': discountCode
+      }
+    }
+
+    this.put('/admin/checkouts/' + checkoutToken + '.json', data, (err) => {
+      return cb(err)
+    })
+  }
+
   // -------------------------------------------------------------------------------------------------------------------
 
   /**
-   * @param {string} endpoint
-   * @param {object} params
-   * @param {function} cb
+   * @param {String} endpoint
+   * @param {Object} params
+   * @param {callback} cb
    */
   module.get = function (endpoint, params, cb) {
     SGShopifyApi.get(endpoint, params, function (err, data) {
@@ -100,9 +117,9 @@ module.exports = function (config) {
   }
 
   /**
-   * @param {string} endpoint
-   * @param {object} params
-   * @param {function} cb
+   * @param {String} endpoint
+   * @param {Object} params
+   * @param {callback} cb
    */
   module.put = function (endpoint, params, cb) {
     SGShopifyApi.put(endpoint, params, function (err, data) {
@@ -111,9 +128,9 @@ module.exports = function (config) {
   }
 
   /**
-   * @param {string} endpoint
-   * @param {object} params
-   * @param {function} cb
+   * @param {String} endpoint
+   * @param {Object} params
+   * @param {callback} cb
    */
   module.delete = function (endpoint, params, cb) {
     SGShopifyApi.delete(endpoint, params, function (err, data) {
@@ -122,9 +139,9 @@ module.exports = function (config) {
   }
 
   /**
-   * @param {string} endpoint
-   * @param {object} params
-   * @param {function} cb
+   * @param {String} endpoint
+   * @param {Object} params
+   * @param {callback} cb
    */
   module.post = function (endpoint, params, cb) {
     SGShopifyApi.post(endpoint, params, function (err, data) {
