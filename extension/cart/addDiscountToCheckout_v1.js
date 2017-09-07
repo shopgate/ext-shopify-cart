@@ -12,29 +12,30 @@ const Message = require('../models/messages/message')
  * @param {callback} cb
  */
 module.exports = function (context, input, cb) {
-  addDiscounts(input.checkout.token, input.discountCodes)
+  addDiscounts(context, input.checkout.token, input.discountCodes)
 
   /**
+   * @param {Object} context
    * @param {String} checkoutToken
    * @param {String[]} discountCodes
    */
-  function addDiscounts (checkoutToken, discountCodes) {
+  function addDiscounts (context, checkoutToken, discountCodes) {
     const Shopify = require('../lib/shopify.api.js')(context.config)
 
     if (Tools.isEmpty(discountCodes) || !Array.isArray(discountCodes) || !discountCodes[0]) {
-      console.log.error('Error: Wrong parameter format or no discount (coupon) codes given.')
+      context.log.error('Error: Wrong parameter format or no discount (coupon) codes given.')
       return cb(new InvalidCallError())
     }
 
     // only one coupon is supported
     const dicountCode = discountCodes[0]
     if (discountCodes.length > 1) {
-      console.log.warning("Shopify doesn't support more than one discount (coupon).")
+      context.log.warning("Shopify doesn't support more than one discount (coupon).")
     }
 
     Shopify.setCheckoutDiscount(checkoutToken, dicountCode, (err, data) => {
+      let resultMessages = []
       if (err) {
-        let resultMessages = []
         Object.keys(data.errors).map(function (objectKey) {
           const messages = data.errors[objectKey]
           const len = messages.length

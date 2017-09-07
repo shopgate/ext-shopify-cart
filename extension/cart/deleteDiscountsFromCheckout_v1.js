@@ -37,8 +37,8 @@ module.exports = function (context, input, cb) {
     }
 
     Shopify.setCheckoutDiscount(checkoutToken, null, (err, data) => {
+      let resultMessages = []
       if (err) {
-        let resultMessages = []
         Object.keys(data.errors).map(function (objectKey) {
           const messages = data.errors[objectKey]
           const len = messages.length
