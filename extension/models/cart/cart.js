@@ -11,6 +11,7 @@ class Cart {
     this._text = null
     this._cartItems = []
     this._totals = []
+    this._enableCoupons = false
   }
 
   /**
@@ -23,6 +24,7 @@ class Cart {
    * text: {string},
    * cartItems: {Array},
    * totals: {Array}
+   * enableCoupons: {boolean}
    * }}
    */
   toJson () {
@@ -34,7 +36,8 @@ class Cart {
       messages: this.messages,
       text: this.text,
       cartItems: this.cartItems,
-      totals: this.totals
+      totals: this.totals,
+      enableCoupons: this.enableCoupons
     }
   }
 
@@ -111,6 +114,14 @@ class Cart {
    */
   addTotal (total) {
     this._totals.push(total)
+  }
+
+  get enableCoupons () {
+    return this._enableCoupons
+  }
+
+  set enableCoupons (value) {
+    this._enableCoupons = value
   }
 }
 
