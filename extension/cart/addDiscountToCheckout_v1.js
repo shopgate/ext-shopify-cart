@@ -28,12 +28,11 @@ module.exports = function (context, input, cb) {
     }
 
     // only one coupon is supported
-    const dicountCode = discountCodes[0]
     if (discountCodes.length > 1) {
       context.log.warning("Shopify doesn't support more than one discount (coupon).")
     }
 
-    Shopify.setCheckoutDiscount(checkoutToken, dicountCode, (err, data) => {
+    Shopify.setCheckoutDiscount(checkoutToken, discountCodes[0], (err, data) => {
       let resultMessages = []
       if (err) {
         Object.keys(data.errors).map(function (objectKey) {
