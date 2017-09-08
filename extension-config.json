@@ -29,7 +29,7 @@
     },
     "enableCartCoupons" : {
       "type" : "static",
-      "destination" : "frontend",
+      "destination" : "backend",
       "params" : {
         "value" : false
       }
