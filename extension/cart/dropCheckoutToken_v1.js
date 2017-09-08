@@ -1,7 +1,7 @@
 /**
  * @param {Object} context
  * @param {Object} input
- * @param {callback} cb
+ * @param {function} cb
  */
 module.exports = function (context, input, cb) {
   // select storage to use: device or user, if logged in

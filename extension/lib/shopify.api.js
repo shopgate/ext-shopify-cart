@@ -31,7 +31,7 @@ module.exports = function (config) {
   // -------------------------------------------------------------------------------------------------------------------
 
   /**
-   * @return {string}
+   * @return {String}
    */
   module.getGraphQlUrl = function () {
     let shopDomain = config.shopifyShopDomain.replace(/\/$/, '')
@@ -54,8 +54,8 @@ module.exports = function (config) {
    * @param {function} cb
    */
   module.createCheckout = function (cb) {
-    this.post('/admin/checkouts.json', {}, function (err, data) {
-      return cb(err, data)
+    this.post('/admin/checkouts.json', {}, function (err, response) {
+      return cb(err, response)
     })
   }
 
@@ -64,13 +64,13 @@ module.exports = function (config) {
    * @param {function} cb
    */
   module.getCheckout = function (checkoutToken, cb) {
-    this.get('/admin/checkouts/' + checkoutToken + '.json', {}, function (err, data) {
-      return cb(err, data)
+    this.get('/admin/checkouts/' + checkoutToken + '.json', {}, function (err, response) {
+      return cb(err, response)
     })
   }
 
   /**
-   * @param {string} checkoutToken
+   * @param {String} checkoutToken
    * @param {Array} productList
    * @param {function} cb
    */
@@ -81,54 +81,71 @@ module.exports = function (config) {
       }
     }
 
-    this.put('/admin/checkouts/' + checkoutToken + '.json', data, (err) => {
-      return cb(err)
+    this.put('/admin/checkouts/' + checkoutToken + '.json', data, (err, response) => {
+      return cb(err, response)
+    })
+  }
+
+  /**
+   * @param {String} checkoutToken
+   * @param {String|null} discountCode
+   * @param {function} cb
+   */
+  module.setCheckoutDiscount = function (checkoutToken, discountCode, cb) {
+    const data = {
+      'checkout': {
+        'discount_code': discountCode
+      }
+    }
+
+    this.put('/admin/checkouts/' + checkoutToken + '.json', data, (err, response) => {
+      return cb(err, response)
     })
   }
 
   // -------------------------------------------------------------------------------------------------------------------
 
   /**
-   * @param {string} endpoint
-   * @param {object} params
+   * @param {String} endpoint
+   * @param {Object} params
    * @param {function} cb
    */
   module.get = function (endpoint, params, cb) {
-    SGShopifyApi.get(endpoint, params, function (err, data) {
-      cb(err, data)
+    SGShopifyApi.get(endpoint, params, function (err, response) {
+      cb(err, response)
     })
   }
 
   /**
-   * @param {string} endpoint
-   * @param {object} params
+   * @param {String} endpoint
+   * @param {Object} params
    * @param {function} cb
    */
   module.put = function (endpoint, params, cb) {
-    SGShopifyApi.put(endpoint, params, function (err, data) {
-      cb(err, data)
+    SGShopifyApi.put(endpoint, params, function (err, response) {
+      cb(err, response)
     })
   }
 
   /**
-   * @param {string} endpoint
-   * @param {object} params
+   * @param {String} endpoint
+   * @param {Object} params
    * @param {function} cb
    */
   module.delete = function (endpoint, params, cb) {
-    SGShopifyApi.delete(endpoint, params, function (err, data) {
-      cb(err, data)
+    SGShopifyApi.delete(endpoint, params, function (err, response) {
+      cb(err, response)
     })
   }
 
   /**
-   * @param {string} endpoint
-   * @param {object} params
+   * @param {String} endpoint
+   * @param {Object} params
    * @param {function} cb
    */
   module.post = function (endpoint, params, cb) {
-    SGShopifyApi.post(endpoint, params, function (err, data) {
-      cb(err, data)
+    SGShopifyApi.post(endpoint, params, function (err, response) {
+      cb(err, response)
     })
   }
 
