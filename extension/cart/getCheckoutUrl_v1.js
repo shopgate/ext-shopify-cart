@@ -12,7 +12,7 @@ const Url = require('../models/url')
  *
  * @param {Object} context
  * @param {Object} input
- * @param {callback} cb
+ * @param {function} cb
  */
 module.exports = function (context, input, cb) {
   // limit expiry time to two hours from "now", because we don't have any info about the real expiry time

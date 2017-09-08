@@ -9,7 +9,7 @@ const Message = require('../models/messages/message')
  *
  * @param {Object} context
  * @param {Object} input
- * @param {callback} cb
+ * @param {function} cb
  */
 module.exports = function (context, input, cb) {
   addDiscounts(context, input.checkout.token, input.discountCodes)
