@@ -186,6 +186,7 @@ definitions:
       - currency
       - totals
       - isOrderable
+      - enableCoupons
     properties:
       messages:
         type: array
@@ -210,6 +211,10 @@ definitions:
       isOrderable:
         type: boolean
         description: Indicated if the cart can be ordered or if it's blocked by one or more conditions like minimun order value.
+        default: true
+      enableCoupons:
+        type: boolean
+        description: Indicates if the cart is supposed to handle adding, showing and removing coupons.
         default: true
   CartItem:
     type: object

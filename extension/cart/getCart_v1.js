@@ -19,6 +19,14 @@ const Tools = require('../lib/tools')
  */
 
 /**
+ * @typedef {object} context
+ * @property {object} config
+ *
+ * @typedef {object} config
+ * @property {boolean} enableCartCoupons
+ */
+
+/**
  * @param context
  * @param input
  * @param cb
@@ -253,31 +261,35 @@ module.exports = function (context, input, cb) {
         cart.addCartItem(cartItem)
       })
 
-      if (Tools.propertyExists(checkout, 'applied_discount')) {
-        if (checkout.applied_discount.applicable) {
-          const discount = new Total()
-          discount.label = checkout.applied_discount.title
-          discount.amount = checkout.applied_discount.amount
-          discount.type = discount.TYPE_DISCOUNT
-          cart.addTotal(discount.toJson())
+      // Check if coupons are enabled to be shown in cart
+      cart.enableCoupons = context.config.enableCartCoupons
+      if (cart.enableCoupons) {
+        if (Tools.propertyExists(checkout, 'applied_discount')) {
+          if (checkout.applied_discount.applicable) {
+            const discount = new Total()
+            discount.label = checkout.applied_discount.title
+            discount.amount = checkout.applied_discount.amount
+            discount.type = discount.TYPE_DISCOUNT
+            cart.addTotal(discount.toJson())
 
-          // add to line items
-          const cartItem = new CartItem()
-          const coupon = new Coupon()
-          coupon.code = checkout.applied_discount.title
-          coupon.savedPrice = {
-            value: checkout.applied_discount.amount,
-            type: coupon.VALUETYPE_FIXED
+            // add to line items
+            const cartItem = new CartItem()
+            const coupon = new Coupon()
+            coupon.code = checkout.applied_discount.title
+            coupon.savedPrice = {
+              value: checkout.applied_discount.amount,
+              type: coupon.VALUETYPE_FIXED
+            }
+            cartItem.quantity = 1
+            cartItem.type = cartItem.TYPE_COUPON
+            cartItem.id = checkout.applied_discount.title
+            cartItem.coupon = coupon.toJson()
+            cart.addCartItem(cartItem)
+          } else {
+            const message = new Message()
+            message.addInfoMessage('600', checkout.applied_discount.non_applicable_reason)
+            cart.addMessage(message.toJson())
           }
-          cartItem.quantity = 1
-          cartItem.type = cartItem.TYPE_COUPON
-          cartItem.id = checkout.applied_discount.title
-          cartItem.coupon = coupon.toJson()
-          cart.addCartItem(cartItem)
-        } else {
-          const message = new Message()
-          message.addInfoMessage('600', checkout.applied_discount.non_applicable_reason)
-          cart.addMessage(message.toJson())
         }
       }
 
@@ -289,7 +301,8 @@ module.exports = function (context, input, cb) {
           totals: cart.totals,
           text: cart.text,
           isTaxIncluded: cart.isTaxIncluded,
-          isOrderable: cart.isOrderable
+          isOrderable: cart.isOrderable,
+          enableCoupons: cart.enableCoupons
         })
       }
 
