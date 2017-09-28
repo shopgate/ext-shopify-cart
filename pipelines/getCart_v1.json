@@ -11,7 +11,7 @@
       {"key": "text", "id": "1060"},
       {"key": "cartItems", "id": "1070"},
       {"key": "totals", "id": "1080"},
-      {"key": "enableCoupons", "id": "1090"}
+      {"key": "flags", "id": "1090"}
     ],
     "steps": [
       {
@@ -146,7 +146,7 @@
           {"key": "text", "id": "1060"},
           {"key": "cartItems", "id": "1070"},
           {"key": "totals", "id": "1080"},
-          {"key": "enableCoupons", "id": "1090"}
+          {"key": "flags", "id": "1090"}
         ]
       }
     ]

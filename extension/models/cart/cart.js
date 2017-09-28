@@ -1,8 +1,7 @@
-const STORAGE_ID = 'cartId'
+const CartFlags = require('./CartFlags')
 
 class Cart {
   constructor () {
-    this.STORAGE_ID = STORAGE_ID
     this._id = null
     this._currency = null
     this._isOrderable = false
@@ -11,34 +10,7 @@ class Cart {
     this._text = null
     this._cartItems = []
     this._totals = []
-    this._enableCoupons = false
-  }
-
-  /**
-   * @return {{
-   * id: {number},
-   * currency: {string},
-   * isOrderable: {boolean},
-   * isTaxIncluded: {boolean},
-   * messages: {string},
-   * text: {string},
-   * cartItems: {Array},
-   * totals: {Array}
-   * enableCoupons: {boolean}
-   * }}
-   */
-  toJson () {
-    return {
-      id: this.id,
-      currency: this.currency,
-      isOrderable: this.isOrderable,
-      isTaxIncluded: this.isTaxIncluded,
-      messages: this.messages,
-      text: this.text,
-      cartItems: this.cartItems,
-      totals: this.totals,
-      enableCoupons: this.enableCoupons
-    }
+    this._flags = new CartFlags()
   }
 
   get id () {
@@ -116,12 +88,12 @@ class Cart {
     this._totals.push(total)
   }
 
-  get enableCoupons () {
-    return this._enableCoupons
+  get flags () {
+    return this._flags
   }
 
-  set enableCoupons (value) {
-    this._enableCoupons = value
+  set flags (value) {
+    this._flags = value
   }
 }
 
