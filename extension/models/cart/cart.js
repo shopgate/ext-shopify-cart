@@ -81,17 +81,22 @@ class Cart {
   }
 
   /**
-   *
    * @param {object} total
    */
   addTotal (total) {
     this._totals.push(total)
   }
 
+  /**
+   * @return {CartFlags}
+   */
   get flags () {
     return this._flags
   }
 
+  /**
+   * @param {CartFlags} value
+   */
   set flags (value) {
     this._flags = value
   }

@@ -1,16 +1,8 @@
 class CartFlags {
   constructor (taxIncluded, orderable, coupons) {
-    this._taxIncluded = taxIncluded
     this._orderable = orderable
+    this._taxIncluded = taxIncluded
     this._coupons = coupons
-  }
-
-  get taxIncluded () {
-    return this._taxIncluded
-  }
-
-  set taxIncluded (value) {
-    this._taxIncluded = value
   }
 
   get orderable () {
@@ -19,6 +11,14 @@ class CartFlags {
 
   set orderable (value) {
     this._orderable = value
+  }
+
+  get taxIncluded () {
+    return this._taxIncluded
+  }
+
+  set taxIncluded (value) {
+    this._taxIncluded = value
   }
 
   get coupons () {
