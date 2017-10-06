@@ -364,11 +364,11 @@ definitions:
       type:
         type: string
         enum: ["option", "input"]
-        example: option
+        example: "input"
       id:
         description: "Id of the property, to which the selection belongs to."
         type: string
-        example: '01-element.select.color'
+        example: '01-input-field.greeting-card-text'
       value:
         type: string
         description: "Content depends on the property type. It's either the value-id of a selected property value for options or the text that was entered for inputs."
