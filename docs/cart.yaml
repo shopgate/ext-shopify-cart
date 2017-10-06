@@ -117,10 +117,10 @@ parameters:
         properties:
           productId:
             type: string
-            example: 10080466570
+            example: "10080466570"
           quantity:
             type: number
-            example : 5
+            example : 1
           properties:
             type: array
             items:
