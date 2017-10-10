@@ -28,7 +28,7 @@ paths:
         - Cart Products
       description: Adds one ore multiple products to the cart.
       parameters:
-        - $ref: '#/parameters/products'
+        - $ref: '#/parameters/addProductsParam'
       responses:
         '200':
           description: No return. The cart needs to be fetched by the frontend afterwards.
@@ -42,7 +42,7 @@ paths:
         - Cart Products
       description: Updates the quantity for one or multiple cart items referenced by their respective CartItemId.
       parameters:
-        - $ref: '#/parameters/cartItem'
+        - $ref: '#/parameters/updateCartItemsParam'
       responses:
         '200':
           description: No return. The cart needs to be fetched by the frontend afterwards.
@@ -106,7 +106,7 @@ paths:
           schema:
             $ref: '#/definitions/UnknownError'
 parameters:
-  products:
+  addProductsParam:
     name: products
     in: body
     required: true
@@ -117,15 +117,15 @@ parameters:
         properties:
           productId:
             type: string
-            example: 10080466570
+            example: "10080466570"
           quantity:
             type: number
-            example : 5
+            example : 1
           properties:
             type: array
             items:
-              $ref: '#/definitions/ProductCartItemProperty'
-  cartItem:
+              $ref: '#/definitions/AddProductsProductProperty'
+  updateCartItemsParam:
     name: CartItem
     in: body
     required: true
@@ -134,7 +134,7 @@ parameters:
       items:
         type: object
         properties:
-          CartItemId:
+          cartItemId:
             type: string
           quantity:
             type: number
@@ -354,6 +354,25 @@ definitions:
         type: string
         description: The selected value of the property.
         example: Red
+  AddProductsProductProperty:
+    type: object
+    required:
+      - type
+      - id
+      - value
+    properties:
+      type:
+        type: string
+        enum: ["option", "input"]
+        example: "input"
+      id:
+        description: "Id of the property, to which the selection belongs to."
+        type: string
+        example: '01-input-field.greeting-card-text'
+      value:
+        type: string
+        description: "Content depends on the property type. It's either the value-id of a selected property value for options or the text that was entered for inputs."
+        example: 'Happy Birthday, dad!'
   Currency:
     type: string
     enum: ["EUR", "CHF", "USD", "RON", "PLN", "AUD", "GBP", "CAD", "SEK", "DKK", "NOK"]
