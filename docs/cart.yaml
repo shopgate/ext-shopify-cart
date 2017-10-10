@@ -125,6 +125,10 @@ parameters:
             type: array
             items:
               $ref: '#/definitions/AddProductsProductProperty'
+          metadata:
+            type: string
+            description: 'Holds additional information about a specific product of any type.'
+            example: '{"additionalInfo": {"is_parent": false}}'
   updateCartItemsParam:
     name: CartItem
     in: body
