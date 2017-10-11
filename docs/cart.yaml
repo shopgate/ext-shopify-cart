@@ -126,9 +126,9 @@ parameters:
             items:
               $ref: '#/definitions/AddProductsProductProperty'
           metadata:
-            type: string
-            description: 'Holds additional information about a specific product of any type.'
-            example: '{"additionalInfo": {"is_parent": false}}'
+            type: object
+            description: 'Holds additional information about a specific product of any type. The contents of the object can vary.'
+            example: {"additionalInfo": {"is_parent": false}}
   updateCartItemsParam:
     name: CartItem
     in: body
