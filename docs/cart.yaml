@@ -160,27 +160,6 @@ parameters:
       description: Code of the coupon.
       items:
         type: string
-  login:
-    name: login
-    in: body
-    required: true
-    description: Login parameter.
-    schema:
-      type: object
-      required:
-        - strategie
-        - parameters
-      properties:
-        strategie:
-          type: string
-          enum: ['basic', 'facebook']
-          example: basic
-        parameters:
-          description: Parameters for `Login`. They differ depending on strategy.
-          type: object
-          example:
-            login: info@shopgate.com
-            password: secret
 
 definitions:
   Cart:
@@ -391,7 +370,7 @@ definitions:
       orderable:
         type: boolean
         description: 'Indicates if the current cart is orderable.'
-        default: true
+        default: false
       coupons:
         type: boolean
         description: 'States if coupon functionality is enabled or not.'
