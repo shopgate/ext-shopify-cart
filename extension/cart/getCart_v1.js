@@ -68,7 +68,7 @@ module.exports = function (context, input, cb) {
       const checkout = data.checkout
 
       /* global */
-      cart.isTaxIncluded = checkout.taxes_included
+      cart.flags.taxIncluded = cart.isTaxIncluded = checkout.taxes_included
       cart.currency = data.checkout.currency
       cart.id = data.checkout.token
 
@@ -78,7 +78,7 @@ module.exports = function (context, input, cb) {
       }
 
       // Disallow checkout if there was no checkout url set by Shopify
-      cart.isOrderable = !!data.checkout.web_url
+      cart.flags.orderable = cart.isOrderable = !!data.checkout.web_url
 
       /* totals */
       const subtotalPrice = new Total()
@@ -262,7 +262,7 @@ module.exports = function (context, input, cb) {
       })
 
       // Check if coupons are enabled to be shown in cart
-      cart.enableCoupons = context.config.enableCartCoupons
+      cart.flags.coupons = context.config.enableCartCoupons
       if (cart.enableCoupons) {
         if (Tools.propertyExists(checkout, 'applied_discount')) {
           if (checkout.applied_discount.applicable) {
@@ -294,16 +294,7 @@ module.exports = function (context, input, cb) {
       }
 
       let createResponse = function () {
-        cb(null, {
-          messages: cart.messages,
-          cartItems: cart.cartItems,
-          currency: cart.currency,
-          totals: cart.totals,
-          text: cart.text,
-          isTaxIncluded: cart.isTaxIncluded,
-          isOrderable: cart.isOrderable,
-          enableCoupons: cart.enableCoupons
-        })
+        cb(null, cart)
       }
 
       Tools.setCurrentCartId(context, cart.id, function (err) {

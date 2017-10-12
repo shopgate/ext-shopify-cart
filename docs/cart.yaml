@@ -160,27 +160,6 @@ parameters:
       description: Code of the coupon.
       items:
         type: string
-  login:
-    name: login
-    in: body
-    required: true
-    description: Login parameter.
-    schema:
-      type: object
-      required:
-        - strategie
-        - parameters
-      properties:
-        strategie:
-          type: string
-          enum: ['basic', 'facebook']
-          example: basic
-        parameters:
-          description: Parameters for `Login`. They differ depending on strategy.
-          type: object
-          example:
-            login: info@shopgate.com
-            password: secret
 
 definitions:
   Cart:
@@ -189,8 +168,7 @@ definitions:
       - cartItems
       - currency
       - totals
-      - isOrderable
-      - enableCoupons
+      - flags
     properties:
       messages:
         type: array
@@ -208,18 +186,8 @@ definitions:
           $ref: '#/definitions/CartTotal'
       text:
         $ref: '#/definitions/CartText'
-      isTaxIncluded:
-        type: boolean
-        description: Indicates if cart prices include tax or not.
-        default: false
-      isOrderable:
-        type: boolean
-        description: Indicated if the cart can be ordered or if it's blocked by one or more conditions like minimun order value.
-        default: true
-      enableCoupons:
-        type: boolean
-        description: Indicates if the cart is supposed to handle adding, showing and removing coupons.
-        default: true
+      flags:
+        $ref: '#/definitions/CartFlags'
   CartItem:
     type: object
     description: The cart item can be a product OR a coupon. The property `type` defines which one it is. The key `coupon` is not set if the type is `product` and vice versa.
@@ -387,6 +355,26 @@ definitions:
       legal:
         type: string
         example: By placing your order you agree to our <b><u>Privacy Policy</u></b>, our <b><u>Terms and Conditions</u></b> as well as our <b><u>Cancellation Policy</u></b>.
+  CartFlags:
+    type: object
+    required:
+      - taxIncluded
+      - orderable
+      - coupons
+    description: 'Additional information about the cart.'
+    properties:
+      taxIncluded:
+        type: boolean
+        description: 'Holds information about the cart prices being gross values or not.'
+        default: false
+      orderable:
+        type: boolean
+        description: 'Indicates if the current cart is orderable.'
+        default: false
+      coupons:
+        type: boolean
+        description: 'States if coupon functionality is enabled or not.'
+        default: true
   Total:
     type: object
     required:
