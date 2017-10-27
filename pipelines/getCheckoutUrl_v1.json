@@ -3,6 +3,7 @@
   "pipeline": {
     "id": "getCheckoutUrl_v1",
     "public": true,
+    "input": [],
     "output": [
       {"key": "url", "id": "1010"},
       {"key": "expires", "id": "1020", "optional": true}
@@ -12,6 +13,7 @@
         "type": "extension",
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/fetchShopifyCheckout_v1.js",
+        "input": [],
         "output": [
           {"key": "checkout", "id": "100"}
         ]

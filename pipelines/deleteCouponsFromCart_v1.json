@@ -14,6 +14,7 @@
         "type": "extension",
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/fetchShopifyCheckout_v1.js",
+        "input": [],
         "output": [
           {"key": "checkout", "id": "100"}
         ]

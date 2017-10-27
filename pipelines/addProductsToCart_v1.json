@@ -44,6 +44,7 @@
         "type": "extension",
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/fetchShopifyCheckout_v1.js",
+        "input": [],
         "output": [
           {"key": "checkout", "id": "101"}
         ]
@@ -117,7 +118,6 @@
         "path": "@shopgate/shopify-cart/cart/getCart_v1.js",
         "input": [
           {"key": "shopifyCartData", "id": "110"},
-          {"key": "shopifyRequestErr", "id": "111", "optional": true},
           {"key": "importedProductsInCart", "id": "113", "optional": true}
         ],
         "output": [
