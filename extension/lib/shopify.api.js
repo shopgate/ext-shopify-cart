@@ -23,7 +23,7 @@ module.exports = function (config) {
   const SGShopifyApi = ShopifyAPI({
     shop: config.shopifyShopAlias + '.myshopify.com',
     shopify_api_key: null, // not required
-    access_token: null, // not required
+    access_token: config.shopifyAccessToken, // not required
     verbose: false
   })
 
@@ -45,7 +45,7 @@ module.exports = function (config) {
   module.getStorefrontAccessToken = function (cb) {
     const endpoint = '/admin/storefront_access_tokens.json'
     // try to fetch a storefront access token with the correct scope
-    this.get(endpoint, {}, function (err, response) {
+    this.get(endpoint, {}, (err, response) => {
       if (err) return cb(err)
 
       const storefrontAccessTokenTitle = 'Web Checkout Storefront Access Token'
@@ -74,7 +74,7 @@ module.exports = function (config) {
           'title': storefrontAccessTokenTitle
         }
       }
-      this.post(endpoint, requestBody, function (err, response) {
+      this.post(endpoint, requestBody, (err, response) => {
         if (err) return cb(err)
 
         return cb(null, response.storefront_access_token.access_token)
