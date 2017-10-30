@@ -1,8 +1,9 @@
 const ShopifyAPI = require('shopify-node-api')
+const Tools = require('./tools')
 
 /**
  * @typedef {object} config
- * @property {string} shopifyShopDomain
+ * @property {string} shopifyShopAlias
  * @property {string} shopifyApiKey
  * @property {string} shopifyAccessToken
  */
@@ -20,9 +21,9 @@ module.exports = function (config) {
    * @property {function} post
    */
   const SGShopifyApi = ShopifyAPI({
-    shop: config.shopifyShopDomain.replace(/^https?:\/\//, ''),
-    shopify_api_key: config.shopifyApiKey,
-    access_token: config.shopifyAccessToken,
+    shop: config.shopifyShopAlias + '.myshopify.com',
+    shopify_api_key: null, // not required
+    access_token: config.shopifyAccessToken, // not required
     verbose: false
   })
 
@@ -31,23 +32,54 @@ module.exports = function (config) {
   // -------------------------------------------------------------------------------------------------------------------
 
   /**
-   * @return {String}
+   * @return {string}
    */
   module.getGraphQlUrl = function () {
-    let shopDomain = config.shopifyShopDomain.replace(/\/$/, '')
+    let shopDomain = 'https://' + config.shopifyShopAlias + '.myshopify.com'
     return shopDomain + '/api/graphql'
   }
 
   /**
-   * @return {string}
+   * @param {function} cb
    */
-  module.getStorefrontAccessToken = function () {
-    // TODO: This token needs to be generated using the access token and stored in the extension settings storage
-    if (config.shopifyApiKey === '8d57a3c51a776b7674c37bff63edd47f') {
-      return 'ae057eea8b7d1fda4bc1e9a92bbb6e6f'
-    }
+  module.getStorefrontAccessToken = function (cb) {
+    const endpoint = '/admin/storefront_access_tokens.json'
+    // try to fetch a storefront access token with the correct scope
+    this.get(endpoint, {}, (err, response) => {
+      if (err) return cb(err)
 
-    return '68aca92c4a171dea889d1cc7464762cd'
+      const storefrontAccessTokenTitle = 'Web Checkout Storefront Access Token'
+
+      /**
+       * @typedef {object} response
+       * @property {storefront_access_token[]} storefront_access_tokens
+       * @typedef {object} storefront_access_token
+       * @property {string} access_token
+       * @property {string} access_scope
+       * @property {string} created_at
+       * @property {int} id
+       * @property {string} title
+       */
+      if (Tools.propertyExists(response, 'storefront_access_tokens')) {
+        for (let i = 0; i < response.storefront_access_tokens.length; i++) {
+          if (response.storefront_access_tokens[i].title === storefrontAccessTokenTitle) {
+            return cb(null, response.storefront_access_tokens[i].access_token)
+          }
+        }
+      }
+
+      // create a new access token, because no valid token was found at this point
+      const requestBody = {
+        'storefront_access_token': {
+          'title': storefrontAccessTokenTitle
+        }
+      }
+      this.post(endpoint, requestBody, (err, response) => {
+        if (err) return cb(err)
+
+        return cb(null, response.storefront_access_token.access_token)
+      })
+    })
   }
 
   /**
