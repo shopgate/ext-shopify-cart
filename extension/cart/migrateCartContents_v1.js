@@ -14,10 +14,10 @@ const UnknownError = require('../models/Errors/UnknownError')
 module.exports = function (context, input, cb) {
   migrateCartContents(
     context,
-    input.sourceCart.checkout.token,
-    input.sourceCart.checkout.line_items,
-    input.targetCart.checkout.token,
-    input.targetCart.checkout.line_items,
+    input.sourceCart.token,
+    input.sourceCart.line_items,
+    input.targetCart.token,
+    input.targetCart.line_items,
     cb
   )
 }
