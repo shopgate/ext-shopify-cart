@@ -39,7 +39,7 @@ function mergeCheckoutCartItems (sourceCartLineItem, targetCartLineItem) {
 function migrateCartContents (context, sourceCartId, sourceCartLineItems, targetCartId, targetCartLineItems, cb) {
   const Shopify = require('../lib/shopify.api.js')(context.config)
 
-  // no merge is needed on idetical carts or if no items present in the source cart
+  // no merge is needed on identical carts or if no items present in the source cart
   if (_.isEmpty(sourceCartLineItems) || sourceCartId === targetCartId) {
     return cb()
   }
