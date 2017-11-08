@@ -1,0 +1,22 @@
+{
+  "version": "1",
+  "pipeline": {
+    "id": "fetchShopifyCheckout_int_v1",
+    "public": true,
+    "input": [],
+    "output": [
+      {"key": "checkout", "id": "1"}
+    ],
+    "steps": [
+      {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/fetchShopifyCheckout_v1.js",
+        "input": [],
+        "output": [
+          {"key": "checkout", "id": "1"}
+        ]
+      }
+    ]
+  }
+}

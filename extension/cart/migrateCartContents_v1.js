@@ -12,7 +12,14 @@ const UnknownError = require('../models/Errors/UnknownError')
  * @param {function} cb
  */
 module.exports = function (context, input, cb) {
-  migrateCartContents(context, input, cb)
+  migrateCartContents(
+    context,
+    input.sourceCart.token,
+    input.sourceCart.line_items,
+    input.targetCart.token,
+    input.targetCart.line_items,
+    cb
+  )
 }
 
 function mergeCheckoutCartItems (sourceCartLineItem, targetCartLineItem) {
@@ -29,32 +36,23 @@ function mergeCheckoutCartItems (sourceCartLineItem, targetCartLineItem) {
   }
 }
 
-function migrateCartContents (context, input, cb) {
+function migrateCartContents (context, sourceCartId, sourceCartLineItems, targetCartId, targetCartLineItems, cb) {
   const Shopify = require('../lib/shopify.api.js')(context.config)
-  const sourceCartId = input.sourceCart.checkout.token
-  const sourceCartLineItems = input.sourceCart.checkout.line_items
-  const targetCartId = input.targetCart.checkout.token
-  const targetCartLineItems = input.targetCart.checkout.line_items
 
-  // If the ids are identical, no merge is needed
-  if (sourceCartId === targetCartId) {
-    return cb()
-  }
-
-  // If there are no lineItems within the source cart, make a callback
-  if (_.isEmpty(sourceCartLineItems)) {
+  // no merge is needed on idetical carts or if no items present in the source cart
+  if (_.isEmpty(sourceCartLineItems) || sourceCartId === targetCartId) {
     return cb()
   }
 
   const checkoutCartItems = []
 
-  // Update quantity for lineItems wich are in both carts, if not existent in the targetCart add sourceCartLineItem to the checkoutCartItems
+  // update quantity for existing items, add to the checkoutCartItems, otherwise
   _.each(sourceCartLineItems, function (sourceCartLineItem) {
     const targetCartLineItem = _.findWhere(targetCartLineItems, {variant_id: sourceCartLineItem.variant_id})
     checkoutCartItems.push(mergeCheckoutCartItems(sourceCartLineItem, targetCartLineItem))
   })
 
-  // Reattach the lineItems which were already in the user cart and check for duplicated items
+  // re-attach the lineItems which were already in the user cart and check for duplicated items
   _.each(targetCartLineItems, function (targetCartLineItem) {
     if (!_.findWhere(checkoutCartItems, {variant_id: targetCartLineItem.variant_id})) {
       checkoutCartItems.push(
@@ -66,16 +64,13 @@ function migrateCartContents (context, input, cb) {
     }
   })
 
-  const updatedData = {
-    checkout: {
-      line_items: checkoutCartItems
-    }
-  }
-
-  // Send the checkoutCartItems to the Shopify-API
+  // update destination cart at Shopify
+  const updatedData = {'checkout': {'line_items': checkoutCartItems}}
   Shopify.put('/admin/checkouts/' + targetCartId + '.json', updatedData, function (err) {
     if (err) {
-      context.log.error('Couldn\'t update checkout with id ' + targetCartId + ' failed with error: ' + JSON.stringify(err))
+      context.log.error(
+        'Couldn\'t update checkout with id ' + targetCartId + ' failed with error: ' + JSON.stringify(err)
+      )
       return cb(new UnknownError())
     }
 
