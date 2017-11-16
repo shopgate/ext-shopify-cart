@@ -1,4 +1,5 @@
 class Address {
+
   constructor () {
     this._id = null
     this._type = null
@@ -12,6 +13,8 @@ class Address {
     this._phone = null
     this._isDefault = true
     this._alias = null
+    this._zipcode = null
+    this._country = null
   }
 
   /**
@@ -43,7 +46,9 @@ class Address {
       state: this._state,
       phone: this._phone,
       isDefault: this._isDefault,
-      alias: this._alias
+      alias: this._alias,
+      zipcode: this._zipcode,
+      country: this._country
     }
   }
 
@@ -145,6 +150,22 @@ class Address {
 
   set alias (value) {
     this._alias = value
+  }
+
+  get zipcode () {
+    return this._zipcode
+  }
+
+  set zipcode (value) {
+    this._zipcode = value
+  }
+
+  get country () {
+    return this._country
+  }
+
+  set country (value) {
+    this._country = value
   }
 }
 

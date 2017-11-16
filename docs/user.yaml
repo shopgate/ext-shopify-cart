@@ -248,6 +248,15 @@ definitions:
               type: string
               description: The user can specify an alias for the address.
               example: Homeaddress
+            zipcode:
+              type: string
+              description: Zipcode of the address
+              example: "12345"
+            country:
+              type: string
+              description: Country of the address
+              example: "United States"
+
   Url:
     type: object
     required:
