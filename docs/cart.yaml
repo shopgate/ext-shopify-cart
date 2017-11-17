@@ -18,7 +18,7 @@ paths:
         '':
           description: 'Returns the cart of the current user.'
           schema:
-            $ref: '#/definitions/Cart'
+            $ref: '#/definitions/CartResult'
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
@@ -33,6 +33,8 @@ paths:
       responses:
         '':
           description: 'No return. The cart needs to be fetched by the frontend afterwards.'
+          schema:
+            $ref: '#definitions/EmptyResult'
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
@@ -41,12 +43,14 @@ paths:
     post:
       tags:
         - Cart Products
-      description: 'Updates the quantity for one or multiple cart items referenced by their respective CartItemId.'
+      description: 'Updates the quantity for one or multiple cart items referenced by their respective cartItemId.'
       parameters:
         - $ref: '#/parameters/updateCartItemsParam'
       responses:
         '':
-          description: 'No return. The cart needs to be fetched by the frontend afterwards.'
+          description: 'Returns an empty object after the action was performed.'
+          schema:
+            $ref: '#definitions/EmptyResult'
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
@@ -55,12 +59,14 @@ paths:
     post:
       tags:
         - Cart Products
-      description: 'Deletes one or multiple cart items referenced by their respective CartItemId.'
+      description: 'Deletes one or multiple cart items referenced by their respective cartItemId.'
       parameters:
         - $ref: '#/parameters/cartItemIds'
       responses:
         '':
-          description: 'No return. The cart needs to be fetched by the frontend afterwards.'
+          description: 'Returns an empty object after the action was performed.'
+          schema:
+            $ref: '#definitions/EmptyResult'
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
@@ -74,7 +80,9 @@ paths:
         - $ref: '#/parameters/couponCodes'
       responses:
         '':
-          description: 'No return. The cart needs to be fetched by the frontend afterwards.'
+          description: 'Returns an empty object after the action was performed.'
+          schema:
+            $ref: '#definitions/EmptyResult'
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
@@ -85,10 +93,12 @@ paths:
         - Cart Coupons
       description: 'Deletes multiple coupons from the cart.'
       parameters:
-        - $ref: '#/parameters/couponCodes'
+        - $ref: '#/parameters/cartItemIds'
       responses:
         '':
-          description: 'No return. The cart needs to be fetched by the frontend afterwards.'
+          description: 'Returns an empty object after the action was performed.'
+          schema:
+            $ref: '#definitions/EmptyResult'
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
@@ -101,7 +111,7 @@ paths:
         '':
           description: 'Returns the checkout url.'
           schema:
-            $ref: '#/definitions/Url'
+            $ref: '#/definitions/UrlResult'
           examples:
             application/json:
               url: 'http://example.com/'
@@ -156,12 +166,12 @@ parameters:
           quantity:
             type: number
   cartItemIds:
-    name: CartItemIds
+    name: cartItemIds
     in: body
     required: true
     schema:
       type: array
-      description: 'Id of the cart item to be deleted.'
+      description: 'Id of the cart item to be deleted or modified.'
       items:
         type: string
   couponCodes:
@@ -175,6 +185,27 @@ parameters:
         type: string
 
 definitions:
+  EmptyResult:
+    type: object
+    required:
+      - output
+    properties:
+      output:
+        type: object
+  UrlResult:
+    type: object
+    required:
+      - output
+    properties:
+      output:
+        $ref: '#/definitions/Url'
+  CartResult:
+    type: object
+    required:
+      - output
+    properties:
+      output:
+        $ref: '#/definitions/Cart'
   Cart:
     type: object
     required:
@@ -265,7 +296,7 @@ definitions:
       featuredImageUrl:
         type: string
         description: 'The image of the product.'
-        example: 'https://testurl.com/testimg.png'
+        example: 'https://myshop.example/images/product_xyz_featured.png'
       properties:
         type: array
         description: 'Selected properties of the current cart item.'
