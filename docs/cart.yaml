@@ -2,6 +2,9 @@ swagger: '2.0'
 info:
   title: Shopgate Cart Pipelines
   version: '1.0'
+  contact:
+    name: ''
+  description: 'This document specifies all the cart pipelines, which are used by the default Shopgate iOS and Android themes.'
 basePath: /
 produces:
   - application/json
@@ -16,6 +19,8 @@ paths:
     post:
       tags:
         - Cart
+      operationId: 'pipelines/getCart_v1'
+      summary: 'Retrieves the carts contents.'
       description: 'Retrieves the whole cart, belonging to a customer, from a fixed endpoint, like an API.'
       responses:
         '':
@@ -25,97 +30,63 @@ paths:
           examples:
             application/json:
               output:
-                {
-                  "output": {
-                    "messages": [
-                      {
-                        "type": "error",
-                        "message": "The cart amount is to high for online purchase. The maximum amount is USD 4.99.",
-                        "code": "CART_VALUE_TOO_HIGH"
-                      }
-                    ],
-                    "cartItems": [
-                      {
-                        "id": "a84de7d7-2b7d-4aa8-a64d-9558ca791b86",
-                        "quantity": 5,
-                        "type": "product",
-                        "coupon": {
-                          "code": "20OFF",
-                          "description": "Reduces the cost of all products by 20%.",
-                          "label": "20% off of all products.",
-                          "discount": {
-                            "value": 20,
-                            "type": "percentage"
-                          }
-                        },
-                        "product": {
-                          "id": "10080466570",
-                          "name": "Awesome T-Shirt",
-                          "addtionalInfo": [
-                            {
-                              "label": "Manufacturer",
-                              "value": "H&M"
-                            }
-                          ],
-                          "featuredImageUrl": "https://myshop.example/images/product_xyz_featured.png",
-                          "properties": [
-                            {
-                              "type": "option",
-                              "label": "Color",
-                              "value": "Red"
-                            }
-                          ],
-                          "price": {
-                            "unit": 10,
-                            "default": 50,
-                            "special": 40
-                          },
-                          "appliedDiscounts": [
-                            {
-                              "code": "20OFF",
-                              "description": "Reduces the cost of all products by 20%.",
-                              "label": "20% off of all products.",
-                              "discount": {
-                                "value": 20,
-                                "type": "percentage"
-                              }
-                            }
-                          ]
-                        },
-                        "messages": [
-                          {
-                            "type": "info",
-                            "message": "This product will be ordered for you after purchase.",
-                            "code": "ORDER_ON_PURCHASE"
-                          }
-                        ]
-                      }
-                    ],
-                    "currency": "USD",
-                    "totals": [
-                      {
-                        "type": "tax",
-                        "label": "Tax (19%)",
-                        "amount": 7.6,
-                        "subTotals": [
-                          {
-                            "type": "tax",
-                            "label": "Tax (19%)",
-                            "amount": 7.6
-                          }
-                        ]
-                      }
-                    ],
-                    "text": {
-                      "legal": "By placing your order you agree to our <b><u>Privacy Policy</u></b>, our <b><u>Terms and Conditions</u></b> as well as our <b><u>Cancellation Policy</u></b>."
-                    },
-                    "flags": {
-                      "taxIncluded": false,
-                      "orderable": false,
-                      "coupons": true
-                    }
-                  }
-                }
+                output:
+                  messages:
+                    - type: error
+                      message: 'The cart amount is to high for online purchase. The maximum amount is USD 4.99.'
+                      code: 'CART_VALUE_TOO_HIGH'
+                  cartItems:
+                    - id: 'a84de7d7-2b7d-4aa8-a64d-9558ca791b86'
+                      quantity: 5
+                      type: product
+                      coupon:
+                        code: '20OFF'
+                        description: 'Reduces the cost of all products by 20%.'
+                        label: '20% off of all products.'
+                        discount:
+                          value: 20
+                          type: 'percentage'
+                      product:
+                        id: '10080466570'
+                        name: 'Awesome T-Shirt'
+                        addtionalInfo:
+                          - label: 'Manufacturer'
+                            value: 'H&M'
+                        featuredImageUrl: 'https://myshop.example/images/product_xyz_featured.png'
+                        properties:
+                          - type: 'option'
+                            label: 'Color'
+                            value: 'Red'
+                        price:
+                          unit: 10
+                          default: 50
+                          special: 40
+                        appliedDiscounts:
+                          - code: '20OFF'
+                            description: 'Reduces the cost of all products by 20%.'
+                            label: '20% off of all products.'
+                            discount:
+                              value: 20
+                              type: 'percentage'
+                      messages:
+                        - type: 'info'
+                          message: 'This product will be ordered for you after purchase.'
+                          code: 'ORDER_ON_PURCHASE'
+                  currency: 'USD'
+                  totals:
+                    - type: 'tax'
+                      label: 'Tax (19%)'
+                      amount: 7.6
+                      subTotals:
+                        - type: 'tax'
+                          label: 'Tax (19%)'
+                          amount: 7.6
+                  text:
+                    legal: 'By placing your order you agree to our <b><u>Privacy Policy</u></b>, our <b><u>Terms and Conditions</u></b> as well as our <b><u>Cancellation Policy</u></b>.'
+                  flags:
+                    taxIncluded: false
+                    orderable: false
+                    coupons: true
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
@@ -130,7 +101,12 @@ paths:
     post:
       tags:
         - Cart Products
-      description: 'Adds one ore multiple products to the cart.'
+      operationId: 'pipelines/addProductsToCart_v1'
+      summary: 'Adds one ore multiple products to the cart.'
+      description: |-
+        Adds one ore multiple products to the cart. Cart rules are applied, if the shop supports them and are set up for at least one product to be added (or already placed in the cart).
+
+        _Note: Depending on the installed extensions, custom errors can be returned on failure._
       parameters:
         - $ref: '#/parameters/addProductsParam'
       responses:
@@ -140,8 +116,7 @@ paths:
             $ref: '#/definitions/EmptyResult'
           examples:
             application/json:
-              output:
-                {}
+              output: {}
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
@@ -156,7 +131,12 @@ paths:
     post:
       tags:
         - Cart Products
-      description: 'Updates the quantity for one or multiple cart items referenced by their respective cartItemId.'
+      operationId: 'pipelines/updateProductsInCart_v1'
+      summary: 'Updates the quantity for the given products in the cart.'
+      description: |-
+        'Updates the quantity for one or multiple cart items referenced by their respective cartItemId. Depending on the shop and it’s cart rules certain quantities can be rejected.
+
+        _Note: Depending on the installed extensions, custom errors can be returned on failure._'
       parameters:
         - $ref: '#/parameters/updateCartItemsParam'
       responses:
@@ -166,8 +146,7 @@ paths:
             $ref: '#/definitions/EmptyResult'
           examples:
             application/json:
-              output:
-                {}
+              output: {}
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
@@ -182,7 +161,12 @@ paths:
     post:
       tags:
         - Cart Products
-      description: 'Deletes one or multiple cart items referenced by their respective cartItemId.'
+      operationId: 'pipelines/deleteProductsFromCart_v1'
+      summary: 'Deletes one or multiple cart items referenced by their respective cartItemId.'
+      description: |-
+        Deletes all given cart items of type “product” from the cart, if the applied cart rules don’t prevent it.
+
+        _Note: Depending on the installed extensions, custom errors can be returned on failure._
       parameters:
         - $ref: '#/parameters/cartItemIdsParam'
       responses:
@@ -192,8 +176,7 @@ paths:
             $ref: '#/definitions/EmptyResult'
           examples:
             application/json:
-              output:
-                {}
+              output: {}
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
@@ -208,7 +191,12 @@ paths:
     post:
       tags:
         - Cart Coupons
-      description: "Adds multiple coupons to the cart. The coupon code needs to be unique. There can't be two coupons with identical code exist in the cart at any given time."
+      operationId: 'pipelines/addCouponsToCart_v1'
+      summary: 'Inserts the given coupon list into the current cart after validating them.'
+      description: |-
+        Adds multiple coupons to the cart. The coupon code needs to be unique. There can’t be two coupons with identical code exist in the cart at any given time.
+
+        _Note: Some shops don’t support more than one coupon, or none at all._
       parameters:
         - $ref: '#/parameters/couponCodesParam'
       responses:
@@ -218,8 +206,16 @@ paths:
             $ref: '#/definitions/EmptyResult'
           examples:
             application/json:
-              output:
-                {}
+              output: {}
+        'EINVALIDCALL':
+          description: "The pipeline can't be called in the given context."
+          schema:
+            $ref: '#/definitions/UnknownError'
+          examples:
+            application/json:
+              error:
+                code: 'EINVALIDCALL'
+                message: "The pipeline can't be called in the given context."
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
@@ -234,7 +230,12 @@ paths:
     post:
       tags:
         - Cart Coupons
-      description: 'Deletes multiple coupons from the cart.'
+      operationId: 'pipelines/deleteCouponsFromCart_v1'
+      summary: 'Deletes multiple coupons from the cart.'
+      description: |-
+        Deletes all given coupons from the cart. Depending on the shop and/or extension, which is handling this operation, some coupons could remain in the cart. Expecially if cart rules apply.
+
+        _Note: Some shops don’t support more than one coupon, or none at all._
       parameters:
         - $ref: '#/parameters/couponCodesParam'
       responses:
@@ -244,8 +245,16 @@ paths:
             $ref: '#/definitions/EmptyResult'
           examples:
             application/json:
-              output:
-                {}
+              output: {}
+        'EINVALIDCALL':
+          description: "The pipeline can't be called in the given context."
+          schema:
+            $ref: '#/definitions/UnknownError'
+          examples:
+            application/json:
+              error:
+                code: 'EINVALIDCALL'
+                message: "The pipeline can't be called in the given context."
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
@@ -260,6 +269,9 @@ paths:
     post:
       tags:
         - Checkout
+      operationId: 'pipelines/getCheckoutUrl_v1'
+      summary: 'Retrieves a checkout url.'
+      description: 'Requests a checkout url and it’s expiration time from the connected shop. Depending on the shop, the expiration time can be very short or not present at all.'
       responses:
         '':
           description: 'Returns the checkout url.'
