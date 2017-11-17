@@ -8,7 +8,10 @@ produces:
 consumes:
   - application/json
 
+
+
 paths:
+
   /getCart_v1:
     post:
       tags:
@@ -19,10 +22,110 @@ paths:
           description: 'Returns the cart of the current user.'
           schema:
             $ref: '#/definitions/CartResult'
+          examples:
+            application/json:
+              output:
+                {
+                  "output": {
+                    "messages": [
+                      {
+                        "type": "error",
+                        "message": "The cart amount is to high for online purchase. The maximum amount is USD 4.99.",
+                        "code": "CART_VALUE_TOO_HIGH"
+                      }
+                    ],
+                    "cartItems": [
+                      {
+                        "id": "a84de7d7-2b7d-4aa8-a64d-9558ca791b86",
+                        "quantity": 5,
+                        "type": "product",
+                        "coupon": {
+                          "code": "20OFF",
+                          "description": "Reduces the cost of all products by 20%.",
+                          "label": "20% off of all products.",
+                          "discount": {
+                            "value": 20,
+                            "type": "percentage"
+                          }
+                        },
+                        "product": {
+                          "id": "10080466570",
+                          "name": "Awesome T-Shirt",
+                          "addtionalInfo": [
+                            {
+                              "label": "Manufacturer",
+                              "value": "H&M"
+                            }
+                          ],
+                          "featuredImageUrl": "https://myshop.example/images/product_xyz_featured.png",
+                          "properties": [
+                            {
+                              "type": "option",
+                              "label": "Color",
+                              "value": "Red"
+                            }
+                          ],
+                          "price": {
+                            "unit": 10,
+                            "default": 50,
+                            "special": 40
+                          },
+                          "appliedDiscounts": [
+                            {
+                              "code": "20OFF",
+                              "description": "Reduces the cost of all products by 20%.",
+                              "label": "20% off of all products.",
+                              "discount": {
+                                "value": 20,
+                                "type": "percentage"
+                              }
+                            }
+                          ]
+                        },
+                        "messages": [
+                          {
+                            "type": "info",
+                            "message": "This product will be ordered for you after purchase.",
+                            "code": "ORDER_ON_PURCHASE"
+                          }
+                        ]
+                      }
+                    ],
+                    "currency": "USD",
+                    "totals": [
+                      {
+                        "type": "tax",
+                        "label": "Tax (19%)",
+                        "amount": 7.6,
+                        "subTotals": [
+                          {
+                            "type": "tax",
+                            "label": "Tax (19%)",
+                            "amount": 7.6
+                          }
+                        ]
+                      }
+                    ],
+                    "text": {
+                      "legal": "By placing your order you agree to our <b><u>Privacy Policy</u></b>, our <b><u>Terms and Conditions</u></b> as well as our <b><u>Cancellation Policy</u></b>."
+                    },
+                    "flags": {
+                      "taxIncluded": false,
+                      "orderable": false,
+                      "coupons": true
+                    }
+                  }
+                }
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
             $ref: '#/definitions/UnknownError'
+          examples:
+            application/json:
+              error:
+                code: 'EUNKNOWN'
+                message: 'An internal error occured.'
+
   /addProductsToCart_v1:
     post:
       tags:
@@ -35,10 +138,20 @@ paths:
           description: 'Returns an empty object after the action was performed.'
           schema:
             $ref: '#/definitions/EmptyResult'
+          examples:
+            application/json:
+              output:
+                {}
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
             $ref: '#/definitions/UnknownError'
+          examples:
+            application/json:
+              error:
+                code: 'EUNKNOWN'
+                message: 'An internal error occured.'
+
   /updateProductsInCart_v1:
     post:
       tags:
@@ -51,58 +164,98 @@ paths:
           description: 'Returns an empty object after the action was performed.'
           schema:
             $ref: '#/definitions/EmptyResult'
+          examples:
+            application/json:
+              output:
+                {}
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
             $ref: '#/definitions/UnknownError'
+          examples:
+            application/json:
+              error:
+                code: 'EUNKNOWN'
+                message: 'An internal error occured.'
+
   /deleteProductsFromCart_v1:
     post:
       tags:
         - Cart Products
       description: 'Deletes one or multiple cart items referenced by their respective cartItemId.'
       parameters:
-        - $ref: '#/parameters/cartItemIds'
+        - $ref: '#/parameters/cartItemIdsParam'
       responses:
         '':
           description: 'Returns an empty object after the action was performed.'
           schema:
             $ref: '#/definitions/EmptyResult'
+          examples:
+            application/json:
+              output:
+                {}
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
             $ref: '#/definitions/UnknownError'
+          examples:
+            application/json:
+              error:
+                code: 'EUNKNOWN'
+                message: 'An internal error occured.'
+
   /addCouponsToCart_v1:
     post:
       tags:
         - Cart Coupons
       description: "Adds multiple coupons to the cart. The coupon code needs to be unique. There can't be two coupons with identical code exist in the cart at any given time."
       parameters:
-        - $ref: '#/parameters/couponCodes'
+        - $ref: '#/parameters/couponCodesParam'
       responses:
         '':
           description: 'Returns an empty object after the action was performed.'
           schema:
             $ref: '#/definitions/EmptyResult'
+          examples:
+            application/json:
+              output:
+                {}
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
             $ref: '#/definitions/UnknownError'
+          examples:
+            application/json:
+              error:
+                code: 'EUNKNOWN'
+                message: 'An internal error occured.'
+
   /deleteCouponsFromCart_v1:
     post:
       tags:
         - Cart Coupons
       description: 'Deletes multiple coupons from the cart.'
       parameters:
-        - $ref: '#/parameters/couponCodes'
+        - $ref: '#/parameters/couponCodesParam'
       responses:
         '':
           description: 'Returns an empty object after the action was performed.'
           schema:
             $ref: '#/definitions/EmptyResult'
+          examples:
+            application/json:
+              output:
+                {}
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
             $ref: '#/definitions/UnknownError'
+          examples:
+            application/json:
+              error:
+                code: 'EUNKNOWN'
+                message: 'An internal error occured.'
+
   /getCheckoutUrl_v1:
     post:
       tags:
@@ -114,8 +267,9 @@ paths:
             $ref: '#/definitions/UrlResult'
           examples:
             application/json:
-              url: 'http://example.com/'
-              expires: '2017-12-31T23:59:59.999Z'
+              output:
+                url: 'http://example.com/'
+                expires: '2017-12-31T23:59:59.999Z'
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
@@ -126,7 +280,10 @@ paths:
                 code: 'EUNKNOWN'
                 message: 'An internal error occured.'
 
+
+
 parameters:
+
   addProductsParam:
     name: products
     in: body
@@ -152,8 +309,9 @@ parameters:
             example:
               additionalInfo:
                 is_parent: false
+
   updateCartItemsParam:
-    name: CartItem
+    name: CartItems
     in: body
     required: true
     schema:
@@ -165,7 +323,8 @@ parameters:
             type: string
           quantity:
             type: number
-  cartItemIds:
+
+  cartItemIdsParam:
     name: cartItemIds
     in: body
     required: true
@@ -174,7 +333,8 @@ parameters:
       description: 'Id of the cart item to be deleted or modified.'
       items:
         type: string
-  couponCodes:
+
+  couponCodesParam:
     name: couponCodes
     in: body
     required: true
@@ -183,6 +343,8 @@ parameters:
       description: 'Code of the coupon.'
       items:
         type: string
+
+
 
 definitions:
   EmptyResult:
