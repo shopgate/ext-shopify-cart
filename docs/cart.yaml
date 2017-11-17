@@ -281,7 +281,7 @@ definitions:
   AppliedDiscount:
     type: object
     required:
-      - savedPrice
+      - discount
     properties:
       code:
         description: 'Code of the coupon.'
@@ -295,7 +295,8 @@ definitions:
         description: 'Label of the coupon.'
         type: string
         example: '20% off of all products.'
-      savedPrice:
+      discount:
+        description: "Amounts to how much discount the coupon applies in percent or absolute. Note: This property is known as 'savedPrice' in early implementations.",
         type: object
         properties:
           value:
