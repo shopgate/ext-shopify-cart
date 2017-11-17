@@ -502,7 +502,7 @@ definitions:
     properties:
       url:
         type: string
-        description: 'A unified resource link..'
+        description: 'A unified resource link.'
         example: 'http://example.com/'
       expires:
         type: string
