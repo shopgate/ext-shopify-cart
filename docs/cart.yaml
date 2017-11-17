@@ -32,7 +32,7 @@ paths:
         - $ref: '#/parameters/addProductsParam'
       responses:
         '':
-          description: 'No return. The cart needs to be fetched by the frontend afterwards.'
+          description: 'Returns an empty object after the action was performed.'
           schema:
             $ref: '#/definitions/EmptyResult'
         'EUNKNOWN':
