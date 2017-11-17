@@ -1,95 +1,96 @@
-swagger: "2.0"
+swagger: '2.0'
 info:
   title: Shopgate Cart Pipelines
-  version: "1.0"
+  version: '1.0'
 basePath: /
 produces:
   - application/json
 consumes:
   - application/json
+
 paths:
   /getCart_v1:
     post:
       tags:
         - Cart
-      description: Retrieves the whole cart, belonging to a customer, from a fixed endpoint, like an API.
+      description: 'Retrieves the whole cart, belonging to a customer, from a fixed endpoint, like an API.'
       responses:
         '200':
-          description: Returns the cart of the current user.
+          description: 'Returns the cart of the current user.'
           schema:
             $ref: '#/definitions/Cart'
         '500':
-          description: An internal error occured.
+          description: 'An internal error occured.'
           schema:
             $ref: '#/definitions/UnknownError'
   /addProductsToCart_v1:
     post:
       tags:
         - Cart Products
-      description: Adds one ore multiple products to the cart.
+      description: 'Adds one ore multiple products to the cart.'
       parameters:
         - $ref: '#/parameters/addProductsParam'
       responses:
         '200':
-          description: No return. The cart needs to be fetched by the frontend afterwards.
+          description: 'No return. The cart needs to be fetched by the frontend afterwards.'
         '500':
-          description: An internal error occured.
+          description: 'An internal error occured.'
           schema:
             $ref: '#/definitions/UnknownError'
   /updateProductsInCart_v1:
     post:
       tags:
         - Cart Products
-      description: Updates the quantity for one or multiple cart items referenced by their respective CartItemId.
+      description: 'Updates the quantity for one or multiple cart items referenced by their respective CartItemId.'
       parameters:
         - $ref: '#/parameters/updateCartItemsParam'
       responses:
         '200':
-          description: No return. The cart needs to be fetched by the frontend afterwards.
+          description: 'No return. The cart needs to be fetched by the frontend afterwards.'
         '500':
-          description: An internal error occured.
+          description: 'An internal error occured.'
           schema:
             $ref: '#/definitions/UnknownError'
   /deleteProductsFromCart_v1:
     post:
       tags:
         - Cart Products
-      description: Deletes one or multiple cart items referenced by their respective CartItemId.
+      description: 'Deletes one or multiple cart items referenced by their respective CartItemId.'
       parameters:
         - $ref: '#/parameters/cartItemIds'
       responses:
         '200':
-           description: No return. The cart needs to be fetched by the frontend afterwards.
+          description: 'No return. The cart needs to be fetched by the frontend afterwards.'
         '500':
-          description: An internal error occured.
+          description: 'An internal error occured.'
           schema:
             $ref: '#/definitions/UnknownError'
   /addCouponsToCart_v1:
     post:
       tags:
         - Cart Coupons
-      description: Adds multiple coupons to the cart. The coupon code needs to be unique. There can't be two coupons with identical code exist in the cart at any given time.
+      description: 'Adds multiple coupons to the cart. The coupon code needs to be unique. There can't be two coupons with identical code exist in the cart at any given time.'
       parameters:
         - $ref: '#/parameters/couponCodes'
       responses:
         '200':
-          description: No return. The cart needs to be fetched by the frontend afterwards.
+          description: 'No return. The cart needs to be fetched by the frontend afterwards.'
         '500':
-          description: An internal error occured.
+          description: 'An internal error occured.'
           schema:
             $ref: '#/definitions/UnknownError'
   /deleteCouponsFromCart_v1:
     post:
       tags:
         - Cart Coupons
-      description: Deletes multiple coupons from the cart.
+      description: 'Deletes multiple coupons from the cart.'
       parameters:
         - $ref: '#/parameters/couponCodes'
       responses:
         '200':
-          description: No return. The cart needs to be fetched by the frontend afterwards.
+          description: 'No return. The cart needs to be fetched by the frontend afterwards.'
         '500':
-          description: An internal error occured.
+          description: 'An internal error occured.'
           schema:
             $ref: '#/definitions/UnknownError'
   /getCheckoutUrl_v1:
@@ -98,13 +99,14 @@ paths:
         - Checkout
       responses:
         '':
-          description: Returns the checkout url.
+          description: 'Returns the checkout url.'
           schema:
             $ref: '#/definitions/Url'
         'EUNKNOWN':
-          description: An internal error occured.
+          description: 'An internal error occured.'
           schema:
             $ref: '#/definitions/UnknownError'
+
 parameters:
   addProductsParam:
     name: products
@@ -117,10 +119,10 @@ parameters:
         properties:
           productId:
             type: string
-            example: "10080466570"
+            example: '10080466570'
           quantity:
             type: number
-            example : 1
+            example: 1
           properties:
             type: array
             items:
@@ -128,7 +130,9 @@ parameters:
           metadata:
             type: object
             description: 'Holds additional information about a specific product of any type. The contents of the object can vary.'
-            example: {"additionalInfo": {"is_parent": false}}
+            example:
+              additionalInfo:
+                is_parent: false
   updateCartItemsParam:
     name: CartItem
     in: body
@@ -148,7 +152,7 @@ parameters:
     required: true
     schema:
       type: array
-      description: Id of the cart item to be deleted.
+      description: 'Id of the cart item to be deleted.'
       items:
         type: string
   couponCodes:
@@ -157,7 +161,7 @@ parameters:
     required: true
     schema:
       type: array
-      description: Code of the coupon.
+      description: 'Code of the coupon.'
       items:
         type: string
 
@@ -190,7 +194,7 @@ definitions:
         $ref: '#/definitions/CartFlags'
   CartItem:
     type: object
-    description: The cart item can be a product OR a coupon. The property `type` defines which one it is. The key `coupon` is not set if the type is `product` and vice versa.
+    description: 'The cart item can be a product OR a coupon. The property `type` defines which one it is. The key `coupon` is not set if the type is `product` and vice versa.'
     required:
       - id
       - quantity
@@ -198,27 +202,29 @@ definitions:
     properties:
       id:
         type: string
-        description: Unique identifier of the cart item. It can be used to remove/manipulate the respective cart item.
-        example: a84de7d7-2b7d-4aa8-a64d-9558ca791b86
+        description: 'Unique identifier of the cart item. It can be used to remove/manipulate the respective cart item.'
+        example: 'a84de7d7-2b7d-4aa8-a64d-9558ca791b86'
       quantity:
         type: number
-        description: Quantity of the cart item.
+        description: 'Quantity of the cart item.'
         example: 5
       type:
         type: string
-        enum: ["product", "coupon"]
-        example: product
+        enum:
+          - 'product'
+          - 'coupon'
+        example: 'product'
       coupon:
         $ref: '#/definitions/CouponCartItem'
       product:
         $ref: '#/definitions/ProductCartItem'
       messages:
         type: array
-        description: All messages specific to the current cart item.
+        description: 'All messages specific to the current cart item.'
         items:
           $ref: '#/definitions/Message'
   CouponCartItem:
-      $ref: '#/definitions/AppliedDiscount'
+    $ref: '#/definitions/AppliedDiscount'
   ProductCartItem:
     type: object
     required:
@@ -229,38 +235,38 @@ definitions:
     properties:
       id:
         type: string
-        description: The id of the product. It`s NOT a database id but the item_number, unique within the scope of a specific shop.
-        example: 10080466570
+        description: 'The id of the product. It`s NOT a database id but the item_number, unique within the scope of a specific shop.'
+        example: '10080466570'
       name:
         type: string
-        description: Name of the product.
-        example: Awesome T-Shirt
+        description: 'Name of the product.'
+        example: 'Awesome T-Shirt'
       addtionalInfo:
         type: array
-        description: Some additional info for the product to be shown on the cart page. E.g. basePrice, SKU, weight, ...
+        description: 'Some additional info for the product to be shown on the cart page. E.g. basePrice, SKU, weight, ...'
         items:
           type: object
           properties:
             label:
               type: string
-              example: Manufacturer
+              example: 'Manufacturer'
             value:
               type: string
-              example: H&M
+              example: 'H&M'
       featuredImageUrl:
         type: string
-        description: The image of the product.
-        example: https://testurl.com/testimg.png
+        description: 'The image of the product.'
+        example: 'https://testurl.com/testimg.png'
       properties:
         type: array
-        description: Selected properties of the current cart item.
+        description: 'Selected properties of the current cart item.'
         items:
           $ref: '#/definitions/ProductCartItemProperty'
       price:
         $ref: '#/definitions/ProductCartItemPrice'
       appliedDiscounts:
         type: array
-        description: All discouts applied to the current line item.
+        description: 'All discouts applied to the current line item.'
         items:
           $ref: '#/definitions/AppliedDiscount'
   AppliedDiscount:
@@ -269,17 +275,17 @@ definitions:
       - savedPrice
     properties:
       code:
-        description: Code of the coupon.
+        description: 'Code of the coupon.'
         type: string
-        example: 20OFF
+        example: '20OFF'
       description:
-        description: Description of the coupon.
+        description: 'Description of the coupon.'
         type: string
-        example: Reduces the cost of all products by 20%.
+        example: 'Reduces the cost of all products by 20%.'
       label:
-        description: Label of the coupon.
+        description: 'Label of the coupon.'
         type: string
-        example: 20% off of all products.
+        example: '20% off of all products.'
       savedPrice:
         type: object
         properties:
@@ -288,8 +294,10 @@ definitions:
             example: 20
           type:
             type: string
-            enum: ['fixed', 'percentage']
-            example: percentage
+            enum:
+              - 'fixed'
+              - 'percentage'
+            example: 'percentage'
   ProductCartItemPrice:
     type: object
     required:
@@ -298,15 +306,15 @@ definitions:
     properties:
       unit:
         type: number
-        description: Price of a single product. With or without tax, depending on the shop settings.
+        description: 'Price of a single product. With or without tax, depending on the shop settings.'
         example: 10
       default:
         type: number
-        description: The price of a single product multiplied by the quantity of he cart item WITHOUT any discounts. With or without tax, depending on the shop settings.
+        description: 'The price of a single product multiplied by the quantity of he cart item WITHOUT any discounts. With or without tax, depending on the shop settings.'
         example: 50
       special:
         type: number
-        description: The special price of a single product multiplied by the cart item quantity. It's only set if a discount is applied to the product.
+        description: "The special price of a single product multiplied by the cart item quantity. It's only set if a discount is applied to the product."
         example: 40
   ProductCartItemProperty:
     type: object
@@ -316,16 +324,18 @@ definitions:
     properties:
       type:
         type: string
-        enum: ["option", "input"]
-        example: option
+        enum:
+          - 'option'
+          - 'input'
+        example: 'option'
       label:
-        description: Display label of the property.
+        description: 'Display label of the property.'
         type: string
         example: Color
       value:
         type: string
-        description: The selected value of the property.
-        example: Red
+        description: 'The selected value of the property.'
+        example: 'Red'
   AddProductsProductProperty:
     type: object
     required:
@@ -335,10 +345,12 @@ definitions:
     properties:
       type:
         type: string
-        enum: ["option", "input"]
-        example: "input"
+        enum:
+          - 'option'
+          - 'input'
+        example: 'input'
       id:
-        description: "Id of the property, to which the selection belongs to."
+        description: 'Id of the property, to which the selection belongs to.'
         type: string
         example: '01-input-field.greeting-card-text'
       value:
@@ -347,14 +359,26 @@ definitions:
         example: 'Happy Birthday, dad!'
   Currency:
     type: string
-    enum: ["EUR", "CHF", "USD", "RON", "PLN", "AUD", "GBP", "CAD", "SEK", "DKK", "NOK"]
+    enum:
+      - 'EUR'
+      - 'CHF'
+      - 'USD'
+      - 'RON'
+      - 'PLN'
+      - 'AUD'
+      - 'GBP'
+      - 'CAD'
+      - 'SEK'
+      - 'DKK'
+      - 'NOK'
+    example: 'USD'
   CartText:
     type: object
     description: 'Additional texts for the current cart like legal text. It can contain HTML content.'
     properties:
       legal:
         type: string
-        example: By placing your order you agree to our <b><u>Privacy Policy</u></b>, our <b><u>Terms and Conditions</u></b> as well as our <b><u>Cancellation Policy</u></b>.
+        example: 'By placing your order you agree to our <b><u>Privacy Policy</u></b>, our <b><u>Terms and Conditions</u></b> as well as our <b><u>Cancellation Policy</u></b>.'
   CartFlags:
     type: object
     required:
@@ -384,11 +408,17 @@ definitions:
     properties:
       type:
         type: string
-        enum: ["subTotal", "shipping", "tax", "payment", "discount", "grandTotal"]
-        example: tax
+        enum:
+          - 'subTotal'
+          - 'shipping'
+          - 'tax'
+          - 'payment'
+          - 'discount'
+          - 'grandTotal'
+        example: 'tax'
       label:
         type: string
-        example: Tax (19%)
+        example: 'Tax (19%)'
       amount:
         type: number
         example: 7.6
@@ -404,22 +434,26 @@ definitions:
               $ref: '#/definitions/Total'
   Message:
     type: object
-    description: Message to be shown to the customer.
+    description: 'Message to be shown to the customer.'
     required:
       - type
       - message
     properties:
       type:
         type: string
-        enum: ['error', 'warning', 'info']
-        example: error
+        enum:
+          - 'error'
+          - 'warning'
+          - 'info'
+        example: 'error'
       message:
         type: string
-        example: Some error occured.
+        description: 'Message that is supposed to be displayed to the customer.'
+        example: 'Some error occured.'
       code:
         type: string
-        description: Message code, mapped by the extension. It can be used to react in a specific way for certain messages and/or to enable the possibility for message translations.
-        example: EUNKNOWN
+        description: 'Message code, mapped by the extension. It can be used to react in a specific way for certain messages and/or to enable the possibility for message translations.'
+        example: 'EUNKNOWN'
   Url:
     type: object
     required:
@@ -427,12 +461,12 @@ definitions:
     properties:
       url:
         type: string
-        description: Url
-        example: "http://example.com/"
+        description: 'A unified resource link..'
+        example: 'http://example.com/'
       expires:
         type: string
-        description: "An optional date-time-string in the format ISO 8601 (YYYY-MM-DDTH:i:s.fZ). The url does not expire if this field os not set. The returned timezone is always UTC (+00:00)"
-        example: "2017-12-31T23:59:59.999Z"
+        description: 'An optional date-time-string in the format ISO 8601 (YYYY-MM-DDTH:i:s.fZ). The url does not expire if this field os not set. The returned timezone is always UTC (+00:00)'
+        example: '2017-12-31T23:59:59.999Z'
   UnknownError:
     type: object
     required:
@@ -445,8 +479,9 @@ definitions:
         properties:
           code:
             type: string
-            enum: ['EUNKNOWN']
-            example: EUNKNOWN
+            enum:
+              - 'EUNKNOWN'
+            example: 'EUNKNOWN'
           message:
             type: string
-            example: An internal error occured.
+            example: 'An internal error occured.'
