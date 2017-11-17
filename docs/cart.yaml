@@ -34,7 +34,7 @@ paths:
         '':
           description: 'No return. The cart needs to be fetched by the frontend afterwards.'
           schema:
-            $ref: '#definitions/EmptyResult'
+            $ref: '#/definitions/EmptyResult'
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
@@ -50,7 +50,7 @@ paths:
         '':
           description: 'Returns an empty object after the action was performed.'
           schema:
-            $ref: '#definitions/EmptyResult'
+            $ref: '#/definitions/EmptyResult'
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
@@ -66,7 +66,7 @@ paths:
         '':
           description: 'Returns an empty object after the action was performed.'
           schema:
-            $ref: '#definitions/EmptyResult'
+            $ref: '#/definitions/EmptyResult'
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
@@ -82,7 +82,7 @@ paths:
         '':
           description: 'Returns an empty object after the action was performed.'
           schema:
-            $ref: '#definitions/EmptyResult'
+            $ref: '#/definitions/EmptyResult'
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
@@ -93,12 +93,12 @@ paths:
         - Cart Coupons
       description: 'Deletes multiple coupons from the cart.'
       parameters:
-        - $ref: '#/parameters/cartItemIds'
+        - $ref: '#/parameters/couponCodes'
       responses:
         '':
           description: 'Returns an empty object after the action was performed.'
           schema:
-            $ref: '#definitions/EmptyResult'
+            $ref: '#/definitions/EmptyResult'
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
