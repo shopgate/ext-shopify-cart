@@ -43,7 +43,7 @@ paths:
                         code: '20OFF'
                         description: 'Reduces the cost of all products by 20%.'
                         label: '20% off of all products.'
-                        discount:
+                        savedPrice:
                           value: 20
                           type: 'percentage'
                       product:
@@ -51,7 +51,7 @@ paths:
                         name: 'Awesome T-Shirt'
                         addtionalInfo:
                           - label: 'Manufacturer'
-                            value: 'H&M'
+                            value: 'Lacoste'
                         featuredImageUrl: 'https://myshop.example/images/product_xyz_featured.png'
                         properties:
                           - type: 'option'
@@ -65,7 +65,7 @@ paths:
                           - code: '20OFF'
                             description: 'Reduces the cost of all products by 20%.'
                             label: '20% off of all products.'
-                            discount:
+                            savedPrice:
                               value: 20
                               type: 'percentage'
                       messages:
@@ -134,9 +134,9 @@ paths:
       operationId: 'pipelines/updateProductsInCart_v1'
       summary: 'Updates the quantity for the given products in the cart.'
       description: |-
-        'Updates the quantity for one or multiple cart items referenced by their respective cartItemId. Depending on the shop and it’s cart rules certain quantities can be rejected.
+        Updates the quantity for one or multiple cart items referenced by their respective cartItemId. Depending on the shop and it’s cart rules certain quantities can be rejected.
 
-        _Note: Depending on the installed extensions, custom errors can be returned on failure._'
+        _Note: Depending on the installed extensions, custom errors can be returned on failure._
       parameters:
         - $ref: '#/parameters/updateCartItemsParam'
       responses:
@@ -466,7 +466,7 @@ definitions:
               example: 'Manufacturer'
             value:
               type: string
-              example: 'H&M'
+              example: 'Lacoste'
       featuredImageUrl:
         type: string
         description: 'The image of the product.'
@@ -486,7 +486,7 @@ definitions:
   AppliedDiscount:
     type: object
     required:
-      - discount
+      - savedPrice
     properties:
       code:
         description: 'Code of the coupon.'
@@ -500,8 +500,8 @@ definitions:
         description: 'Label of the coupon.'
         type: string
         example: '20% off of all products.'
-      discount:
-        description: "Amounts to how much discount the coupon applies in percent or absolute. Note: This property is known as 'savedPrice' in early implementations."
+      savedPrice:
+        description: "Amounts to how much discount the coupon applies in percent or absolute."
         type: object
         properties:
           value:
