@@ -69,7 +69,7 @@ paths:
     post:
       tags:
         - Cart Coupons
-      description: 'Adds multiple coupons to the cart. The coupon code needs to be unique. There can't be two coupons with identical code exist in the cart at any given time.'
+      description: "Adds multiple coupons to the cart. The coupon code needs to be unique. There can't be two coupons with identical code exist in the cart at any given time."
       parameters:
         - $ref: '#/parameters/couponCodes'
       responses:
