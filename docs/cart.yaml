@@ -15,11 +15,11 @@ paths:
         - Cart
       description: 'Retrieves the whole cart, belonging to a customer, from a fixed endpoint, like an API.'
       responses:
-        '200':
+        '':
           description: 'Returns the cart of the current user.'
           schema:
             $ref: '#/definitions/Cart'
-        '500':
+        'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
             $ref: '#/definitions/UnknownError'
@@ -31,9 +31,9 @@ paths:
       parameters:
         - $ref: '#/parameters/addProductsParam'
       responses:
-        '200':
+        '':
           description: 'No return. The cart needs to be fetched by the frontend afterwards.'
-        '500':
+        'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
             $ref: '#/definitions/UnknownError'
@@ -45,9 +45,9 @@ paths:
       parameters:
         - $ref: '#/parameters/updateCartItemsParam'
       responses:
-        '200':
+        '':
           description: 'No return. The cart needs to be fetched by the frontend afterwards.'
-        '500':
+        'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
             $ref: '#/definitions/UnknownError'
@@ -59,9 +59,9 @@ paths:
       parameters:
         - $ref: '#/parameters/cartItemIds'
       responses:
-        '200':
+        '':
           description: 'No return. The cart needs to be fetched by the frontend afterwards.'
-        '500':
+        'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
             $ref: '#/definitions/UnknownError'
@@ -73,9 +73,9 @@ paths:
       parameters:
         - $ref: '#/parameters/couponCodes'
       responses:
-        '200':
+        '':
           description: 'No return. The cart needs to be fetched by the frontend afterwards.'
-        '500':
+        'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
             $ref: '#/definitions/UnknownError'
@@ -87,9 +87,9 @@ paths:
       parameters:
         - $ref: '#/parameters/couponCodes'
       responses:
-        '200':
+        '':
           description: 'No return. The cart needs to be fetched by the frontend afterwards.'
-        '500':
+        'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
             $ref: '#/definitions/UnknownError'
@@ -102,10 +102,19 @@ paths:
           description: 'Returns the checkout url.'
           schema:
             $ref: '#/definitions/Url'
+          examples:
+            application/json:
+              url: 'http://example.com/'
+              expires: '2017-12-31T23:59:59.999Z'
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
             $ref: '#/definitions/UnknownError'
+          examples:
+            application/json:
+              error:
+                code: 'EUNKNOWN'
+                message: 'An internal error occured.'
 
 parameters:
   addProductsParam:
