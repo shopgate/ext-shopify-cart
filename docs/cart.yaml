@@ -23,7 +23,7 @@ paths:
       summary: 'Retrieves the carts contents.'
       description: 'Retrieves the whole cart, belonging to a customer, from a fixed endpoint, like an API.'
       responses:
-        '':
+        'ok':
           description: 'Returns the cart of the current user.'
           schema:
             $ref: '#/definitions/CartResult'
@@ -102,15 +102,15 @@ paths:
       tags:
         - Cart Products
       operationId: 'pipelines/addProductsToCart_v1'
-      summary: 'Adds one ore multiple products to the cart.'
+      summary: 'Adds one or multiple products to the cart.'
       description: |-
-        Adds one ore multiple products to the cart. Cart rules are applied, if the shop supports them and are set up for at least one product to be added (or already placed in the cart).
+        Adds one or multiple products to the cart. Cart rules are applied, if the shop supports them and are set up for at least one product to be added (or already placed in the cart).
 
         _Note: Depending on the installed extensions, custom errors can be returned on failure._
       parameters:
         - $ref: '#/parameters/addProductsParam'
       responses:
-        '':
+        'ok':
           description: 'Returns an empty object after the action was performed.'
           schema:
             $ref: '#/definitions/EmptyResult'
@@ -140,7 +140,7 @@ paths:
       parameters:
         - $ref: '#/parameters/updateCartItemsParam'
       responses:
-        '':
+        'ok':
           description: 'Returns an empty object after the action was performed.'
           schema:
             $ref: '#/definitions/EmptyResult'
@@ -170,7 +170,7 @@ paths:
       parameters:
         - $ref: '#/parameters/cartItemIdsParam'
       responses:
-        '':
+        'ok':
           description: 'Returns an empty object after the action was performed.'
           schema:
             $ref: '#/definitions/EmptyResult'
@@ -200,7 +200,7 @@ paths:
       parameters:
         - $ref: '#/parameters/couponCodesParam'
       responses:
-        '':
+        'ok':
           description: 'Returns an empty object after the action was performed.'
           schema:
             $ref: '#/definitions/EmptyResult'
@@ -239,7 +239,7 @@ paths:
       parameters:
         - $ref: '#/parameters/couponCodesParam'
       responses:
-        '':
+        'ok':
           description: 'Returns an empty object after the action was performed.'
           schema:
             $ref: '#/definitions/EmptyResult'
@@ -273,7 +273,7 @@ paths:
       summary: 'Retrieves a checkout url.'
       description: 'Requests a checkout url and it’s expiration time from the connected shop. Depending on the shop, the expiration time can be very short or not present at all.'
       responses:
-        '':
+        'ok':
           description: 'Returns the checkout url.'
           schema:
             $ref: '#/definitions/UrlResult'
@@ -429,17 +429,17 @@ definitions:
           - 'coupon'
         example: 'product'
       coupon:
-        $ref: '#/definitions/CouponCartItem'
+        $ref: '#/definitions/CartItemCoupon'
       product:
-        $ref: '#/definitions/ProductCartItem'
+        $ref: '#/definitions/CartItemProduct'
       messages:
         type: array
         description: 'All messages specific to the current cart item.'
         items:
           $ref: '#/definitions/Message'
-  CouponCartItem:
+  CartItemCoupon:
     $ref: '#/definitions/AppliedDiscount'
-  ProductCartItem:
+  CartItemProduct:
     type: object
     required:
       - id
@@ -475,9 +475,9 @@ definitions:
         type: array
         description: 'Selected properties of the current cart item.'
         items:
-          $ref: '#/definitions/ProductCartItemProperty'
+          $ref: '#/definitions/CartItemProductProperty'
       price:
-        $ref: '#/definitions/ProductCartItemPrice'
+        $ref: '#/definitions/CartItemProductPrice'
       appliedDiscounts:
         type: array
         description: 'All discouts applied to the current line item.'
@@ -513,7 +513,7 @@ definitions:
               - 'fixed'
               - 'percentage'
             example: 'percentage'
-  ProductCartItemPrice:
+  CartItemProductPrice:
     type: object
     required:
       - unit
@@ -531,11 +531,11 @@ definitions:
         type: number
         description: "The special price of a single product multiplied by the cart item quantity. It's only set if a discount is applied to the product."
         example: 40
-  ProductCartItemProperty:
+  CartItemProductProperty:
     type: object
     required:
-      - type
-      - value
+      - 'type'
+      - 'value'
     properties:
       type:
         type: string
@@ -546,7 +546,7 @@ definitions:
       label:
         description: 'Display label of the property.'
         type: string
-        example: Color
+        example: 'Color'
       value:
         type: string
         description: 'The selected value of the property.'
