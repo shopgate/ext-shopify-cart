@@ -30,63 +30,61 @@ paths:
           examples:
             application/json:
               output:
-                output:
-                  messages:
-                    - type: error
-                      message: 'The cart amount is to high for online purchase. The maximum amount is USD 4.99.'
-                      code: 'CART_VALUE_TOO_HIGH'
-                  cartItems:
-                    - id: 'a84de7d7-2b7d-4aa8-a64d-9558ca791b86'
-                      quantity: 5
-                      type: product
-                      coupon:
-                        code: '20OFF'
-                        description: 'Reduces the cost of all products by 20%.'
-                        label: '20% off of all products.'
-                        savedPrice:
-                          value: 20
-                          type: 'percentage'
-                      product:
-                        id: '10080466570'
-                        name: 'Awesome T-Shirt'
-                        addtionalInfo:
-                          - label: 'Manufacturer'
-                            value: 'Lacoste'
-                        featuredImageUrl: 'https://myshop.example/images/product_xyz_featured.png'
-                        properties:
-                          - type: 'option'
-                            label: 'Color'
-                            value: 'Red'
-                        price:
-                          unit: 10
-                          default: 50
-                          special: 40
-                        appliedDiscounts:
-                          - code: '20OFF'
-                            description: 'Reduces the cost of all products by 20%.'
-                            label: '20% off of all products.'
-                            savedPrice:
-                              value: 20
-                              type: 'percentage'
-                      messages:
-                        - type: 'info'
-                          message: 'This product will be ordered for you after purchase.'
-                          code: 'ORDER_ON_PURCHASE'
-                  currency: 'USD'
-                  totals:
-                    - type: 'tax'
-                      label: 'Tax (19%)'
-                      amount: 7.6
-                      subTotals:
-                        - type: 'tax'
-                          label: 'Tax (19%)'
-                          amount: 7.6
-                  text:
-                    legal: 'By placing your order you agree to our <b><u>Privacy Policy</u></b>, our <b><u>Terms and Conditions</u></b> as well as our <b><u>Cancellation Policy</u></b>.'
-                  flags:
-                    taxIncluded: false
-                    orderable: false
-                    coupons: true
+                messages:
+                  - type: 'error'
+                    message: 'The cart amount is to high for online purchase. The maximum amount is USD 4.99.'
+                    code: 'CART_VALUE_TOO_HIGH'
+                cartItems:
+                  - id: 'a84de7d7-2b7d-4aa8-a64d-9558ca791b86'
+                    quantity: 5
+                    type: 'product'
+                    coupon:
+                      code: '20OFF'
+                      description: 'Reduces the cost of all products by 20%.'
+                      label: '20% off of all products.'
+                      savedPrice:
+                        value: 20
+                        type: 'percentage'
+                    product:
+                      id: '10080466570'
+                      name: 'Awesome T-Shirt'
+                      addtionalInfo:
+                        - label: 'Manufacturer'
+                          value: 'Lacoste'
+                      featuredImageUrl: 'https://myshop.example/images/product_xyz_featured.png'
+                      properties:
+                          label: 'Color'
+                          value: 'Red'
+                      price:
+                        unit: 10
+                        default: 50
+                        special: 40
+                      appliedDiscounts:
+                        - code: '20OFF'
+                          description: 'Reduces the cost of all products by 20%.'
+                          label: '20% off of all products.'
+                          savedPrice:
+                            value: 20
+                            type: 'percentage'
+                    messages:
+                      - type: 'info'
+                        message: 'This product will be ordered for you after purchase.'
+                        code: 'ORDER_ON_PURCHASE'
+                currency: 'USD'
+                totals:
+                  - type: 'tax'
+                    label: 'Tax (19%)'
+                    amount: 7.6
+                    subTotals:
+                      - type: 'tax'
+                        label: 'Tax (19%)'
+                        amount: 7.6
+                text:
+                  legal: 'By placing your order you agree to our <b><u>Privacy Policy</u></b>, our <b><u>Terms and Conditions</u></b> as well as our <b><u>Cancellation Policy</u></b>.'
+                flags:
+                  taxIncluded: false
+                  orderable: false
+                  coupons: true
         'EUNKNOWN':
           description: 'An internal error occured.'
           schema:
@@ -311,10 +309,10 @@ parameters:
           quantity:
             type: number
             example: 1
-          properties:
+          options:
             type: array
             items:
-              $ref: '#/definitions/AddProductsProductProperty'
+              $ref: '#/definitions/ProductOption'
           metadata:
             type: object
             description: 'Holds additional information about a specific product of any type. The contents of the object can vary.'
@@ -534,24 +532,18 @@ definitions:
   CartItemProductProperty:
     type: object
     required:
-      - 'type'
+      - 'label'
       - 'value'
     properties:
-      type:
-        type: string
-        enum:
-          - 'option'
-          - 'input'
-        example: 'option'
       label:
-        description: 'Display label of the property.'
+        description: 'Display label of the option or variant.'
         type: string
         example: 'Color'
       value:
         type: string
-        description: 'The selected value of the property.'
+        description: 'The selected display value of the option or variant.'
         example: 'Red'
-  AddProductsProductProperty:
+  ProductOption:
     type: object
     required:
       - type
@@ -561,9 +553,9 @@ definitions:
       type:
         type: string
         enum:
-          - 'option'
-          - 'input'
-        example: 'input'
+          - 'select'
+          - 'text'
+        example: 'text'
       id:
         description: 'Id of the property, to which the selection belongs to.'
         type: string
