@@ -214,8 +214,8 @@ module.exports = function (context, input, cb) {
         /* price */
         const price = new Price()
         price.unit = item.price
-        price.default = item.compare_at_price ? item.compare_at_price * item.quantity : item.line_price
-        price.special = item.compare_at_price ? item.line_price : null
+        price.default = item.compare_at_price > 0 ? item.compare_at_price * item.quantity : item.line_price
+        price.special = item.compare_at_price < 0 ? item.line_price : null
 
         /* add price to product */
         product.price = price.toJson()

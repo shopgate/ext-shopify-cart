@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "shopify-api-node": "^2.5.0",
     "shopify-node-api": "^1.7.6",
     "underscore": "1.8.3",
     "request": "2.81.0"

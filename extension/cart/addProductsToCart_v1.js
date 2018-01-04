@@ -88,9 +88,6 @@ module.exports = function (context, input, cb) {
       }
     }
 
-    const _data = data
-    const _shopifyUrl = '/admin/checkouts/' + cartId + '.json'
-
     Shopify.put('/admin/checkouts/' + cartId + '.json', data, function (err) {
       let success = true
       if (err) {
