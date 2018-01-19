@@ -1,14 +1,13 @@
 const EINVALIDCREDENTIALS = 'EINVALIDCREDENTIALS'
 
-class InvalidCredentialsError {
+class InvalidCredentialsError extends Error {
   constructor (displayMessage, message) {
+    super((message !== null && message !== undefined)
+      ? message
+      : 'The given credentials are wrong or do not exist.'
+    )
+
     this._code = EINVALIDCREDENTIALS
-
-    this._message = 'The given credentials are wrong or do not exist.'
-    if (message !== null && message !== undefined) {
-      this._message = message
-    }
-
     this._displayMessage = null
     if (displayMessage !== null) {
       this._displayMessage = displayMessage
