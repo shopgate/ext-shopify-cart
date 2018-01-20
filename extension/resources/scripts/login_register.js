@@ -1,29 +1,14 @@
 /* eslint-disable */
 
-function runPipelineScript () {
+SGEvent.login_register = function () {
   // attach a click-event-listener to each relevant form-submit button
-  attachSubmitListener('customer_login')
-  attachSubmitListener('create_customer')
-}
-
-function getParameterByName(paramName, url) {
-  if (!url) {
-    url = window.location.href
+  if (getLocation().endsWith('/account/login')) {
+    attachSubmitListener('customer_login')
+  } else if (getLocation().endsWith('/account/register')) {
+    attachSubmitListener('create_customer')
   }
 
-  paramName = paramName.replace(/[\[\]]/g, "\\$&")
-  var regex = new RegExp("[?&]" + paramName + "(=([^&#]*)|&|#|$)")
-  results = regex.exec(url)
-
-  if (!results) {
-    return null
-  }
-
-  if (!results[2]) {
-    return ''
-  }
-
-  return decodeURIComponent(results[2].replace(/\+/g, " "))
+  closeLoadingSpinner()
 }
 
 function attachSubmitListener(elementName) {
@@ -34,18 +19,10 @@ function attachSubmitListener(elementName) {
   }
 }
 
-function getRandomPassPhrase(len) {
-  if (!len) len = 16
-  return Array(len).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!§$%&/()=?ß+*~#'-_.:,;<>|{[]}^°").map(function(x) {
-    return x[Math.floor(Math.random() * x.length)]
-  }).join('')
-}
-
 function checkState(phrase) {
   console.log("Exported phrase: " + phrase)
   console.log("Saved encrypt payload: " + localStorage.getItem('ShopgateWebloginPayload'))
   console.log("Decrypted payload: " + CryptoJS.AES.decrypt(localStorage.getItem('ShopgateWebloginPayload'), phrase).toString(CryptoJS.enc.Utf8))
-  return true
 }
 
 function initAppLogin(formId) {
@@ -73,6 +50,15 @@ function initAppLogin(formId) {
   // create encryption phrase
   var phrase = getRandomPassPhrase(14)
 
+  // save get params for later (after registration or login has succeeded)
+  var sgcloudCallbackData = getParameterByName('sgcloud_callback_data')
+  var sgcloudCheckout = getParameterByName('sgcloud_checkout')
+  if (sgcloudCallbackData || sgcloudCheckout) {
+    localStorage.setItem('ShopgateParams', JSON.stringify({
+      sgcloudCallbackData: sgcloudCallbackData,
+      sgcloudCheckout: sgcloudCheckout
+    }))
+  }
 
   // store payload to local storage
   localStorage.setItem('ShopgateWebloginPayload', CryptoJS.AES.encrypt(JSON.stringify(payloadData), phrase).toString())
