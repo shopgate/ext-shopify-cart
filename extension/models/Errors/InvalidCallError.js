@@ -1,14 +1,13 @@
 const EINVALIDCALL = 'EINVALIDCALL'
 
-class InvalidCallError {
+class InvalidCallError extends Error {
   constructor (message) {
+    super((message !== null && message !== undefined)
+      ? message
+      : 'The pipeline can\'t be called in the given context.'
+    )
+
     this._code = EINVALIDCALL
-
-    this._message = 'The pipeline can\'t be called in the given context.'
-    if (message !== null && message !== undefined) {
-      this._message = message
-    }
-
     this._displayMessage = null
   }
 

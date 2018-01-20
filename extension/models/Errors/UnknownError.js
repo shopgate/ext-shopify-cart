@@ -1,9 +1,10 @@
 const EUNKNOWN = 'EUNKNOWN'
 
-class UnknownError {
+class UnknownError extends Error {
   constructor () {
+    super('An internal error occured.')
+
     this._code = EUNKNOWN
-    this._message = 'An internal error occured.'
     this._displayMessage = null
   }
 

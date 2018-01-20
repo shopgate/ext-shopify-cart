@@ -1,9 +1,9 @@
 const EACCESS = 'EACCESS'
 
-class UnauthorizedError {
+class UnauthorizedError extends Error {
   constructor (displayMessage) {
+    super('Permission denied.')
     this._code = EACCESS
-    this._message = 'Permission denied.'
 
     this._displayMessage = null
     if (displayMessage !== null && displayMessage !== undefined) {
