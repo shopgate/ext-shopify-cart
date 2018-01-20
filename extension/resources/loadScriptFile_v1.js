@@ -15,8 +15,9 @@ module.exports = function (context, input, cb) {
   // secure the script loader by prohibiting access to any files that are not whitelisted and removing path characters
   const scriptName = input.scriptName.replace(/[\s\uFEFF\xA0./\\]+/g, '')
   const whitelist = {
-    'initWebLogin': true,
-    'finalizeWebLogin': true
+    '__init': true,
+    'login_register': true,
+    'account': true
   }
   if (!whitelist[scriptName]) {
     return cb(new ScriptNotWhitelistedError(scriptName))
