@@ -7,19 +7,8 @@ class ScriptNotWhitelistedError extends Error {
       : `The given script is not whitelisted.`
     )
 
-    this._code = ESCRIPTNOTWHITELISTED
-    this._displayMessage = null
-  }
-
-  get code () {
-    return this._code
-  }
-
-  get message () {
-    return this._message
-  }
-  get displayMessage () {
-    return this._displayMessage
+    this.code = ESCRIPTNOTWHITELISTED
+    this.displayMessage = null
   }
 }
 

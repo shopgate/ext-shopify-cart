@@ -7,30 +7,11 @@ class InvalidCredentialsError extends Error {
       : 'The given credentials are wrong or do not exist.'
     )
 
-    this._code = EINVALIDCREDENTIALS
-    this._displayMessage = null
+    this.code = EINVALIDCREDENTIALS
+    this.displayMessage = null
     if (displayMessage !== null) {
-      this._displayMessage = displayMessage
+      this.displayMessage = displayMessage
     }
-  }
-
-  toJson () {
-    return {
-      code: this._code,
-      message: this._message
-    }
-  }
-
-  get code () {
-    return this._code
-  }
-
-  get message () {
-    return this._message
-  }
-
-  get displayMessage () {
-    return this._displayMessage
   }
 }
 
