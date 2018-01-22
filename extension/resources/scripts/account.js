@@ -19,7 +19,7 @@ SGEvent.account = function () {
 function loginInApp(payload) {
   console.log("called: loginInApp")
   var pipelineInput = {
-    "strategy":"webLogin",
+    "strategy":"web",
     "parameters": {
       "payload": payload
     }
@@ -57,7 +57,6 @@ function loginInApp(payload) {
 function proceedToCheckout () {
   sendPipelineRequest('getCheckoutUrl_v1', false, function (err, output) {
     window.location.replace(output.url)
-    // TODO: Carsten Schneider fragen woher man an die übergebenen(?) Tracking-Daten rankommt #######################
   })
 }
 
