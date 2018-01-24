@@ -7,27 +7,8 @@ class InvalidCallError extends Error {
       : 'The pipeline can\'t be called in the given context.'
     )
 
-    this._code = EINVALIDCALL
-    this._displayMessage = null
-  }
-
-  toJson () {
-    return {
-      code: this._code,
-      message: this._message
-    }
-  }
-
-  get code () {
-    return this._code
-  }
-
-  get message () {
-    return this._message
-  }
-
-  get displayMessage () {
-    return this._displayMessage
+    this.code = EINVALIDCALL
+    this.displayMessage = null
   }
 }
 

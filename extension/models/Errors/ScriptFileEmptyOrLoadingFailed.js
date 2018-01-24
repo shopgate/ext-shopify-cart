@@ -7,19 +7,8 @@ class ScriptFileEmptyOrLoadingFailed extends Error {
       : `The given script is empty or failed to load.`
     )
 
-    this._code = SCRIPTFILEEMPTYORLOADINGFAILED
-    this._displayMessage = null
-  }
-
-  get code () {
-    return this._code
-  }
-
-  get message () {
-    return this._message
-  }
-  get displayMessage () {
-    return this._displayMessage
+    this.code = SCRIPTFILEEMPTYORLOADINGFAILED
+    this.displayMessage = null
   }
 }
 
