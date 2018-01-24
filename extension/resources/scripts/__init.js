@@ -1,23 +1,28 @@
-/* eslint-disable */
 
-SGEvent.__init = function () {
-  // // reset data on every page except /account
-  // if (!getLocation().endsWith('/account')) {
-  //   console.log('##### clearing storage #####')
-  //   localStorage.removeItem('ShopgateWebloginPayload')
-  // }
-
+window.SGPipelineScript.__init = function () {
   // do some basic routing
-  if (getLocation().endsWith('/account/login') || getLocation().endsWith('/account/register')) {
-    loadPipelineScript('login_register')
-  } else if (getLocation().endsWith('/account')) {
-    loadPipelineScript('account')
+  if (window.SGPipelineScript.getLocation().endsWith('/account/login') || window.SGPipelineScript.getLocation().endsWith('/account/register')) {
+    // reset data on every page except /account
+    if (!window.SGPipelineScript.getLocation().endsWith('/account')) {
+      window.localStorage.removeItem('ShopgateWebloginPayload')
+    }
+
+    window.SGAppConnector.loadPipelineScript('login_register')
+  } else if (window.SGPipelineScript.getLocation().endsWith('/account')) {
+    window.SGAppConnector.loadPipelineScript('account')
+  } else if (window.SGPipelineScript.getLocation().endsWith('/challenge')) {
+    // avoid deleting data as this is between registration start and completion
+    window.SGAppConnector.closeLoadingSpinner()
   } else {
-    closeLoadingSpinner()
+    // reset data on every page except /account
+    if (!window.SGPipelineScript.getLocation().endsWith('/account')) {
+      window.localStorage.removeItem('ShopgateWebloginPayload')
+    }
+
+    window.SGAppConnector.closeLoadingSpinner()
   }
 }
 
-function getLocation () {
+window.SGPipelineScript.getLocation = function () {
   return window.location.toString().replace(/[#?].*$/g, '')
 }
-/* eslint-enable */
