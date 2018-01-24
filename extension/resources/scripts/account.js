@@ -23,6 +23,8 @@ function loginInApp (payload) {
   window.SGAppConnector.sendPipelineRequest('login_v1', true, pipelineInput, function (err, output) {
     // tell the frontend to switch to "logged in mode"
     if (!err && output.success === true) {
+      console.log('# Web login/registration successful. Breadcasting "userLoggedIn" event to the app.')
+
       window.SGAppConnector.sendAppCommand({
         'c': 'broadcastEvent',
         'p': {
@@ -42,11 +44,14 @@ function loginInApp (payload) {
     }
 
     // close in app browser tab otherwise (also send back the callback data)
+
+    var closeTabData = [(ShopgateParams ? ShopgateParams.sgcloudCallbackData : {})]
+    console.log('# Closing in app browser tab with data: ' + JSON.stringify(closeTabData))
     window.SGAppConnector.sendAppCommand({
       'c': 'broadcastEvent',
       'p': {
         'event': 'closeInAppBrowser',
-        'data': ShopgateParams ? ShopgateParams.sgcloudCallbackData : {}
+        'data': closeTabData
       }
     })
   })
@@ -58,6 +63,7 @@ function proceedToCheckout () {
       return console.error(err)
     }
 
+    console.log('# Proceeding to checkout after successfol web login/registration (in app browser).')
     window.location.replace(output.url)
   })
 }

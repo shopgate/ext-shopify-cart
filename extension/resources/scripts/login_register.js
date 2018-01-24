@@ -12,7 +12,7 @@ window.SGPipelineScript.login_register = function () {
   var sgcloudCheckout = window.SGAppConnector.getParameterByName('sgcloud_checkout')
   if (sgcloudCallbackData || sgcloudCheckout) {
     window.localStorage.setItem('ShopgateParams', JSON.stringify({
-      sgcloudCallbackData: sgcloudCallbackData,
+      sgcloudCallbackData: JSON.parse(sgcloudCallbackData),
       sgcloudCheckout: sgcloudCheckout
     }))
   }
