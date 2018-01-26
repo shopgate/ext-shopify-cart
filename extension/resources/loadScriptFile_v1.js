@@ -17,7 +17,8 @@ module.exports = function (context, input, cb) {
   const whitelist = {
     '__init': true,
     'login_register': true,
-    'account': true
+    'account': true,
+    'checkouts': true
   }
   if (!whitelist[scriptName]) {
     return cb(new ScriptNotWhitelistedError(scriptName))
