@@ -1,4 +1,6 @@
-
+/**
+ * Pipeline entry function for the login and registration page of the Shopify frontend.
+ */
 window.SGPipelineScript.login_register = function () {
   // attach a click-event-listener to each relevant form-submit button
   if (window.SGPipelineScript.getLocation().endsWith('/account/login')) {

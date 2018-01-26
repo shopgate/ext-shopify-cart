@@ -19,7 +19,7 @@ if (!window.SGAppConnector) {
     /**
      * Takes a length param and creates a random passphrase and returns it.
      *
-     * @param {int} len
+     * @param {number} len
      * @return {string}
      */
     getRandomPassPhrase: function (len) {},
@@ -75,6 +75,21 @@ if (!window.SGAppConnector) {
      * @param {boolean|null} globalScope
      */
     includeScript: function (scriptContent, globalScope = null) {},
+    /**
+     * Takes script code and puts it into the localStorage to allow faster loading times when it is needed again.
+     *
+     * @param {string} key
+     * @param {string} scriptCode
+     */
+    saveScriptToCache: function (key, scriptCode) {},
+
+    /**
+     * Tries to load a script from the localStorage.
+     *
+     * @param {string} key
+     * @return {string} Returns an empty string if nothing is available in the cache.
+     */
+    getScriptFromCache: function (key) {},
 
     /**
      * Loads a script file from a given url and injects it into the current page.
@@ -88,7 +103,7 @@ if (!window.SGAppConnector) {
      * Calls a pipeline to get script code to be injected.
      *
      * @param {string} scriptName
-     * @param {*|null} passthroughParams
+     * @param {*|null} passthroughParams Parameters to be passed to the pipelines entry function
      */
     loadPipelineScript: function (scriptName, passthroughParams = null) {}
 
