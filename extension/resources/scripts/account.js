@@ -52,7 +52,7 @@ window.SGPipelineScript.loginInApp = function (payload) {
 
     // the registration or login can be triggered just before checkout or as a standalone action
     if (shopgateParams && shopgateParams.sgcloudCheckout) {
-      return this.proceedToCheckout()
+      return window.SGPipelineScript.proceedToCheckout()
     }
 
     // close in app browser tab if it was just a standalone action (also send back the callback data)
@@ -72,12 +72,11 @@ window.SGPipelineScript.loginInApp = function (payload) {
  * Fetches the checkout url for the users cart and redirects him to the checkout.
  */
 window.SGPipelineScript.proceedToCheckout = function () {
-  window.SGAppConnector.sendPipelineRequest('getCheckoutUrl_v1', false, null, function (err, output) {
-    if (err) {
-      return console.error(err)
-    }
-
+  // take checkout url from cache, clean up and redirect
+  var checkoutUrl = window.localStorage.getItem(this.STORAGE_KEY_CHECKOUT_URL)
+  window.localStorage.removeItem(this.STORAGE_KEY_CHECKOUT_URL)
+  if (checkoutUrl) {
     console.log('# Proceeding to checkout after successfol web login/registration (in app browser).')
-    window.location.replace(output.url)
-  })
+    window.location.replace(window.atob(checkoutUrl))
+  }
 }

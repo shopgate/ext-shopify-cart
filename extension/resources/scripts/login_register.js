@@ -35,7 +35,7 @@ window.SGPipelineScript.login_register = function () {
 window.SGPipelineScript.attachSubmitListener = function (formId) {
   if (document.getElementById(formId)) {
     document.getElementById(formId).querySelector('input[type="submit"]').onclick = function () {
-      return this.initAppLogin(formId)
+      return window.SGPipelineScript.initAppLogin(formId)
     }
   }
 }
@@ -99,4 +99,20 @@ window.SGPipelineScript.initAppLogin = function (formId) {
 
   // abort form submission (wait for pipeline response)
   return false
+}
+
+
+
+/**
+ * Fetches the checkout url in the background and caches it for later usage.
+ */
+window.SGPipelineScript.requestCheckoutUrl = function () {
+  window.SGAppConnector.sendPipelineRequest('getCheckoutUrl_v1', false, null, function (err, output, storageKey) {
+    if (err) {
+      return console.error(err)
+    }
+
+    console.log('# Cached checkout url.')
+    window.localStorage.setItem(storageKey, window.btoa(output.url))
+  }, this.STORAGE_KEY_CHECKOUT_URL)
 }
