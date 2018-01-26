@@ -3,17 +3,22 @@
  */
 window.SGPipelineScript.login_register = function () {
   // attach a click-event-listener to each relevant form-submit button
-  if (window.SGPipelineScript.getLocation().endsWith('/account/login')) {
-    attachSubmitListener('customer_login')
-  } else if (window.SGPipelineScript.getLocation().endsWith('/account/register')) {
-    attachSubmitListener('create_customer')
+  switch (this.getPage()) {
+    case this.PAGE_LOGIN: {
+      this.attachSubmitListener('customer_login')
+      break
+    }
+    case this.PAGE_REGISTER: {
+      this.attachSubmitListener('create_customer')
+      break
+    }
   }
 
   // save get params for later (after registration or login has succeeded)
   var sgcloudCallbackData = window.SGAppConnector.getParameterByName('sgcloud_callback_data')
   var sgcloudCheckout = window.SGAppConnector.getParameterByName('sgcloud_checkout')
   if (sgcloudCallbackData || sgcloudCheckout) {
-    window.localStorage.setItem('ShopgateParams', JSON.stringify({
+    window.localStorage.setItem(this.STORAGE_KEY_TAB_PARAMS, JSON.stringify({
       sgcloudCallbackData: JSON.parse(sgcloudCallbackData),
       sgcloudCheckout: sgcloudCheckout
     }))
@@ -22,24 +27,37 @@ window.SGPipelineScript.login_register = function () {
   window.SGAppConnector.closeLoadingSpinner()
 }
 
-function attachSubmitListener (elementName) {
-  if (document.getElementById(elementName)) {
-    document.getElementById(elementName).querySelector('input[type="submit"]').onclick = function () {
-      return initAppLogin(elementName)
+/**
+ * Takes an form id and modifies it's "submit" input to init the web login on clicking that input.
+ *
+ * @param {string} formId
+ */
+window.SGPipelineScript.attachSubmitListener = function (formId) {
+  if (document.getElementById(formId)) {
+    document.getElementById(formId).querySelector('input[type="submit"]').onclick = function () {
+      return this.initAppLogin(formId)
     }
   }
 }
 
-function initAppLogin (formId) {
+/**
+ * Reads the children of the given form to find credentials data for the web login within the input fields.
+ * This data is encrypted with a random phrase and temporarily stored in the localStorage for finalizing the web login.
+ * The form submission is postponed to after successful web login initialization.
+ *
+ * @param {string} formId
+ * @return {boolean}
+ */
+window.SGPipelineScript.initAppLogin = function (formId) {
   // read form elements
-  var elements = Array.from(document.getElementById(formId).children)
+  var formChilds = Array.from(document.getElementById(formId).children)
   var payloadData = {}
   var key
   var name
-  elements.forEach((el) => {
-    if (el.name) {
+  for (var i = 0; i < formChilds.length; i++) {
+    if (formChilds[i].name) {
       key = ''
-      name = el.name.replace('customer[', '').replace(']', '')
+      name = formChilds[i].name.replace('customer[', '').replace(']', '')
       if (name === 'email') {
         key = 'u'
       } else if (name === 'password') {
@@ -47,29 +65,38 @@ function initAppLogin (formId) {
       }
 
       if (key) {
-        payloadData[key] = el.value
+        payloadData[key] = formChilds[i].value
       }
     }
-  })
+  }
 
   // create encryption phrase
   var phrase = window.SGAppConnector.getRandomPassPhrase(16)
 
   // store payload to local storage
-  window.localStorage.setItem('ShopgateWebloginPayload', window.CryptoJS.AES.encrypt(JSON.stringify(payloadData), phrase).toString())
+  window.localStorage.setItem(
+    this.STORAGE_KEY_WEBLOGIN_PAYLOAD,
+    window.CryptoJS.AES.encrypt(JSON.stringify(payloadData), phrase).toString()
+  )
 
-  var pipelineData = {
-    phrase: phrase
-  }
-  window.SGAppConnector.sendPipelineRequest('initWebLogin_v1', true, pipelineData, function (err, output, formId) {
-    // submit form, since the pipeline response arrived
-    if (!err) {
-      document.getElementById(formId).submit()
-    }
-  }, formId)
+  // init weblogin by passing encryption phrase to trusted user extension
+  window.SGAppConnector.sendPipelineRequest(
+    'initWebLogin_v1',
+    true,
+    {phrase: phrase},
+
+    // callback
+    function (err, output, formId) {
+      // submit form, since the pipeline response arrived
+      if (!err) {
+        document.getElementById(formId).submit()
+      }
+    },
+
+    // 3rd callback param
+    formId
+  )
 
   // abort form submission (wait for pipeline response)
   return false
 }
-
-/* eslint-enable */

@@ -3,12 +3,12 @@
  */
 window.SGPipelineScript.account = function () {
   // try to log in inside the app when the account page is loaded
-  if (window.SGPipelineScript.getLocation().endsWith('/account')) {
+  if (this.getPage() === this.PAGE_ACCOUNT) {
     // check if there was a login or registration before (also clean up localStorage)
-    var ShopgateWebloginPayload = window.localStorage.getItem('ShopgateWebloginPayload')
-    window.localStorage.removeItem('ShopgateWebloginPayload')
-    if (ShopgateWebloginPayload) {
-      loginInApp(ShopgateWebloginPayload)
+    var shopgateWebloginPayload = window.localStorage.getItem(this.STORAGE_KEY_WEBLOGIN_PAYLOAD)
+    window.localStorage.removeItem(this.STORAGE_KEY_WEBLOGIN_PAYLOAD)
+    if (shopgateWebloginPayload) {
+      this.loginInApp(shopgateWebloginPayload)
     }
   }
 
@@ -21,13 +21,13 @@ window.SGPipelineScript.account = function () {
  *
  * @param payload
  */
-function loginInApp (payload) {
+window.SGPipelineScript.loginInApp = function (payload) {
   // read from localStorage and remove it because it's not needed afterwards anymore
-  var ShopgateParams = window.localStorage.getItem('ShopgateParams')
-  if (ShopgateParams) {
-    ShopgateParams = JSON.parse(ShopgateParams)
+  var shopgateParams = window.localStorage.getItem(this.STORAGE_KEY_TAB_PARAMS)
+  if (shopgateParams) {
+    shopgateParams = JSON.parse(shopgateParams)
   }
-  window.localStorage.removeItem('ShopgateParams')
+  window.localStorage.removeItem(this.STORAGE_KEY_TAB_PARAMS)
 
   var pipelineInput = {
     'strategy': 'web',
@@ -36,8 +36,8 @@ function loginInApp (payload) {
     }
   }
 
-  // call login_v1 pipeline and pass through the ShopgateParams data that was sent to the tab when it was opened
-  window.SGAppConnector.sendPipelineRequest('login_v1', true, pipelineInput, function (err, output, ShopgateParams) {
+  // call login_v1 pipeline and pass through the shopgateParams data that was sent to the tab when it was opened
+  window.SGAppConnector.sendPipelineRequest('login_v1', true, pipelineInput, function (err, output, shopgateParams) {
     // tell the frontend to switch to "logged in mode"
     if (!err && output.success === true) {
       console.log('# Web login/registration successful. Broadcasting "userLoggedIn" event to the app.')
@@ -51,12 +51,12 @@ function loginInApp (payload) {
     }
 
     // the registration or login can be triggered just before checkout or as a standalone action
-    if (ShopgateParams && ShopgateParams.sgcloudCheckout) {
-      return proceedToCheckout()
+    if (shopgateParams && shopgateParams.sgcloudCheckout) {
+      return this.proceedToCheckout()
     }
 
     // close in app browser tab if it was just a standalone action (also send back the callback data)
-    var closeTabData = [(ShopgateParams ? ShopgateParams.sgcloudCallbackData : {})]
+    var closeTabData = [(shopgateParams ? shopgateParams.sgcloudCallbackData : {})]
     console.log('# Closing in app browser tab with data: ' + JSON.stringify(closeTabData))
     window.SGAppConnector.sendAppCommand({
       'c': 'broadcastEvent',
@@ -65,13 +65,13 @@ function loginInApp (payload) {
         'data': closeTabData
       }
     })
-  }, ShopgateParams)
+  }, shopgateParams)
 }
 
 /**
  * Fetches the checkout url for the users cart and redirects him to the checkout.
  */
-function proceedToCheckout () {
+window.SGPipelineScript.proceedToCheckout = function () {
   window.SGAppConnector.sendPipelineRequest('getCheckoutUrl_v1', false, null, function (err, output) {
     if (err) {
       return console.error(err)
