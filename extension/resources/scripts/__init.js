@@ -23,6 +23,12 @@ window.SGPipelineScript.__init = function () {
   switch (this.getPage()) {
     case this.PAGE_LOGIN: // same action as PAGE_REGISTER (fall through to next statement)
     case this.PAGE_REGISTER: {
+      // Encryption functionality is required here (load crypto-js library)
+      window.SGAppConnector.loadRemoteScript(
+        'https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js',
+        true
+      )
+
       // clear previously stored temporary credentials to avoid conflicts later and forward to page specific script
       window.localStorage.removeItem(this.STORAGE_KEY_WEBLOGIN_PAYLOAD)
       window.SGAppConnector.loadPipelineScript('login_register')
