@@ -44,9 +44,8 @@ window.SGPipelineScript.__init = function () {
       break
     }
     case this.PAGE_CHALLENGE: {
-      // the user needs to take some action, so close the loading spinner. no page specific code needed
-      this.closeLoadingScreen()
-      window.SGAppConnector.closeLoadingSpinner()
+      // load page specific script
+      window.SGAppConnector.loadPipelineScript('challenge')
       break
     }
     default: {
@@ -125,7 +124,7 @@ window.SGPipelineScript.getPage = function () {
     // accoutn overview page
     return this.PAGE_ACCOUNT
   } else if (currentLocation.match(this.PAGE_CHALLENGE.toLowerCase() + '/*$')) {
-    // a page that does a "bot test"
+    // a page that checks if the user is a robot
     return this.PAGE_CHALLENGE
   } else if (currentLocation.match(this.PAGE_CHECKOUTS.toLowerCase() + '/*$')) {
     // the checkouts/<hash> page

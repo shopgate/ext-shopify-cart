@@ -2,9 +2,6 @@
  * Pipeline entry function for the account overview page of the Shopify frontend.
  */
 window.SGPipelineScript.account = function () {
-  // hide internal processes from the user
-  this.showLoadingScreen()
-
   // check if there was a login or registration before (also clean up localStorage)
   var shopgateWebloginPayload = window.localStorage.getItem(this.STORAGE_KEY_WEBLOGIN_PAYLOAD)
   window.localStorage.removeItem(this.STORAGE_KEY_WEBLOGIN_PAYLOAD)

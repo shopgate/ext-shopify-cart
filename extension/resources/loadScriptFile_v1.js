@@ -18,6 +18,7 @@ module.exports = function (context, input, cb) {
     '__init': true,
     'login_register': true,
     'account': true,
+    'challenge': true,
     'checkouts': true
   }
   if (!whitelist[scriptName]) {
