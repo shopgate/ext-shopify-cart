@@ -112,7 +112,7 @@ window.SGPipelineScript.requestCheckoutUrl = function () {
       return console.error(err)
     }
 
-    console.log('# Cached checkout url.')
+    console.log('# Cached checkout url')
     window.localStorage.setItem(storageKey, window.btoa(output.url))
   }, this.STORAGE_KEY_CHECKOUT_URL)
 }
