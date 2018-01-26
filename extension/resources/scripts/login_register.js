@@ -5,10 +5,12 @@ window.SGPipelineScript.login_register = function () {
   // attach a click-event-listener to each relevant form-submit button
   switch (this.getPage()) {
     case this.PAGE_LOGIN: {
+      this.requestCheckoutUrl()
       this.attachSubmitListener('customer_login')
       break
     }
     case this.PAGE_REGISTER: {
+      this.requestCheckoutUrl()
       this.attachSubmitListener('create_customer')
       break
     }
@@ -100,7 +102,6 @@ window.SGPipelineScript.initAppLogin = function (formId) {
   // abort form submission (wait for pipeline response)
   return false
 }
-
 
 
 /**
