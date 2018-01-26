@@ -2,14 +2,14 @@
  * Pipeline entry function for the account overview page of the Shopify frontend.
  */
 window.SGPipelineScript.account = function () {
-  // try to log in inside the app when the account page is loaded
-  if (this.getPage() === this.PAGE_ACCOUNT) {
-    // check if there was a login or registration before (also clean up localStorage)
-    var shopgateWebloginPayload = window.localStorage.getItem(this.STORAGE_KEY_WEBLOGIN_PAYLOAD)
-    window.localStorage.removeItem(this.STORAGE_KEY_WEBLOGIN_PAYLOAD)
-    if (shopgateWebloginPayload) {
-      this.loginInApp(shopgateWebloginPayload)
-    }
+  // hide internal processes from the user
+  this.showLoadingScreen()
+
+  // check if there was a login or registration before (also clean up localStorage)
+  var shopgateWebloginPayload = window.localStorage.getItem(this.STORAGE_KEY_WEBLOGIN_PAYLOAD)
+  window.localStorage.removeItem(this.STORAGE_KEY_WEBLOGIN_PAYLOAD)
+  if (shopgateWebloginPayload) {
+    this.loginInApp(shopgateWebloginPayload)
   }
 
   window.SGAppConnector.closeLoadingSpinner()
@@ -43,9 +43,9 @@ window.SGPipelineScript.loginInApp = function (payload) {
       console.log('# Web login/registration successful. Broadcasting "userLoggedIn" event to the app.')
 
       window.SGAppConnector.sendAppCommand({
-        'c': 'broadcastEvent',
-        'p': {
-          'event': 'userLoggedIn'
+        c: 'broadcastEvent',
+        p: {
+          event: 'userLoggedIn'
         }
       })
     }
@@ -55,14 +55,17 @@ window.SGPipelineScript.loginInApp = function (payload) {
       return window.SGPipelineScript.proceedToCheckout()
     }
 
-    // close in app browser tab if it was just a standalone action (also send back the callback data)
+    // close loading screen, because otherwise it will even be visible after closing the tab
+    window.SGPipelineScript.closeLoadingScreen()
+
+    // close loading screen and close in app browser tab if it was just a standalone action (send back callback data)
     var closeTabData = [(shopgateParams ? shopgateParams.sgcloudCallbackData : {})]
     console.log('# Closing in app browser tab with data: ' + JSON.stringify(closeTabData))
     window.SGAppConnector.sendAppCommand({
-      'c': 'broadcastEvent',
-      'p': {
-        'event': 'closeInAppBrowser',
-        'data': closeTabData
+      c: 'broadcastEvent',
+      p: {
+        event: 'closeInAppBrowser',
+        data: closeTabData
       }
     })
   }, shopgateParams)

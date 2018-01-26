@@ -13,6 +13,7 @@ window.SGPipelineScript.PAGE_CHECKOUTS = '/[0-9]+/checkouts/[0-9a-f]+'
 window.SGPipelineScript.STORAGE_KEY_WEBLOGIN_PAYLOAD = 'shopgateWebloginPayload'
 window.SGPipelineScript.STORAGE_KEY_TAB_PARAMS = 'shopgateParams'
 window.SGPipelineScript.STORAGE_KEY_CHECKOUT_URL = 'shopifyCheckoutUrl'
+window.SGPipelineScript.STORAGE_KEY_LOADING_SCREEN_ENABLED = 'shopgateAppLoadingScreenEnabled'
 /**
  * Pipeline entry function.
  *
@@ -44,12 +45,14 @@ window.SGPipelineScript.__init = function () {
     }
     case this.PAGE_CHALLENGE: {
       // the user needs to take some action, so close the loading spinner. no page specific code needed
+      this.closeLoadingScreen()
       window.SGAppConnector.closeLoadingSpinner()
       break
     }
     default: {
       // on every other page the temporarily stored credentials should be removed and the loading spinner be closed
       window.localStorage.removeItem(this.STORAGE_KEY_WEBLOGIN_PAYLOAD)
+      this.closeLoadingScreen()
       window.SGAppConnector.closeLoadingSpinner()
       break
     }
@@ -63,6 +66,46 @@ window.SGPipelineScript.__init = function () {
  */
 window.SGPipelineScript.getLocation = function () {
   return window.location.toString().replace(/[#?].*$/g, '')
+}
+
+/**
+ * Sends an app command to show the loading screen.
+ */
+window.SGPipelineScript.showLoadingScreen = function () {
+  // sending the "sho"
+  if (window.localStorage.getItem(this.STORAGE_KEY_LOADING_SCREEN_ENABLED)) {
+    return
+  }
+  window.localStorage.setItem(this.STORAGE_KEY_LOADING_SCREEN_ENABLED, 'true')
+
+  window.SGAppConnector.sendAppCommand({
+    c: 'presentNotification',
+    p: {
+      presentationType: 'centeredFade',
+      src: 'sgapi:loading_notification',
+      timeout: 10,
+      notificationParams: {
+        fullSize: true
+      }
+    }
+  })
+}
+
+/**
+ * Sends an app command to close the loading screen.
+ */
+window.SGPipelineScript.closeLoadingScreen = function () {
+  if (!window.localStorage.getItem(this.STORAGE_KEY_LOADING_SCREEN_ENABLED)) {
+    return
+  }
+  window.localStorage.removeItem(this.STORAGE_KEY_LOADING_SCREEN_ENABLED)
+
+  window.SGAppConnector.sendAppCommand({
+    c: 'broadcastEvent',
+    p: {
+      event: 'closeNotification'
+    }
+  })
 }
 
 /**

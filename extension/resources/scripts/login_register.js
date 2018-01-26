@@ -2,6 +2,9 @@
  * Pipeline entry function for the login and registration page of the Shopify frontend.
  */
 window.SGPipelineScript.login_register = function () {
+  // the application can open up a loading screen on int own. make sure it's closed when user action is required
+  this.closeLoadingScreen()
+
   // attach a click-event-listener to each relevant form-submit button
   switch (this.getPage()) {
     case this.PAGE_LOGIN: {
@@ -51,6 +54,9 @@ window.SGPipelineScript.attachSubmitListener = function (formId) {
  * @return {boolean}
  */
 window.SGPipelineScript.initAppLogin = function (formId) {
+  // hide internal processes from the user
+  this.showLoadingScreen()
+
   // read form elements
   var formChilds = Array.from(document.getElementById(formId).children)
   var payloadData = {}
