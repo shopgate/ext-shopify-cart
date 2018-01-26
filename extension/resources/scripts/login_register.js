@@ -103,7 +103,6 @@ window.SGPipelineScript.initAppLogin = function (formId) {
   return false
 }
 
-
 /**
  * Fetches the checkout url in the background and caches it for later usage.
  */
