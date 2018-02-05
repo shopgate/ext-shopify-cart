@@ -1,27 +1,13 @@
 class Url {
   constructor (url, expires) {
-    this._url = ''
+    this.url = ''
     if (url !== null && url !== undefined) {
-      this._url = url
+      this.url = url
     }
 
     if (expires !== null && expires !== undefined && expires !== '') {
-      this._expires = expires
+      this.expires = expires
     }
-  }
-
-  /**
-   * @return {string}
-   */
-  get url () {
-    return this._url
-  }
-
-  /**
-   * @return {string}
-   */
-  get expires () {
-    return this._expires
   }
 }
 

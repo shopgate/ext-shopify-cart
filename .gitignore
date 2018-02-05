@@ -1,8 +1,7 @@
 .DS_Store
 build
 extension/coverage
-extension/node_modules
+**/node_modules
+**/extension/config.json
 .idea/
 npm-debug.log
-.eslintrc.json
-node_modules/

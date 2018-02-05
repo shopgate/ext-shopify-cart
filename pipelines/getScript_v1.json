@@ -1,0 +1,28 @@
+{
+  "version": "1",
+  "pipeline": {
+    "id": "getScript_v1",
+    "public": true,
+    "input": [
+      {"key": "scriptName", "id": "1"}
+    ],
+    "output": [
+      {"key": "scriptName", "id": "1"},
+      {"key": "scriptCode", "id": "2"}
+    ],
+    "steps": [
+      {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/resources/loadScriptFile_v1.js",
+        "input": [
+          {"key": "scriptName", "id": "1"}
+        ],
+        "output": [
+          {"key": "scriptName", "id": "1"},
+          {"key": "scriptCode", "id": "2"}
+        ]
+      }
+    ]
+  }
+}
