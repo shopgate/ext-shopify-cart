@@ -135,6 +135,42 @@ module.exports = function (config) {
     })
   }
 
+  /**
+   * @param {number} customersId
+   * @param {function} cb
+   */
+  module.getCustomerById = function (customersId, cb) {
+    this.get(`/admin/customers/${customersId}.json`, {}, (err, userData) => {
+      if (err) {
+        return cb(err)
+      }
+
+      if (Tools.isEmpty(userData.customer)) {
+        return cb(new Error('Customer not found'))
+      }
+
+      cb(null, userData.customer)
+    })
+  }
+
+  /**
+   * @param {string} email
+   * @param {function} cb
+   */
+  module.findUserByEmail = function (email, cb) {
+    this.get(`/admin/customers/search.json?query=${email}`, {}, (err, userData) => {
+      if (err) {
+        return cb(err)
+      }
+
+      if (Tools.isEmpty(userData.customers)) {
+        return cb(new Error('No customers not found'))
+      }
+
+      cb(null, userData.customers)
+    })
+  }
+
   // -------------------------------------------------------------------------------------------------------------------
 
   /**
