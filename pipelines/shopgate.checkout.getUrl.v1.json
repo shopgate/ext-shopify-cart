@@ -1,13 +1,12 @@
 {
   "version": "1",
   "pipeline": {
-    "id": "deleteCouponsFromCart_v1",
+    "id": "shopgate.checkout.getUrl.v1",
     "public": true,
-    "input": [
-      {"key": "couponCodes", "id": "1020"}
-    ],
+    "input": [],
     "output": [
-      {"key": "messages", "id": "1010", "optional" : true}
+      {"key": "url", "id": "1010"},
+      {"key": "expires", "id": "1020", "optional": true}
     ],
     "steps": [
       {
@@ -33,13 +32,13 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/deleteDiscountsFromCheckout_v1.js",
+        "path": "@shopgate/shopify-cart/cart/getCheckoutUrl_v1.js",
         "input": [
-          {"key": "checkout", "id": "100"},
-          {"key": "discountCodes", "id": "1020"}
+          {"key": "checkout", "id": "100"}
         ],
         "output": [
-          {"key": "messages", "id": "1010", "optional": true}
+          {"key": "url", "id": "1010"},
+          {"key": "expires", "id": "1020", "optional": true}
         ]
       }
     ]
