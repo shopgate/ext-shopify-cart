@@ -1,7 +1,7 @@
 {
   "version": "1",
   "pipeline": {
-    "id": "fetchShopifyCheckout_int_v1",
+    "id": "shopgate.cart.fetchShopifyCheckout.v1",
     "public": true,
     "input": [],
     "output": [

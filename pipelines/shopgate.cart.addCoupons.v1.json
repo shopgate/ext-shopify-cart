@@ -1,7 +1,7 @@
 {
   "version": "1",
   "pipeline": {
-    "id": "addCouponsToCart_v1",
+    "id": "shopgate.cart.addCoupons.v1",
     "public": true,
     "input": [
       {"key": "couponCodes", "id": "1020"}

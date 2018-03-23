@@ -1,7 +1,7 @@
 {
   "version": "1",
   "pipeline": {
-    "id": "migrateCartContents_int_v1",
+    "id": "shopgate.cart.migrateCartContents.v1",
     "public": true,
     "input": [
       {"key": "sourceCart", "id": "1"},

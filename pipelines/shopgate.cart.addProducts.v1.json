@@ -1,15 +1,45 @@
 {
   "version": "1",
   "pipeline": {
-    "id": "updateProductsInCart_v1",
+    "id": "shopgate.cart.addProducts.v1",
     "public": true,
     "input": [
-      {"key": "CartItem", "id": "1010"}
+      {"key": "products", "id": "1080"}
     ],
     "output": [
       {"key": "messages", "id": "1100", "optional": true}
     ],
     "steps": [
+      {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/products/getProducts_v1.js",
+        "input": [
+          {"key": "products", "id": "1080"}
+        ],
+        "output": [
+          {"key": "service", "id": "10"},
+          {"key": "version", "id": "11"},
+          {"key": "path", "id": "12"},
+          {"key": "method", "id": "13"},
+          {"key": "query", "id": "14"}
+        ]
+      },
+      {
+        "type": "extension",
+        "id": "@shopgate/bigapi",
+        "path": "@shopgate/bigapi/big-api/getBigApiResult.js",
+        "input": [
+          {"key": "service", "id": "10"},
+          {"key": "version", "id": "11"},
+          {"key": "path", "id": "12"},
+          {"key": "method", "id": "13"},
+          {"key": "query", "id": "14"}
+        ],
+        "output": [
+          {"key": "collection", "id": "100"}
+        ]
+      },
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
@@ -38,7 +68,7 @@
           {"key": "checkout", "id": "101"}
         ],
         "output": [
-          {"key": "shopifyCartData", "id": "100"}
+          {"key": "shopifyCartData", "id": "110"}
         ]
       },
       {
@@ -46,10 +76,10 @@
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/getShopifyCartProducts_v1.js",
         "input": [
-          {"key": "shopifyCartData", "id": "100"}
+          {"key": "shopifyCartData", "id": "110"}
         ],
         "output": [
-          {"key": "products",  "id": "102"}
+          {"key": "products",  "id": "112"}
         ]
       },
       {
@@ -57,14 +87,14 @@
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/products/getProducts_v1.js",
         "input": [
-          {"key": "products", "id": "102"}
+          {"key": "products", "id": "112"}
         ],
         "output": [
-          {"key": "service", "id": "10"},
-          {"key": "version", "id": "11"},
-          {"key": "path", "id": "12"},
-          {"key": "method", "id": "13"},
-          {"key": "query", "id": "14"}
+          {"key": "service", "id": "20"},
+          {"key": "version", "id": "21"},
+          {"key": "path", "id": "22"},
+          {"key": "method", "id": "23"},
+          {"key": "query", "id": "24"}
         ]
       },
       {
@@ -72,14 +102,14 @@
         "id": "@shopgate/bigapi",
         "path": "@shopgate/bigapi/big-api/getBigApiResult.js",
         "input": [
-          {"key": "service", "id": "10"},
-          {"key": "version", "id": "11"},
-          {"key": "path", "id": "12"},
-          {"key": "method", "id": "13"},
-          {"key": "query", "id": "14"}
+          {"key": "service", "id": "20"},
+          {"key": "version", "id": "21"},
+          {"key": "path", "id": "22"},
+          {"key": "method", "id": "23"},
+          {"key": "query", "id": "24"}
         ],
         "output": [
-          {"key": "collection", "id": "103"}
+          {"key": "collection", "id": "113"}
         ]
       },
       {
@@ -87,8 +117,8 @@
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/getCart_v1.js",
         "input": [
-          {"key": "shopifyCartData", "id": "100"},
-          {"key": "importedProductsInCart", "id": "103", "optional": true}
+          {"key": "shopifyCartData", "id": "110"},
+          {"key": "importedProductsInCart", "id": "113", "optional": true}
         ],
         "output": [
           {"key": "cartItems", "id": "1060"}
@@ -97,11 +127,12 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/updateProductsInCart_v1.js",
+        "path": "@shopgate/shopify-cart/cart/addProductsToCart_v1.js",
         "input": [
-          {"key": "importedProductsInCart", "id": "103", "optional": true},
+          {"key": "importedProductsAddedToCart", "id": "100"},
+          {"key": "importedProductsInCart", "id": "113", "optional": true},
           {"key": "cartItems", "id": "1060"},
-          {"key": "CartItem", "id": "1010"}
+          {"key": "products", "id": "1080"}
         ],
         "output": [
           {"key": "messages", "id": "1100", "optional": true}
