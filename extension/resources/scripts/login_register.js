@@ -89,7 +89,7 @@ window.SGPipelineScript.initAppLogin = function (formId) {
 
   // init weblogin by passing encryption phrase to trusted user extension
   window.SGAppConnector.sendPipelineRequest(
-    'initWebLogin_v1',
+    'shopgate.user.initWebLogin.v1',
     true,
     {phrase: phrase},
 
@@ -113,7 +113,7 @@ window.SGPipelineScript.initAppLogin = function (formId) {
  * Fetches the checkout url in the background and caches it for later usage.
  */
 window.SGPipelineScript.requestCheckoutUrl = function () {
-  window.SGAppConnector.sendPipelineRequest('getCheckoutUrl_v1', false, null, function (err, output, storageKey) {
+  window.SGAppConnector.sendPipelineRequest('shopgate.checkout.getUrl.v1', false, null, function (err, output, storageKey) {
     if (err) {
       return console.error(err)
     }
