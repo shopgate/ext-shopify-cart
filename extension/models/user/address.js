@@ -1,5 +1,4 @@
 class Address {
-
   constructor () {
     this._id = null
     this._type = null
