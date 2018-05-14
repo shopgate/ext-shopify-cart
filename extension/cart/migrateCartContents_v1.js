@@ -64,6 +64,17 @@ function migrateCartContents (context, sourceCartId, sourceCartLineItems, target
     }
   })
 
+  // Clear the old guest cart
+  const clearData = {'checkout': {'line_items': []}}
+  Shopify.put('/admin/checkouts/' + sourceCartId + '.json', clearData, function (err) {
+    if (err) {
+      context.log.error(
+        'Couldn\'t clear checkout with id ' + sourceCartId + ' failed with error: ' + JSON.stringify(err)
+      )
+      return cb(new UnknownError())
+    }
+  })
+
   // update destination cart at Shopify
   const updatedData = {'checkout': {'line_items': checkoutCartItems}}
   Shopify.put('/admin/checkouts/' + targetCartId + '.json', updatedData, function (err) {
