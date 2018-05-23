@@ -84,11 +84,11 @@ function migrateCartContents (context, sourceCartId, sourceCartLineItems, target
         context.log.error(
           'Couldn\'t update checkout with id ' + targetCartId + ' failed with error: ' + JSON.stringify(err)
         )
-        return cb(new Error('Unable to merging carts'))
+        return cb(new Error('Unable to merge carts'))
       }
       const errorLineItem = err.error.line_items
       Object.keys(errorLineItem).map((errorKey) => {
-        var errorContent = errorLineItem[errorKey]
+        const errorContent = errorLineItem[errorKey]
         let currentLineItem = updatedData.checkout.line_items[errorKey]
         if (currentLineItem) {
           const quantity = errorContent.quantity
@@ -106,7 +106,7 @@ function migrateCartContents (context, sourceCartId, sourceCartLineItems, target
             context.log.error(
               'Couldn\'t update checkout with id ' + targetCartId + ' failed with error: ' + JSON.stringify(err)
             )
-            return cb(new Error('Unable to merging carts'))
+            return cb(new Error('Unable to merge carts'))
           })
       })
     })
