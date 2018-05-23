@@ -75,16 +75,50 @@ function migrateCartContents (context, sourceCartId, sourceCartLineItems, target
     }
   })
 
-  // update destination cart at Shopify
   const updatedData = {'checkout': {'line_items': checkoutCartItems}}
-  Shopify.put('/admin/checkouts/' + targetCartId + '.json', updatedData, function (err) {
-    if (err) {
-      context.log.error(
-        'Couldn\'t update checkout with id ' + targetCartId + ' failed with error: ' + JSON.stringify(err)
-      )
-      return cb(new UnknownError())
-    }
 
-    cb()
-  })
+  updateCart(updatedData, targetCartId)
+    .then(cb())
+    .catch(err => {
+      if (err.code !== 422) {
+        context.log.error(
+          'Couldn\'t update checkout with id ' + targetCartId + ' failed with error: ' + JSON.stringify(err)
+        )
+        return cb(new Error('Unable to merging carts'))
+      }
+      const errorLineItem = err.error.line_items
+      Object.keys(errorLineItem).map((errorKey) => {
+        var errorContent = errorLineItem[errorKey]
+        let currentLineItem = updatedData.checkout.line_items[errorKey]
+        if (currentLineItem) {
+          const quantity = errorContent.quantity
+          if (quantity.length) {
+            quantity.map((item) => {
+              if (item.code === 'not_enough_in_stock') {
+                currentLineItem.quantity = item.options.remaining
+              }
+            })
+          }
+        }
+        updateCart(updatedData, targetCartId)
+          .then(cb())
+          .catch(err => {
+            context.log.error(
+              'Couldn\'t update checkout with id ' + targetCartId + ' failed with error: ' + JSON.stringify(err)
+            )
+            return cb(new Error('Unable to merging carts'))
+          })
+      })
+    })
+
+  function updateCart (updatedData, targetCartId) {
+    return new Promise((resolve, reject) => {
+      Shopify.put('/admin/checkouts/' + targetCartId + '.json', updatedData, function (err) {
+        if (err) {
+          return reject(err)
+        }
+        resolve(true)
+      })
+    })
+  }
 }
