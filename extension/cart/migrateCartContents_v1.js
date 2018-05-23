@@ -89,7 +89,7 @@ function migrateCartContents (context, sourceCartId, sourceCartLineItems, target
       const errorLineItem = err.error.line_items
       Object.keys(errorLineItem).map((errorKey) => {
         const errorContent = errorLineItem[errorKey]
-        let currentLineItem = updatedData.checkout.line_items[errorKey]
+        const currentLineItem = updatedData.checkout.line_items[errorKey]
         if (currentLineItem) {
           const quantity = errorContent.quantity
           if (quantity.length) {
