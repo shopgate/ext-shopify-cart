@@ -2,6 +2,10 @@
   "name": "@shopgate/shopify-cart",
   "version": "1.1.0",
   "description": "",
+  "scripts": {
+    "test": "JUNIT_REPORT_PATH=../build/mocha.xml JUNIT_REPORT_STACK=1 mocha --recursive test -R mocha-jenkins-reporter",
+    "cover": "istanbul cover _mocha -- --recursive"
+  },
   "repository": {
     "type": "git",
     "url": "ssh://git@stash.localdev.cc:7999/sgx/shopify-cart.git"
@@ -12,6 +16,17 @@
     "request": "2.81.0",
     "shopify-node-api": "^1.7.6",
     "underscore": "1.8.3"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "chai-subset": "^1.6.0",
+    "expect": "^22.4.3",
+    "mocha": "^3.2.0",
+    "mocha-jenkins-reporter": "^0.3.7",
+    "rewire": "^2.5.2",
+    "sinon": "^5.0.9",
+    "sinon-stub-promise": "^4.0.0"
   },
   "standard": {
     "env": {
