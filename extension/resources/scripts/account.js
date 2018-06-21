@@ -29,7 +29,8 @@ window.SGPipelineScript.loginInApp = function (payload) {
   var pipelineInput = {
     'strategy': 'web',
     'parameters': {
-      'payload': payload
+      'payload': payload,
+      'customerId': window.meta.page.customerId
     }
   }
 

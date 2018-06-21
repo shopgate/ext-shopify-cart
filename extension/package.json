@@ -1,6 +1,6 @@
 {
   "name": "@shopgate/shopify-cart",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "",
   "scripts": {
     "test": "JUNIT_REPORT_PATH=../build/mocha.xml JUNIT_REPORT_STACK=1 mocha --recursive test -R mocha-jenkins-reporter",
