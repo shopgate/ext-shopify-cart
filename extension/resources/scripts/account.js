@@ -30,10 +30,10 @@ window.SGPipelineScript.loginInApp = function (payload) {
     'strategy': 'web',
     'parameters': {
       'payload': payload,
-      'customerId': this.meta.page.customerId
+      'customerId': window.meta.page.customerId
     }
   }
-  console.log('pipelineInput', pipelineInput)
+
   // call login_v1 pipeline and pass through the shopgateParams data that was sent to the tab when it was opened
   window.SGAppConnector.sendPipelineRequest('shopgate.user.loginUser.v1', true, pipelineInput, function (err, output, shopgateParams) {
     // tell the frontend to switch to "logged in mode"
