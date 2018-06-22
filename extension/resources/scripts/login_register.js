@@ -58,7 +58,7 @@ window.SGPipelineScript.initAppLogin = function (formId) {
   this.showLoadingScreen()
 
   // read form elements
-  var formChilds = Array.from(document.getElementById(formId).children)
+  var formChilds = Array.prototype.slice.call(document.getElementById(formId).querySelectorAll('input[name^=customer]'))
   var payloadData = {}
   var key
   var name
@@ -91,7 +91,7 @@ window.SGPipelineScript.initAppLogin = function (formId) {
   window.SGAppConnector.sendPipelineRequest(
     'shopgate.user.initWebLogin.v1',
     true,
-    {phrase: phrase},
+    { phrase: phrase },
 
     // callback
     function (err, output, formId) {
