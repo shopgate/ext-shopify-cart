@@ -1,5 +1,7 @@
 const ShopifyAPI = require('shopify-node-api')
 const Tools = require('./tools')
+const ShopgateShopifyApi = require('./shopgate.shopify.node.api')
+const Logger = require('./logger')
 
 /**
  * @typedef {object} config
@@ -9,10 +11,10 @@ const Tools = require('./tools')
  */
 
 /**
- * @param {object} config
+ * @param {object} context
  * @return {{}}
  */
-module.exports = function (config) {
+module.exports = function (context) {
   /**
    * @typedef {object} SGShopifyApi
    * @property {function} get
@@ -21,11 +23,17 @@ module.exports = function (config) {
    * @property {function} post
    */
   const SGShopifyApi = ShopifyAPI({
-    shop: config.shopifyShopAlias + '.myshopify.com',
+    shop: context.config.shopifyShopAlias + '.myshopify.com',
     shopify_api_key: null, // not required
-    access_token: config.shopifyAccessToken, // not required
+    access_token: context.config.shopifyAccessToken, // not required
     verbose: false
   })
+
+  /**
+   * Rewrite makeRequest method
+   */
+  let shopgateShopifyApi = new ShopgateShopifyApi()
+  SGShopifyApi.makeRequest = shopgateShopifyApi.makeRequest
 
   const module = {}
 
@@ -35,7 +43,7 @@ module.exports = function (config) {
    * @return {string}
    */
   module.getGraphQlUrl = function () {
-    let shopDomain = 'https://' + config.shopifyShopAlias + '.myshopify.com'
+    let shopDomain = 'https://' + context.config.shopifyShopAlias + '.myshopify.com'
     return shopDomain + '/api/graphql'
   }
 
@@ -172,14 +180,15 @@ module.exports = function (config) {
   }
 
   // -------------------------------------------------------------------------------------------------------------------
-
   /**
    * @param {String} endpoint
    * @param {Object} params
    * @param {function} cb
    */
   module.get = function (endpoint, params, cb) {
-    SGShopifyApi.get(endpoint, params, function (err, response) {
+    const logRequest = new Logger(context, params)
+    SGShopifyApi.get(endpoint, params, (err, response, headers, options, statusCode) => {
+      logRequest.log(statusCode, headers, response, options)
       cb(err, response)
     })
   }
@@ -190,7 +199,9 @@ module.exports = function (config) {
    * @param {function} cb
    */
   module.put = function (endpoint, params, cb) {
-    SGShopifyApi.put(endpoint, params, function (err, response) {
+    const logRequest = new Logger(context, params)
+    SGShopifyApi.put(endpoint, params, function (err, response, headers, options, statusCode) {
+      logRequest.log(statusCode, headers, response, options)
       cb(err, response)
     })
   }
@@ -201,7 +212,9 @@ module.exports = function (config) {
    * @param {function} cb
    */
   module.delete = function (endpoint, params, cb) {
-    SGShopifyApi.delete(endpoint, params, function (err, response) {
+    const logRequest = new Logger(context, params)
+    SGShopifyApi.delete(endpoint, params, function (err, response, headers, options, statusCode) {
+      logRequest.log(statusCode, headers, response, options)
       cb(err, response)
     })
   }
@@ -212,7 +225,9 @@ module.exports = function (config) {
    * @param {function} cb
    */
   module.post = function (endpoint, params, cb) {
-    SGShopifyApi.post(endpoint, params, function (err, response) {
+    const logRequest = new Logger(context, params)
+    SGShopifyApi.post(endpoint, params, function (err, response, headers, options, statusCode) {
+      logRequest.log(statusCode, headers, response, options)
       cb(err, response)
     })
   }

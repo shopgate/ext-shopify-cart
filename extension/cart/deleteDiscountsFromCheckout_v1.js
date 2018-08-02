@@ -19,7 +19,7 @@ module.exports = function (context, input, cb) {
    * @param {String[]} discountCodes
    */
   function removeDiscounts (checkout, discountCodes) {
-    const Shopify = require('../lib/shopify.api.js')(context.config)
+    const Shopify = require('../lib/shopify.api.js')(context)
     const checkoutToken = checkout.token
 
     if (Tools.isEmpty(discountCodes) || !Array.isArray(discountCodes) || !discountCodes[0]) {

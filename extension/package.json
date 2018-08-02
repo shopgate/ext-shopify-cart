@@ -14,7 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "request": "2.87.0",
-    "shopify-node-api": "^1.7.6",
+    "shopify-node-api": "1.7.6",
     "underscore": "1.8.3"
   },
   "devDependencies": {

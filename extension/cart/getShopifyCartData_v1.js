@@ -11,7 +11,7 @@ const Tools = require('../lib/tools')
  * @param cb
  */
 module.exports = function (context, input, cb) {
-  const Shopify = require('../lib/shopify.api.js')(context.config)
+  const Shopify = require('../lib/shopify.api.js')(context)
 
   Tools.getCurrentCartId(context, (err, cartId) => {
     if (err) cb(err)
