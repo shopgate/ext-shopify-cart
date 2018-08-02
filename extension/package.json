@@ -1,9 +1,9 @@
 {
   "name": "@shopgate/shopify-cart",
-  "version": "1.1.6-beta.1",
+  "version": "1.1.6-beta.2",
   "description": "",
   "scripts": {
-    "test": "JUNIT_REPORT_PATH=../build/mocha.xml JUNIT_REPORT_STACK=1 mocha --recursive test -R mocha-jenkins-reporter",
+    "test": "JUNIT_REPORT_PATH=../build/mocha.xml JUNIT_REPORT_STACK=1 mocha --recursive test -R mochawesome --reporter-options reportDir=coverage",
     "cover": "istanbul cover _mocha -- --recursive"
   },
   "repository": {
@@ -23,7 +23,7 @@
     "chai-subset": "^1.6.0",
     "expect": "^22.4.3",
     "mocha": "^3.2.0",
-    "mocha-jenkins-reporter": "^0.3.7",
+    "mochawesome": "3.0.2",
     "rewire": "^2.5.2",
     "sinon": "^5.0.9",
     "sinon-stub-promise": "^4.0.0"
