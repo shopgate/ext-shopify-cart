@@ -1,6 +1,6 @@
 const _ = require('underscore')
 const UnknownError = require('../models/Errors/UnknownError')
-const { updateCart, clearCart } = require('./../helper/cart')
+let { updateCart, clearCart } = require('./../helper/cart')
 
 /**
  *
