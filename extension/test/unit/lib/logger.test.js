@@ -1,19 +1,16 @@
 const sinon = require('sinon')
-
 const Logger = require('../../../lib/logger')
-const context = {
-  log: {
-    debug: (message) => {
-    }
-  }
-}
 const statusCodeSuccess = 200
 let logRequest
+const log = {
+  debug: (message) => {
+  }
+}
 
 describe('Logger', () => {
 
   beforeEach(() => {
-    logRequest = new Logger(context, {})
+    logRequest = new Logger(log, {})
   });
 
   it('should log the status code, duration, request and response', () => {
@@ -25,7 +22,7 @@ describe('Logger', () => {
       statusCode: statusCodeSuccess
     }
 
-    const logSpy = sinon.spy(context.log, 'debug')
+    const logSpy = sinon.spy(log, 'debug')
 
     logRequest.log(statusCodeSuccess, {}, {}, {})
     sinon.assert.calledWith(logSpy, expectedLogObject)
