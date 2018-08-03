@@ -1,4 +1,4 @@
-var BigJSON = require('json-bigint')
+const BigJSON = require('json-bigint')
 
 module.exports = function () {
   module.makeRequest = function (endpoint, method, data, callback, retry) {
@@ -43,7 +43,7 @@ module.exports = function () {
       })
 
       response.on('end', function () {
-        var delay = 0
+        let delay = 0
 
         // If the request is being rate limited by Shopify, try again after a delay
         if (response.statusCode === 429) {
@@ -61,6 +61,7 @@ module.exports = function () {
         setTimeout(function () {
           let json = {}
           let error
+          let jsonError
 
           try {
             if (body.trim() !== '') {
@@ -71,7 +72,7 @@ module.exports = function () {
           }
           if (response.statusCode >= 400) {
             if (json && (json.hasOwnProperty('error_description') || json.hasOwnProperty('error') || json.hasOwnProperty('errors'))) {
-              var jsonError = (json.error_description || json.error || json.errors)
+              jsonError = (json.error_description || json.error || json.errors)
             }
             error = {
               code: response.statusCode, error: jsonError || response.statusMessage
@@ -86,7 +87,7 @@ module.exports = function () {
     request.on('error', function (e) {
       self.conditional_console_log('Request Error: ', e)
       if (self.config.retry_errors && !retry) {
-        var delay = self.config.error_retry_delay || 10000
+        const delay = self.config.error_retry_delay || 10000
         self.conditional_console_log('retrying once in " + delay + " milliseconds')
         setTimeout(function () {
           self.makeRequest(endpoint, method, data, callback, true)

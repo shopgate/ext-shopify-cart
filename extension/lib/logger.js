@@ -1,6 +1,6 @@
 module.exports = class {
-  constructor (context, request) {
-    this.context = context
+  constructor (logger, request) {
+    this.logger = logger
     this.request = request
     this.start = new Date()
   }
@@ -18,6 +18,6 @@ module.exports = class {
       },
       message: 'Request to Shopify'
     }
-    this.context.log.debug(logResult)
+    this.logger.debug(logResult)
   }
 }

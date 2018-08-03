@@ -16,7 +16,7 @@ const _ = require('underscore')
  * @param cb
  */
 module.exports = function (context, input, cb) {
-  const Shopify = require('../lib/shopify.api.js')(context)
+  const Shopify = require('../lib/shopify.api.js')(context.config, context.log)
   const existCartItems = input.cartItems
   const updateCartItems = input.CartItem
   const resultMessages = []

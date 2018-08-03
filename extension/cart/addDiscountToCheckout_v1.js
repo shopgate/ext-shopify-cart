@@ -20,7 +20,7 @@ module.exports = function (context, input, cb) {
    * @param {String[]} discountCodes
    */
   function addDiscounts (context, checkoutToken, discountCodes) {
-    const Shopify = require('../lib/shopify.api.js')(context)
+    const Shopify = require('../lib/shopify.api.js')(context.config, context.log)
 
     if (Tools.isEmpty(discountCodes) || !Array.isArray(discountCodes) || !discountCodes[0]) {
       context.log.error('Error: Wrong parameter format or no discount (coupon) codes given.')

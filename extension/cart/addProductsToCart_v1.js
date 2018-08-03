@@ -15,7 +15,7 @@ const Tools = require('../lib/tools')
  * @param {function} cb
  */
 module.exports = function (context, input, cb) {
-  const Shopify = require('../lib/shopify.api.js')(context)
+  const Shopify = require('../lib/shopify.api.js')(context.config, context.log)
   let checkoutCartItems = []
   const importedProductsAddedToCart = input.importedProductsAddedToCart
   const importedProductsInCart = input.importedProductsInCart
