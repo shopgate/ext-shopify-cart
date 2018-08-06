@@ -4,7 +4,7 @@ const CartItem = require('../models/cart/cartItems/cartItem')
 const _ = require('underscore')
 
 module.exports = function (context, input, cb) {
-  const Shopify = require('../lib/shopify.api.js')(context.config)
+  const Shopify = require('../lib/shopify.api.js')(context.config, context.log)
   const existCartItems = input.cartItems
   const itemsIdsToDelete = input.CartItemIds
   const importedProductsInCart = input.importedProductsInCart

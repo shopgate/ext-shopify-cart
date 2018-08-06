@@ -8,7 +8,7 @@ const Tools = require('../lib/tools')
  * @param {function} cb
  */
 module.exports = function (context, input, cb) {
-  const Shopify = require('../lib/shopify.api.js')(context.config)
+  const Shopify = require('../lib/shopify.api.js')(context.config, context.log)
   const createNew = Boolean(input.createNew)
 
   // creates a checkout if forced or none available, loads an existing one otherwise

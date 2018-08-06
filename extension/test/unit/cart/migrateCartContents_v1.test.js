@@ -2,8 +2,8 @@ const sinon = require('sinon')
 const assert = require('assert')
 const rewire = require('rewire')
 
-const step = rewire('../../cart/migrateCartContents_v1')
-const cart = require('../../helper/cart')
+const step = rewire('../../../cart/migrateCartContents_v1')
+const cart = require('../../../helper/cart')
 
 describe('migrateCartContents', () => {
 

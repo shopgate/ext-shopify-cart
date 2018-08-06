@@ -1,9 +1,9 @@
 {
   "name": "@shopgate/shopify-cart",
-  "version": "1.1.5",
+  "version": "1.2.0",
   "description": "",
   "scripts": {
-    "test": "JUNIT_REPORT_PATH=../build/mocha.xml JUNIT_REPORT_STACK=1 mocha --recursive test -R mocha-jenkins-reporter",
+    "test": "JUNIT_REPORT_PATH=../build/mocha.xml JUNIT_REPORT_STACK=1 mocha --recursive test -R mochawesome --reporter-options reportDir=coverage",
     "cover": "istanbul cover _mocha -- --recursive"
   },
   "repository": {
@@ -14,7 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "request": "2.87.0",
-    "shopify-node-api": "^1.7.6",
+    "shopify-node-api": "1.7.6",
     "underscore": "1.8.3"
   },
   "devDependencies": {
@@ -22,10 +22,11 @@
     "chai-as-promised": "^7.1.1",
     "chai-subset": "^1.6.0",
     "expect": "^22.4.3",
-    "mocha": "^3.2.0",
-    "mocha-jenkins-reporter": "^0.3.7",
+    "mocha": "^5.2.0",
+    "mochawesome": "3.0.2",
+    "nock": "^9.4.4",
     "rewire": "^2.5.2",
-    "sinon": "^5.0.9",
+    "sinon": "^5.1.1",
     "sinon-stub-promise": "^4.0.0"
   },
   "standard": {
