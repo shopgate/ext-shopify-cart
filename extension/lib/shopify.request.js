@@ -1,19 +1,86 @@
 const querystring = require('querystring')
 const https = require('https')
+const Logger = require('./logger')
 
 module.exports = class {
+  /**
+   * @param {Object} config
+   * @param {config.log} logger
+   */
   constructor (config, logger) {
     this.config = config
     this.logger = logger
   }
+  /**
+   * @param {string} endpoint
+   * @param {Object} data
+   * @returns {Promise}
+   */
   get (endpoint, data) {
     endpoint += '?' + querystring.stringify(data)
     return (this.makeRequest(endpoint, 'GET', data))
   }
+  /**
+   * @param {string} endpoint
+   * @param {Object} data
+   * @returns {Promise}
+   */
+  put (endpoint, data) {
+    return (this.makeRequest(endpoint, 'PUT', data))
+  }
+  /**
+   * @param {string} endpoint
+   * @param {Object} data
+   * @returns {Promise}
+   */
+  post (endpoint, data) {
+    return (this.makeRequest(endpoint, 'POST', data))
+  }
+  /**
+   * @param {string} endpoint
+   * @param {Object} data
+   * @returns {Promise}
+   */
+  delete (endpoint, data) {
+    return (this.makeRequest(endpoint, 'DELETE', data))
+  }
+  /**
+   * @param {string} endpoint
+   * @param {Object} data
+   * @returns {Promise}
+   */
+  patch (endpoint, data) {
+    return (this.makeRequest(endpoint, 'PATCH', data))
+  }
+
+  /**
+   * @returns {string}
+   */
+  buildAuthURL () {
+    let authUrl = 'https://' + this.config.shop.split('.')[0]
+    authUrl += '.myshopify.com/admin/oauth/authorize?'
+    authUrl += 'client_id=' + this.config.shopify_api_key
+    authUrl += '&scope=' + this.config.shopify_scope
+    authUrl += '&redirect_uri=' + this.config.redirect_uri
+    authUrl += '&state=' + this.config.nonce
+
+    return authUrl
+  }
+
+  /**
+   * @returns {string}
+   */
   getHostName () {
     return this.config.shop.split('.')[0] + '.myshopify.com'
   }
+  /**
+   * @param {string} endpoint
+   * @param {string} method
+   * @param {Object} data
+   * @returns {Promise}
+   */
   makeRequest (endpoint, method, data) {
+    const logRequest = new Logger(this.logger, data)
     const dataString = JSON.stringify(data)
     const options = {
       hostname: this.getHostName(),
@@ -26,17 +93,18 @@ module.exports = class {
         'Accept': 'application/json'
       }
     }
+
     if (this.config.access_token) {
       options.headers['X-Shopify-Access-Token'] = this.config.access_token
     }
-    if (options.method === 'post' || options.method === 'put' || options.method === 'delete' || options.method === 'patch') {
-      options.headers['Content-Length'] = Buffer.alloc(dataString).length
+
+    if (!this.ifGetMethod(options)) {
+      options.headers['Content-Length'] = Buffer.from(dataString).length
     }
 
     return new Promise((resolve, reject) => {
       const request = https.request(options, function (response) {
         response.setEncoding('utf8')
-
         let body = ''
         response.on('data', (chunk) => {
           body += chunk
@@ -44,19 +112,35 @@ module.exports = class {
           try {
             if (body.trim() !== '') {
               const json = JSON.parse(body)
+              logRequest.log(response.statusCode, options.headers, json, options)
               resolve(json)
+            } else {
+              logRequest.log(response.statusCode, options.headers, '', options)
+              reject(new Error('Empty response given'))
             }
           } catch (err) {
-            return reject(err)
+            reject(err)
           }
         })
       })
 
-      request.on('error', function (err) {
-        return reject(err)
+      request.on('error', (err) => {
+        reject(err)
       })
+
+      if (!this.ifGetMethod(options)) {
+        request.write(dataString)
+      }
 
       request.end()
     })
+  }
+
+  /**
+   * @param {Object} options
+   * @returns {Boolean}
+   */
+  ifGetMethod (options) {
+    return options.method === 'get'
   }
 }

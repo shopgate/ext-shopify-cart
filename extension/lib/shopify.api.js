@@ -29,7 +29,7 @@ module.exports = function (config, log) {
       access_token: config.shopifyAccessToken, // not required
       verbose: false
     },
-    Logger
+    log
   )
 
   const module = {}
@@ -188,7 +188,7 @@ module.exports = function (config, log) {
         cb(null, response)
       })
       .catch((err) => {
-        return err
+        cb(err)
       })
   }
 
@@ -198,11 +198,13 @@ module.exports = function (config, log) {
    * @param {function} cb
    */
   module.put = function (endpoint, params, cb) {
-    const logRequest = new Logger(log, params)
-    ShopifyApiRequest.put(endpoint, params, function (err, response, headers, options, statusCode) {
-      logRequest.log(statusCode, headers, response, options)
-      cb(err, response)
-    })
+    ShopifyApiRequest.put(endpoint, params)
+      .then((response) => {
+        cb(null, response)
+      })
+      .catch((err) => {
+        cb(err)
+      })
   }
 
   /**
@@ -211,11 +213,13 @@ module.exports = function (config, log) {
    * @param {function} cb
    */
   module.delete = function (endpoint, params, cb) {
-    const logRequest = new Logger(log, params)
-    ShopifyApiRequest.delete(endpoint, params, function (err, response, headers, options, statusCode) {
-      logRequest.log(statusCode, headers, response, options)
-      cb(err, response)
-    })
+    ShopifyApiRequest.delete(endpoint, params)
+      .then((response) => {
+        cb(null, response)
+      })
+      .catch((err) => {
+        cb(err)
+      })
   }
 
   /**
@@ -224,11 +228,13 @@ module.exports = function (config, log) {
    * @param {function} cb
    */
   module.post = function (endpoint, params, cb) {
-    const logRequest = new Logger(log, params)
-    ShopifyApiRequest.post(endpoint, params, function (err, response, headers, options, statusCode) {
-      logRequest.log(statusCode, headers, response, options)
-      cb(err, response)
-    })
+    ShopifyApiRequest.post(endpoint, params)
+      .then((response) => {
+        cb(null, response)
+      })
+      .catch((err) => {
+        cb(err)
+      })
   }
 
   // -------------------------------------------------------------------------------------------------------------------
