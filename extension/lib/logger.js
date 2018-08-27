@@ -1,3 +1,5 @@
+const uuid = require('uuid-v4')
+
 module.exports = class {
   constructor (logger, request) {
     this.logger = logger
@@ -5,6 +7,7 @@ module.exports = class {
     this.start = new Date()
   }
   log (statusCode, headers, response, options) {
+    options.uuid = uuid()
     const logResult = {
       duration: new Date() - this.start,
       statusCode,

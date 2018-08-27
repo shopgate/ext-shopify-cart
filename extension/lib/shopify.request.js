@@ -1,4 +1,5 @@
 const querystring = require('querystring')
+const BigJSON = require('json-bigint')
 const https = require('https')
 const Logger = require('./logger')
 
@@ -54,26 +55,6 @@ module.exports = class {
   }
 
   /**
-   * @returns {string}
-   */
-  buildAuthURL () {
-    let authUrl = 'https://' + this.config.shop.split('.')[0]
-    authUrl += '.myshopify.com/admin/oauth/authorize?'
-    authUrl += 'client_id=' + this.config.shopify_api_key
-    authUrl += '&scope=' + this.config.shopify_scope
-    authUrl += '&redirect_uri=' + this.config.redirect_uri
-    authUrl += '&state=' + this.config.nonce
-
-    return authUrl
-  }
-
-  /**
-   * @returns {string}
-   */
-  getHostName () {
-    return this.config.shop.split('.')[0] + '.myshopify.com'
-  }
-  /**
    * @param {string} endpoint
    * @param {string} method
    * @param {Object} data
@@ -81,9 +62,9 @@ module.exports = class {
    */
   makeRequest (endpoint, method, data) {
     const logRequest = new Logger(this.logger, data)
-    const dataString = JSON.stringify(data)
+    const dataString = BigJSON.stringify(data)
     const options = {
-      hostname: this.getHostName(),
+      hostname: this.config.shop,
       path: endpoint,
       method: method.toLowerCase() || 'get',
       port: 443,
@@ -98,7 +79,7 @@ module.exports = class {
       options.headers['X-Shopify-Access-Token'] = this.config.access_token
     }
 
-    if (!this.ifGetMethod(options)) {
+    if (!this.isGetMethod(options)) {
       options.headers['Content-Length'] = Buffer.from(dataString).length
     }
 
@@ -128,7 +109,7 @@ module.exports = class {
         reject(err)
       })
 
-      if (!this.ifGetMethod(options)) {
+      if (!this.isGetMethod(options)) {
         request.write(dataString)
       }
 
@@ -140,7 +121,7 @@ module.exports = class {
    * @param {Object} options
    * @returns {Boolean}
    */
-  ifGetMethod (options) {
+  isGetMethod (options) {
     return options.method === 'get'
   }
 }
