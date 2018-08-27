@@ -7,7 +7,7 @@ module.exports = class {
     this.start = new Date()
   }
   log (statusCode, headers, response, options) {
-    options.uuid = uuid()
+    options.shopify_request_id = uuid()
     const logResult = {
       duration: new Date() - this.start,
       statusCode,

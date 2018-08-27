@@ -92,7 +92,7 @@ module.exports = class {
         }).on('end', () => {
           try {
             if (body.trim() !== '') {
-              const json = JSON.parse(body)
+              const json = BigJSON.parse(body)
               logRequest.log(response.statusCode, options.headers, json, options)
               resolve(json)
             } else {
