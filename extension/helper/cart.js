@@ -3,7 +3,7 @@
  * @param {object} context
  */
 const clearCart = (sourceCartId, context) => {
-  const Shopify = require('../lib/shopify.api.js')(context.config)
+  const Shopify = require('../lib/shopify.api.js')(context.config, context.log)
   const clearData = { 'checkout': { 'line_items': [] } }
   return new Promise((resolve, reject) => {
     Shopify.put('/admin/checkouts/' + sourceCartId + '.json', clearData, function (err) {
@@ -21,7 +21,7 @@ const clearCart = (sourceCartId, context) => {
  * @param {object} context
  */
 const updateCart = (updatedData, targetCartId, context) => {
-  const Shopify = require('../lib/shopify.api.js')(context.config)
+  const Shopify = require('../lib/shopify.api.js')(context.config, context.log)
   return new Promise((resolve, reject) => {
     Shopify.put('/admin/checkouts/' + targetCartId + '.json', updatedData, function (err) {
       if (err) {

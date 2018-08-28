@@ -9,7 +9,7 @@ const _ = require('underscore')
  * @param {Function} cb
  */
 module.exports = function (context, input, cb) {
-  const ShopifyApi = require('../lib/shopify.api.js')(context.config)
+  const ShopifyApi = require('../lib/shopify.api.js')(context.config, context.log)
   const products = input.products
 
   let productIds = []

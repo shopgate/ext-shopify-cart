@@ -1,5 +1,6 @@
-const ShopifyAPI = require('shopify-node-api')
 const Tools = require('./tools')
+const Logger = require('./logger')
+const ShopifyRequest = require('./shopify.request')
 
 /**
  * @typedef {object} config
@@ -10,9 +11,10 @@ const Tools = require('./tools')
 
 /**
  * @param {object} config
+ * @param {Logger} log
  * @return {{}}
  */
-module.exports = function (config) {
+module.exports = function (config, log) {
   /**
    * @typedef {object} SGShopifyApi
    * @property {function} get
@@ -20,12 +22,15 @@ module.exports = function (config) {
    * @property {function} delete
    * @property {function} post
    */
-  const SGShopifyApi = ShopifyAPI({
-    shop: config.shopifyShopAlias + '.myshopify.com',
-    shopify_api_key: null, // not required
-    access_token: config.shopifyAccessToken, // not required
-    verbose: false
-  })
+  const ShopifyApiRequest = new ShopifyRequest(
+    {
+      shop: config.shopifyShopAlias + '.myshopify.com',
+      shopify_api_key: null, // not required
+      access_token: config.shopifyAccessToken, // not required
+      verbose: false
+    },
+    log
+  )
 
   const module = {}
 
@@ -172,16 +177,19 @@ module.exports = function (config) {
   }
 
   // -------------------------------------------------------------------------------------------------------------------
-
   /**
    * @param {String} endpoint
    * @param {Object} params
    * @param {function} cb
    */
   module.get = function (endpoint, params, cb) {
-    SGShopifyApi.get(endpoint, params, function (err, response) {
-      cb(err, response)
-    })
+    ShopifyApiRequest.get(endpoint, params)
+      .then((response) => {
+        cb(null, response)
+      })
+      .catch((err) => {
+        cb(err)
+      })
   }
 
   /**
@@ -190,9 +198,13 @@ module.exports = function (config) {
    * @param {function} cb
    */
   module.put = function (endpoint, params, cb) {
-    SGShopifyApi.put(endpoint, params, function (err, response) {
-      cb(err, response)
-    })
+    ShopifyApiRequest.put(endpoint, params)
+      .then((response) => {
+        cb(null, response)
+      })
+      .catch((err) => {
+        cb(err)
+      })
   }
 
   /**
@@ -201,9 +213,13 @@ module.exports = function (config) {
    * @param {function} cb
    */
   module.delete = function (endpoint, params, cb) {
-    SGShopifyApi.delete(endpoint, params, function (err, response) {
-      cb(err, response)
-    })
+    ShopifyApiRequest.delete(endpoint, params)
+      .then((response) => {
+        cb(null, response)
+      })
+      .catch((err) => {
+        cb(err)
+      })
   }
 
   /**
@@ -212,9 +228,13 @@ module.exports = function (config) {
    * @param {function} cb
    */
   module.post = function (endpoint, params, cb) {
-    SGShopifyApi.post(endpoint, params, function (err, response) {
-      cb(err, response)
-    })
+    ShopifyApiRequest.post(endpoint, params)
+      .then((response) => {
+        cb(null, response)
+      })
+      .catch((err) => {
+        cb(err)
+      })
   }
 
   // -------------------------------------------------------------------------------------------------------------------
