@@ -265,6 +265,18 @@ module.exports = function (context, input, cb) {
         cart.addCartItem(cartItem)
       })
 
+      // merge line items that are the same product before returning
+      cart.cartItems = Object.values(cart.cartItems.reduce((itemsByProductId, current) => {
+        if (!itemsByProductId[current.product.id]) {
+          itemsByProductId[current.product.id] = current
+          return itemsByProductId
+        }
+
+        itemsByProductId[current.product.id].quantity += current.quantity
+
+        return itemsByProductId
+      }, {}))
+
       // Check if coupons are enabled to be shown in cart
       cart.flags.coupons = context.config.enableCartCoupons
       if (cart.enableCoupons) {
