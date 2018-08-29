@@ -165,8 +165,8 @@ module.exports = function (context, input, cb) {
         let isChild = true
 
         /**
-         * @typedef {object} importedProductInCart
-         * @property {int} id
+         * @typedef {Object} importedProductInCart
+         * @property {number} id
          * @property {string} customData
          */
         importedProductsInCart.forEach(function (importedProductInCart) {
@@ -217,8 +217,13 @@ module.exports = function (context, input, cb) {
         price.default = item.price * item.quantity
         price.special = null
 
-        if (item.compare_at_price > 0) {
-          price.special = item.compare_at_price * item.quantity
+        /**
+         * Compare at price is same as MSRP,
+         * so use that as a higher price if present
+         */
+        if (item.compare_at_price > item.price) {
+          price.special = price.default
+          price.default = item.compare_at_price * item.quantity
         }
 
         /* add price to product */
