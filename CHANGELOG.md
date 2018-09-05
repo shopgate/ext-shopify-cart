@@ -6,9 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [1.2.4] - 2018-09-05
+### Fixed
+- cart product manipulation with errors falsely responds with success, e.g. out of stock error
+
 ## [1.2.3] - 2018-08-30
 ### Fixed
-- cart showing duplicate items and wrong quantities when the same product is added multiple times very quickly 
+- cart showing duplicate items and wrong quantities when the same product is added multiple times very quickly
 
 ## [1.2.2] - 2018-08-30
 ### Fixed
@@ -18,6 +22,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - logging request duration and other info when requesting the Shopify API
 
+[1.2.4]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/compare/commits?targetBranch=refs%2Ftags%2Fv1.2.3&sourceBranch=refs%2Ftags%2Fv1.2.4
 [1.2.3]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/compare/commits?targetBranch=refs%2Ftags%2Fv1.2.2&sourceBranch=refs%2Ftags%2Fv1.2.3
 [1.2.2]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/compare/commits?targetBranch=refs%2Ftags%2Fv1.2.1&sourceBranch=refs%2Ftags%2Fv1.2.2
 [1.2.1]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/browse?at=refs%2Ftags%2Fv1.2.1
