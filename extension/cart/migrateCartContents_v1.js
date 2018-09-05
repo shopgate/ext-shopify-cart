@@ -93,7 +93,7 @@ function updateAndAdjustCart (updatedData, targetCartId, context, cb) {
         )
         return cb(new Error('Unable to merge carts'))
       }
-      const errorLineItem = err.error.line_items
+      const errorLineItem = err.errors.line_items
       Object.keys(errorLineItem).map((errorKey) => {
         const errorContent = errorLineItem[errorKey]
         const currentLineItem = updatedData.checkout.line_items[errorKey]

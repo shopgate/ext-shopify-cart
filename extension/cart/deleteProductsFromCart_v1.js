@@ -68,7 +68,7 @@ module.exports = function (context, input, cb) {
         let success = true
         if (err) {
           success = false
-          _.each(err.error.line_items, function (error) {
+          _.each(err.errors.line_items, function (error) {
             for (let messageKey in error) {
               if (error.hasOwnProperty(messageKey)) {
                 _.each(error[messageKey], function (errorItem) {
