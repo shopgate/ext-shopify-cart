@@ -102,7 +102,7 @@ module.exports = function (context, input, cb) {
         return cb(err)
       }
 
-      return cb(null, null)
+      return cb()
     })
   }
 
