@@ -65,9 +65,7 @@ module.exports = function (context, input, cb) {
         }
       }
       Shopify.put('/admin/checkouts/' + cartId + '.json', updatedData, function (err) {
-        let success = true
-        if (err) {
-          success = false
+        if (err && err.hasOwnProperty('errors') && err.errors.hasOwnProperty('line_items')) {
           _.each(err.errors.line_items, function (error) {
             for (let messageKey in error) {
               if (error.hasOwnProperty(messageKey)) {
@@ -79,9 +77,11 @@ module.exports = function (context, input, cb) {
               }
             }
           })
+
+          return cb(null, { messages: resultMessages })
         }
-        if (success) return cb(null, null)
-        return cb(null, {messages: resultMessages})
+
+        return cb(err)
       })
     }
   }

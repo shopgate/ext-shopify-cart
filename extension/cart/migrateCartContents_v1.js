@@ -78,43 +78,48 @@ function migrateCartContents (context, sourceCartId, sourceCartLineItems, target
 }
 
 /**
- * @param {object} updatedData
- * @param {string} targetCartId
- * @param {object} context
+ * @param {Object} updatedData
+ * @param {string|number} targetCartId
+ * @param {Object} context
  * @param {function} cb
  */
 function updateAndAdjustCart (updatedData, targetCartId, context, cb) {
   updateCart(updatedData, targetCartId, context)
     .then(cb())
     .catch(err => {
-      if (err.code !== 422) {
+      if (err && err.hasOwnProperty('code') && err.code !== 422) {
         context.log.error(
           'Couldn\'t update checkout with id ' + targetCartId + ' failed with error: ' + JSON.stringify(err)
         )
         return cb(new Error('Unable to merge carts'))
       }
-      const errorLineItem = err.errors.line_items
-      Object.keys(errorLineItem).map((errorKey) => {
-        const errorContent = errorLineItem[errorKey]
-        const currentLineItem = updatedData.checkout.line_items[errorKey]
-        if (currentLineItem) {
-          const quantity = errorContent.quantity
-          if (quantity.length) {
-            quantity.map((item) => {
-              if (item.code === 'not_enough_in_stock') {
-                currentLineItem.quantity = item.options.remaining
-              }
-            })
+      /**
+       * Updates the quantity to available amount if possible
+       */
+      if (err & err.hasOwnProperty('errors') && err.errors.hasOwnProperty('line_items')) {
+        const errorLineItem = err.errors.line_items
+        Object.keys(errorLineItem).map((errorKey) => {
+          const errorContent = errorLineItem[errorKey]
+          const currentLineItem = updatedData.checkout.line_items[errorKey]
+          if (currentLineItem) {
+            const quantity = errorContent.quantity
+            if (quantity.length) {
+              quantity.map((item) => {
+                if (item.code === 'not_enough_in_stock') {
+                  currentLineItem.quantity = item.options.remaining
+                }
+              })
+            }
           }
-        }
-        updateCart(updatedData, targetCartId, context)
-          .then(cb())
-          .catch(err => {
-            context.log.error(
-              'Couldn\'t update checkout with id ' + targetCartId + ' failed with error: ' + JSON.stringify(err)
-            )
-            return cb(new Error('Unable to merge carts'))
-          })
-      })
+          updateCart(updatedData, targetCartId, context)
+            .then(cb())
+            .catch(err => {
+              context.log.error(
+                'Couldn\'t update checkout with id ' + targetCartId + ' failed with error: ' + JSON.stringify(err)
+              )
+              return cb(new Error('Unable to merge carts'))
+            })
+        })
+      }
     })
 }

@@ -3,15 +3,15 @@ const Message = require('../models/messages/message')
 const Tools = require('../lib/tools')
 
 /**
- * @typedef {object} input
+ * @typedef {Object} input
  * @property {Array} products
  * @property {Array} importedProductsAddedToCart
  * @property {Array} importedProductsInCart
  * @property {Array} products
  * @property {Array} cartItems
  *
- * @param {object} context
- * @param {object} input
+ * @param {Object} context
+ * @param {Object} input
  * @param {function} cb
  */
 module.exports = function (context, input, cb) {
@@ -29,7 +29,6 @@ module.exports = function (context, input, cb) {
   })
 
   /**
-   *
    * @param {string} cartId
    */
   function addProducts (cartId) {
@@ -89,9 +88,7 @@ module.exports = function (context, input, cb) {
     }
 
     Shopify.put('/admin/checkouts/' + cartId + '.json', data, function (err) {
-      let success = true
-      if (err) {
-        success = false
+      if (err && err.hasOwnProperty('errors') && err.errors.hasOwnProperty('line_items')) {
         _.each(err.errors.line_items, function (error) {
           for (let messageKey in error) {
             if (error.hasOwnProperty(messageKey)) {
@@ -103,9 +100,11 @@ module.exports = function (context, input, cb) {
             }
           }
         })
+
+        return cb(null, { messages: resultMessages })
       }
-      if (success) return cb(null, null)
-      return cb(null, {messages: resultMessages})
+
+      return cb(err)
     })
   }
 }
