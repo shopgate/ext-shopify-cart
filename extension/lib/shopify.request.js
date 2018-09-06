@@ -96,6 +96,7 @@ module.exports = class {
               logRequest.log(response.statusCode, options.headers, json, options)
               if (json.hasOwnProperty('errors')) {
                 reject(json)
+                return
               }
               resolve(json)
             } else {
