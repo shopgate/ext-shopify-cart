@@ -95,8 +95,7 @@ module.exports = class {
               const json = BigJSON.parse(body)
               logRequest.log(response.statusCode, options.headers, json, options)
               if (json.hasOwnProperty('errors')) {
-                reject(json)
-                return
+                return reject(json)
               }
               resolve(json)
             } else {

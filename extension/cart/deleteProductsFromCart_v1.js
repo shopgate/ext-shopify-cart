@@ -79,11 +79,9 @@ module.exports = function (context, input, cb) {
           })
 
           return cb(null, { messages: resultMessages })
-        } else if (err) {
-          return cb(err)
         }
 
-        return cb()
+        return cb(err)
       })
     }
   }
