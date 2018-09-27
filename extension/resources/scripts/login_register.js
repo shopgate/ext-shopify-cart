@@ -5,19 +5,25 @@ window.SGPipelineScript.login_register = function () {
   // the application can open up a loading screen on int own. make sure it's closed when user action is required
   this.closeLoadingScreen()
 
+  const history = JSON.parse(window.localStorage.getItem(window.SGPipelineScript.STORAGE_KEY_PAGE_HISTORY))
+
   // attach a click-event-listener to each relevant form-submit button
   switch (this.getPage()) {
     case this.PAGE_LOGIN: {
       this.requestCheckoutUrl()
       this.attachSubmitListener('customer_login')
+      history.push('login')
       break
     }
     case this.PAGE_REGISTER: {
       this.requestCheckoutUrl()
       this.attachSubmitListener('create_customer')
+      history.push('register')
       break
     }
   }
+
+  window.localStorage.setItem(window.SGPipelineScript.STORAGE_KEY_PAGE_HISTORY, JSON.stringify(history))
 
   // save get params for later (after registration or login has succeeded)
   var sgcloudCallbackData = window.SGAppConnector.getParameterByName('sgcloud_callback_data')

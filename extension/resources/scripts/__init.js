@@ -13,6 +13,7 @@ window.SGPipelineScript.PAGE_CHECKOUTS = '/[0-9]+/checkouts/[0-9a-f]+'
 window.SGPipelineScript.STORAGE_KEY_WEBLOGIN_PAYLOAD = 'shopgateWebloginPayload'
 window.SGPipelineScript.STORAGE_KEY_TAB_PARAMS = 'shopgateParams'
 window.SGPipelineScript.STORAGE_KEY_CHECKOUT_URL = 'shopifyCheckoutUrl'
+window.SGPipelineScript.STORAGE_KEY_PAGE_HISTORY = 'shopgatePageHistory'
 window.SGPipelineScript.STORAGE_KEY_LOADING_SCREEN_ENABLED = 'shopgateAppLoadingScreenEnabled'
 /**
  * Pipeline entry function.
@@ -21,6 +22,11 @@ window.SGPipelineScript.STORAGE_KEY_LOADING_SCREEN_ENABLED = 'shopgateAppLoading
  * It also does some minor initialization.
  */
 window.SGPipelineScript.__init = function () {
+  // set up page history
+  if (JSON.parse(window.localStorage.getItem(window.SGPipelineScript.STORAGE_KEY_PAGE_HISTORY)) === null) {
+    window.localStorage.setItem(window.SGPipelineScript.STORAGE_KEY_PAGE_HISTORY, '[]')
+  }
+
   // do some basic routing
   switch (this.getPage()) {
     case this.PAGE_LOGIN: // same action as PAGE_REGISTER (fall through to next statement)
@@ -40,15 +46,29 @@ window.SGPipelineScript.__init = function () {
     case this.PAGE_ACCOUNT: {
       // load page specific script
       window.SGAppConnector.loadPipelineScript('account')
+      const history = JSON.parse(window.localStorage.getItem(window.SGPipelineScript.STORAGE_KEY_PAGE_HISTORY))
+      history.push('account')
+      window.localStorage.setItem(window.SGPipelineScript.STORAGE_KEY_PAGE_HISTORY, JSON.stringify(history))
       // leave loading spinner open because the script is not finished, yet
       break
     }
     case this.PAGE_CHALLENGE: {
       // load page specific script
       window.SGAppConnector.loadPipelineScript('challenge')
+      const history = JSON.parse(window.localStorage.getItem(window.SGPipelineScript.STORAGE_KEY_PAGE_HISTORY))
+      history.push('challenge')
+      window.localStorage.setItem(window.SGPipelineScript.STORAGE_KEY_PAGE_HISTORY, JSON.stringify(history))
       break
     }
     default: {
+      // check whether we're coming from registration; in that case, execute the actions
+      const history = JSON.parse(window.localStorage.getItem(window.SGPipelineScript.STORAGE_KEY_PAGE_HISTORY))
+      if (history.join(',').match(/register(,challenge)*$/)) {
+        history.length = 0 // clear history
+        window.SGAppConnector.loadPipelineScript('account')
+        break
+      }
+
       // on every other page the temporarily stored credentials should be removed and the loading spinner be closed
       window.localStorage.removeItem(this.STORAGE_KEY_WEBLOGIN_PAYLOAD)
       this.closeLoadingScreen()
