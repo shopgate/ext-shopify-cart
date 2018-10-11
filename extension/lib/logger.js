@@ -22,15 +22,16 @@ module.exports = class {
       logRequest.body = JSON.stringify(logRequest.body)
     }
 
-    this.logger.debug({
-      duration: logResponse.elapsedTime || 0,
-      statusCode: logResponse.statusCode || 0,
-      request: logRequest,
-      response: {
-        headers: logResponse.headers || {},
-        body: logResponse.body
-      },
-      msg: 'Request to Shopify'
+    this.logger.debug('Request to Shopify', {
+      shopifyRequest: {
+        duration: logResponse.elapsedTime || 0,
+        statusCode: logResponse.statusCode || 0,
+        request: logRequest,
+        response: {
+          headers: logResponse.headers ? JSON.stringify(logResponse.headers) : '',
+          body: logResponse.body
+        }
+      }
     })
   }
 }
