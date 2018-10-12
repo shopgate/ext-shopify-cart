@@ -19,9 +19,9 @@ describe('Logger', () => {
     logRequest.log({}, {statusCode: httpCodeSuccess, elapsedTime: 123})
 
     sinon.assert.calledWith(logSpy, sinon.match.has('duration'))
-    sinon.assert.calledWith(logSpy, sinon.match.has('msg'))
-    sinon.assert.calledWith(logSpy, sinon.match.has('request'))
-    sinon.assert.calledWith(logSpy, sinon.match.has('response'))
+    sinon.assert.calledWith(logSpy, sinon.match.has('shopifyRequest'))
+    sinon.assert.calledWith(logSpy, sinon.match.hasNested('shopifyRequest.response'))
+    sinon.assert.calledWith(logSpy, sinon.match.hasNested('shopifyRequest.request'))
     sinon.assert.calledWith(logSpy, sinon.match({statusCode: httpCodeSuccess}))
   })
 })
