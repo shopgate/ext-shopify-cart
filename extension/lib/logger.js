@@ -7,8 +7,8 @@ module.exports = class {
   }
 
   /**
-   * @param {object} requestOptions
-   * @param {object} response A response object of the "request" module
+   * @param {Object} requestOptions
+   * @param {Object} response A response object of the "request" module
    */
   log (requestOptions, response = {}) {
     const logRequest = Object.assign({}, requestOptions)
