@@ -91,7 +91,8 @@ module.exports = class {
           body += chunk
         }).on('end', () => {
           try {
-            const logOptions = { ...options.headers, body: dataString }
+            const logOptions = { ...options, body: dataString }
+            delete logOptions.agent
             if (body.trim() !== '') {
               const json = BigJSON.parse(body)
               logRequest.log(logOptions, response)
