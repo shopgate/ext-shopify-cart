@@ -22,7 +22,7 @@ module.exports = class {
       logRequest.body = JSON.stringify(logRequest.body, null, 2)
     }
 
-    this.logger.debug('Request to Shopify', {
+    this.logger.debug({
       duration: logResponse.elapsedTime || 0,
       statusCode: logResponse.statusCode || 0,
       shopifyRequest: {
@@ -32,6 +32,6 @@ module.exports = class {
           body: logResponse.body
         }
       }
-    })
+    }, 'Request to Shopify')
   }
 }
