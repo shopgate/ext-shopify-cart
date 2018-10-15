@@ -61,7 +61,7 @@ module.exports = class {
    * @returns {Promise}
    */
   makeRequest (endpoint, method, data) {
-    const logRequest = new Logger(this.logger, data)
+    const logRequest = new Logger(this.logger)
     const dataString = BigJSON.stringify(data)
     const options = {
       hostname: this.config.shop,
@@ -91,15 +91,17 @@ module.exports = class {
           body += chunk
         }).on('end', () => {
           try {
+            const logOptions = { ...options, body: dataString }
+            delete logOptions.agent
             if (body.trim() !== '') {
               const json = BigJSON.parse(body)
-              logRequest.log(response.statusCode, options.headers, json, options)
+              logRequest.log(logOptions, response)
               if (json.hasOwnProperty('errors')) {
                 return reject(json)
               }
               resolve(json)
             } else {
-              logRequest.log(response.statusCode, options.headers, '', options)
+              logRequest.log(logOptions)
               reject(new Error('Empty response given'))
             }
           } catch (err) {

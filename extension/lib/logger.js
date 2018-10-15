@@ -1,26 +1,37 @@
-const uuid = require('uuid-v4')
-
 module.exports = class {
-  constructor (logger, request) {
+  /**
+   * @param {context.log} logger The extension's context.log object.
+   */
+  constructor (logger) {
     this.logger = logger
-    this.request = request
-    this.start = new Date()
   }
-  log (statusCode, headers, response, options) {
-    options.shopify_request_id = uuid()
-    const logResult = {
-      duration: new Date() - this.start,
-      statusCode,
-      request: {
-        request: this.request,
-        options
-      },
-      response: {
-        headers,
-        body: response
-      },
-      message: 'Request to Shopify - Cart extension'
+
+  /**
+   * @param {Object} requestOptions
+   * @param {Object} response A response object of the "request" module
+   */
+  log (requestOptions, response = {}) {
+    const logRequest = Object.assign({}, requestOptions)
+    const logResponse = response === null ? {} : Object.assign({}, response)
+
+    if (logResponse.body && typeof logResponse.body !== 'string') {
+      logResponse.body = JSON.stringify(logResponse.body, null, 2)
     }
-    this.logger.debug(logResult)
+
+    if (logRequest.body && typeof logRequest.body !== 'string') {
+      logRequest.body = JSON.stringify(logRequest.body, null, 2)
+    }
+
+    this.logger.debug({
+      duration: logResponse.elapsedTime || 0,
+      statusCode: logResponse.statusCode || 0,
+      shopifyRequest: {
+        request: logRequest,
+        response: {
+          headers: logResponse.headers ? JSON.stringify(logResponse.headers, null, 2) : '',
+          body: logResponse.body
+        }
+      }
+    }, 'Request to Shopify')
   }
 }

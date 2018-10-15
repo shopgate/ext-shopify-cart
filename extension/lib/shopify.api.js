@@ -1,5 +1,4 @@
 const Tools = require('./tools')
-const Logger = require('./logger')
 const ShopifyRequest = require('./shopify.request')
 
 /**
