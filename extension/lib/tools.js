@@ -50,16 +50,11 @@ class Tools {
    * @public
    */
   static getCurrentCartId (context, cb) {
-    const userId = context.meta.userId
-    if (userId) {
-      context.storage.user.get('checkoutToken', (sErr, cartId) => {
-        return cb(sErr, cartId)
-      })
-    } else {
-      context.storage.device.get('checkoutToken', (sErr, cartId) => {
-        return cb(sErr, cartId)
-      })
-    }
+    const storage = context.meta.userId ? context.storage.user : context.storage.device
+
+    storage.get('checkoutToken', (sErr, cartId) => {
+      return cb(sErr, cartId)
+    })
   }
 
   /**

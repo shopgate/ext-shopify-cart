@@ -1,110 +1,107 @@
-const _ = require('underscore')
 const Message = require('../models/messages/message')
 const Tools = require('../lib/tools')
 
 /**
- * @typedef {Object} input
- * @property {Array} products
- * @property {Array} importedProductsAddedToCart
- * @property {Array} importedProductsInCart
- * @property {Array} products
- * @property {Array} cartItems
- *
  * @param {Object} context
  * @param {Object} input
- * @param {function} cb
+ * @param {Object[]} input.products
+ * @param {Object[]} input.importedProductsAddedToCart
+ * @param {Object[]} input.importedProductsInCart
+ * @param {Object[]} input.products
+ * @param {Object[]} input.cartItems
  */
-module.exports = function (context, input, cb) {
-  const Shopify = require('../lib/shopify.api.js')(context.config, context.log)
-  let checkoutCartItems = []
+module.exports = async function (context, input) {
+  const shopify = require('../lib/shopify.api.js')(context.config, context.log)
   const importedProductsAddedToCart = input.importedProductsAddedToCart
   const importedProductsInCart = input.importedProductsInCart
   const newCartItems = input.products
   const existingCartItems = input.cartItems
-  const resultMessages = []
 
-  Tools.getCurrentCartId(context, (err, cartId) => {
-    if (err) cb(err)
-    addProducts(cartId)
+  const cartId = await new Promise((resolve, reject) => {
+    Tools.getCurrentCartId(context, (err, cartId) => {
+      if (err) return reject(err)
+
+      resolve(cartId)
+    })
+  })
+
+  const items = {}
+  existingCartItems.forEach(existingCartItem => {
+    if (existingCartItem.product && existingCartItem.product.id) {
+      items[existingCartItem.product.id] = existingCartItem.quantity
+    }
+  })
+
+  newCartItems.forEach(newCartItem => {
+    if (!(newCartItem.productId in items)) {
+      items[newCartItem.productId] = 0
+    }
+
+    items[newCartItem.productId] += newCartItem.quantity
+  })
+
+  const checkoutCartItems = Object.entries(items).map(([id, quantity]) => {
+    let variantId = extractVariantId(importedProductsAddedToCart.find(importedProductAddedToCart =>
+      importedProductAddedToCart.id === id && importedProductAddedToCart.customData
+    ).customData)
+
+    // if variant not found among added products, search in existing products
+    if (!variantId) {
+      variantId = extractVariantId(importedProductsInCart.find(importedProductInCart =>
+        importedProductInCart.id === id && importedProductInCart.customData
+      ).customData)
+    }
+
+    return {
+      variant_id: variantId || id,
+      quantity
+    }
+  })
+
+  return new Promise((resolve, reject) => {
+    shopify.put(
+      `/admin/checkouts/${cartId}.json`,
+      { checkout: { line_items: checkoutCartItems } },
+      err => {
+        if (!err) {
+          return resolve()
+        }
+
+        if (!err.errors || !err.errors.line_items) return reject(err)
+
+        const errorMessages = []
+        Object.values(err.errors.line_items).forEach(errorsPerLineItem => {
+          Object.entries(errorsPerLineItem).forEach(([errorType, errors]) => {
+            errors.forEach(error => {
+              let errorCode
+              switch (error.code) {
+                case 'not_enough_in_stock':
+                  errorCode = 'EINSUFFICIENTSTOCK'
+                  break
+                default:
+                  errorCode = error.code
+              }
+              console.log('yo!')
+
+              const errorMessage = new Message()
+              errorMessage.addErrorMessage(errorCode, error.message)
+              errorMessages.push(errorMessage.toJson())
+            })
+          })
+        })
+
+        resolve({messages: errorMessages})
+      }
+    )
   })
 
   /**
-   * @param {string} cartId
+   * @param {string} customDataJson
+   * @returns {number|null}
    */
-  function addProducts (cartId) {
-    let items = {}
-    _.each(existingCartItems, function (existingCartItem) {
-      if (Tools.propertyExists(existingCartItem, 'product.id')) {
-        items[existingCartItem.product.id] = existingCartItem.quantity
-      }
-    })
-    _.each(newCartItems, function (newCartItem) {
-      if (newCartItem.productId in items) {
-        items[newCartItem.productId] += newCartItem.quantity
-      } else {
-        items[newCartItem.productId] = newCartItem.quantity
-      }
-    })
-    _.each(items, function (quantity, id) {
-      // find variant id by checking "internal order info" (customData)
-      let variantId = id
-      let isMapped = false
-      // check if the current product was just added to the cart
-      _.each(importedProductsAddedToCart, function (importedProductAddedToCart) {
-        if (importedProductAddedToCart.id === id && Object.keys(importedProductAddedToCart.customData).length >= 0) {
-          // if the product has a variant id then use it, because it is a a normal product in Shopify context then
-          const customData = JSON.parse(importedProductAddedToCart.customData)
-          if (customData.variant_id !== undefined) {
-            variantId = customData.variant_id
-            isMapped = true
-          }
-        }
-      })
-      // check if the current product was in the cart before (don't map the ones that were mapped already)
-      if (!isMapped) {
-        _.each(importedProductsInCart, function (importedProductInCart) {
-          if (importedProductInCart.id === id && Object.keys(importedProductInCart.customData).length >= 0) {
-            // if the product has a variant id then use it, because it is a a normal product in Shopify context then
-            const customData = JSON.parse(importedProductInCart.customData)
-            if (customData.variant_id !== undefined) {
-              variantId = customData.variant_id
-              isMapped = true
-            }
-          }
-        })
-      }
-      checkoutCartItems.push(
-        {
-          'variant_id': variantId,
-          'quantity': quantity
-        }
-      )
-    })
+  function extractVariantId (customDataJson) {
+    const customData = JSON.parse(customDataJson)
 
-    const data = {
-      'checkout': {
-        'line_items': checkoutCartItems
-      }
-    }
-
-    Shopify.put('/admin/checkouts/' + cartId + '.json', data, function (err) {
-      if (err && err.hasOwnProperty('errors') && err.errors.hasOwnProperty('line_items')) {
-        _.each(err.errors.line_items, function (error) {
-          for (let messageKey in error) {
-            if (error.hasOwnProperty(messageKey)) {
-              _.each(error[messageKey], function (errorItem) {
-                const errorMessage = new Message()
-                errorMessage.addErrorMessage(errorItem.code, errorItem.message)
-                resultMessages.push(errorMessage.toJson())
-              })
-            }
-          }
-        })
-
-        return cb(null, { messages: resultMessages })
-      }
-
-      return cb(err)
-    })
+    return (customData && customData.variant_id) ? customData.variant_id : null
   }
 }
