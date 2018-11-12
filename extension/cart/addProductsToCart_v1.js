@@ -81,7 +81,6 @@ module.exports = async function (context, input) {
                 default:
                   errorCode = error.code
               }
-              console.log('yo!')
 
               const errorMessage = new Message()
               errorMessage.addErrorMessage(errorCode, error.message)
