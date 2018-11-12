@@ -58,41 +58,45 @@ module.exports = async function (context, input) {
     }
   })
 
-  return new Promise((resolve, reject) => {
-    shopify.put(
-      `/admin/checkouts/${cartId}.json`,
-      { checkout: { line_items: checkoutCartItems } },
-      err => {
-        if (!err) {
-          return resolve()
+  try {
+    return await new Promise((resolve, reject) => {
+      shopify.put(
+        `/admin/checkouts/${cartId}.json`,
+        { checkout: { line_items: checkoutCartItems } },
+        err => {
+          if (err) return reject(err)
+
+          resolve()
         }
+      )
+    })
+  } catch (err) {
+    if (!err) return
 
-        if (!err.errors || !err.errors.line_items) return reject(err)
+    if (!err.errors || !err.errors.line_items) throw err
 
-        const errorMessages = []
-        Object.values(err.errors.line_items).forEach(errorsPerLineItem => {
-          Object.entries(errorsPerLineItem).forEach(([errorType, errors]) => {
-            errors.forEach(error => {
-              let errorCode
-              switch (error.code) {
-                case 'not_enough_in_stock':
-                  errorCode = 'EINSUFFICIENTSTOCK'
-                  break
-                default:
-                  errorCode = error.code
-              }
+    const errorMessages = []
+    Object.values(err.errors.line_items).forEach(errorsPerLineItem => {
+      Object.entries(errorsPerLineItem).forEach(([errorType, errors]) => {
+        errors.forEach(error => {
+          let errorCode
+          switch (error.code) {
+            case 'not_enough_in_stock':
+              errorCode = 'EINSUFFICIENTSTOCK'
+              break
+            default:
+              errorCode = error.code
+          }
 
-              const errorMessage = new Message()
-              errorMessage.addErrorMessage(errorCode, error.message)
-              errorMessages.push(errorMessage.toJson())
-            })
-          })
+          const errorMessage = new Message()
+          errorMessage.addErrorMessage(errorCode, error.message)
+          errorMessages.push(errorMessage.toJson())
         })
+      })
+    })
 
-        resolve({messages: errorMessages})
-      }
-    )
-  })
+    return { messages: errorMessages }
+  }
 
   /**
    * @param {string} customDataJson
