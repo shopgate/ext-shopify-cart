@@ -1,5 +1,6 @@
 const Message = require('../models/messages/message')
 const Tools = require('../lib/tools')
+const { extractVariantId } = require('../helper/cart')
 
 /**
  * @param {Object} context
@@ -43,13 +44,13 @@ module.exports = async function (context, input) {
   const checkoutCartItems = Object.entries(items).map(([id, quantity]) => {
     let variantId = extractVariantId(importedProductsAddedToCart.find(importedProductAddedToCart =>
       importedProductAddedToCart.id === id && importedProductAddedToCart.customData
-    ).customData)
+    ))
 
     // if variant not found among added products, search in existing products
     if (!variantId) {
       variantId = extractVariantId(importedProductsInCart.find(importedProductInCart =>
         importedProductInCart.id === id && importedProductInCart.customData
-      ).customData)
+      ))
     }
 
     return {
@@ -59,20 +60,16 @@ module.exports = async function (context, input) {
   })
 
   try {
-    return await new Promise((resolve, reject) => {
-      shopify.put(
-        `/admin/checkouts/${cartId}.json`,
-        { checkout: { line_items: checkoutCartItems } },
-        err => {
-          if (err) return reject(err)
+    return await new Promise((resolve, reject) => shopify.put(
+      `/admin/checkouts/${cartId}.json`,
+      { checkout: { line_items: checkoutCartItems } },
+      err => {
+        if (err) return reject(err)
 
-          resolve()
-        }
-      )
-    })
+        resolve()
+      }
+    ))
   } catch (err) {
-    if (!err) return
-
     if (!err.errors || !err.errors.line_items) throw err
 
     const errorMessages = []
@@ -96,15 +93,5 @@ module.exports = async function (context, input) {
     })
 
     return { messages: errorMessages }
-  }
-
-  /**
-   * @param {string} customDataJson
-   * @returns {number|null}
-   */
-  function extractVariantId (customDataJson) {
-    const customData = JSON.parse(customDataJson)
-
-    return (customData && customData.variant_id) ? customData.variant_id : null
   }
 }

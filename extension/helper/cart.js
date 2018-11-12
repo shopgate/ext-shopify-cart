@@ -32,4 +32,17 @@ const updateCart = (updatedData, targetCartId, context) => {
   })
 }
 
-module.exports = { clearCart, updateCart }
+/**
+ * @param {Object} product
+ * @param {string} [product.customData]
+ * @returns {number|null}
+ */
+function extractVariantId (product) {
+  if (!product || !product.customData) return null
+
+  const customData = JSON.parse(product.customData)
+
+  return (customData && customData.variant_id) ? customData.variant_id : null
+}
+
+module.exports = { clearCart, updateCart, extractVariantId }
