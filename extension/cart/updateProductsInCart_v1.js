@@ -1,111 +1,87 @@
 const Message = require('../models/messages/message')
 const CartItem = require('../models/cart/cartItems/cartItem')
 const Tools = require('../lib/tools')
-const _ = require('underscore')
-
-/**
- * @typedef {object} input
- * @property {Array} shopifyCartItems
- * @property {Array} cartItems
- * @property {Array} importedProductsInCart
- */
+const { extractVariantId } = require('../helper/cart')
 
 /**
  * @param context
- * @param input
- * @param cb
+ * @param {Object} input
+ * @param {Object[]} input.importedProductsInCart The list of items in the cart in Shopgate format
+ * @param {Object[]} input.cartItems The list of items currently in the cart
+ * @param {Object[]} input.CartItem The list of items to be changed
  */
-module.exports = function (context, input, cb) {
-  const Shopify = require('../lib/shopify.api.js')(context.config, context.log)
-  const existCartItems = input.cartItems
+module.exports = async function (context, input) {
+  const shopify = require('../lib/shopify.api.js')(context.config, context.log)
+  const existingCartItems = input.cartItems
   const updateCartItems = input.CartItem
-  const resultMessages = []
   const importedProductsInCart = input.importedProductsInCart
   const cartItem = new CartItem()
 
   let checkoutCartItems = []
 
-  /**
-   * @param {string} cartId
-   */
-  let updateProducts = function (cartId) {
-    // create a map to map all Shopgate item_numbers in the cart to Shopify variant_ids
-    let variantMap = []
-    _.each(existCartItems, function (existCartItem) {
-      if (existCartItem.type === cartItem.TYPE_PRODUCT) {
-        variantMap[existCartItem.product.id] = existCartItem.product.id
-        _.each(importedProductsInCart, function (importedProductInCart) {
-          if (importedProductInCart.id === existCartItem.product.id && Object.keys(importedProductInCart.customData).length >= 0) {
-            // if the product has a variant id then use it, because it is a a normal product in Shopify context then
-            const customData = JSON.parse(importedProductInCart.customData)
-            if (customData.variant_id !== undefined) {
-              variantMap[existCartItem.product.id] = customData.variant_id
-            }
-          }
-        })
-      }
+  const cartId = await new Promise((resolve, reject) => {
+    Tools.getCurrentCartId(context, (err, cartId) => {
+      if (err) return reject(err)
+
+      resolve(cartId)
     })
-
-    // identify all products that have changed in quantity and the one that have not
-    _.each(existCartItems, function (existCartItem) {
-      if (existCartItem.type === cartItem.TYPE_PRODUCT) {
-        let found = false
-        /**
-         * @typedef {object} item
-         * @property {string} CartItemId
-         * @property {int} quantity
-         */
-        updateCartItems.find(function (item) {
-          if (item.CartItemId === existCartItem.id) {
-            checkoutCartItems.push(
-              {
-                'variant_id': variantMap[existCartItem.product.id],
-                'quantity': item.quantity
-              }
-            )
-            found = true
-          }
-        })
-        if (!found) {
-          checkoutCartItems.push(
-            {
-              'variant_id': variantMap[existCartItem.product.id],
-              'quantity': existCartItem.quantity
-            }
-          )
-        }
-      }
-    })
-
-    const updatedData = {
-      'checkout': {
-        'line_items': checkoutCartItems
-      }
-    }
-
-    Shopify.put('/admin/checkouts/' + cartId + '.json', updatedData, function (err) {
-      if (err && err.hasOwnProperty('errors') && err.errors.hasOwnProperty('line_items')) {
-        _.each(err.errors.line_items, function (error) {
-          for (let messageKey in error) {
-            if (error.hasOwnProperty(messageKey)) {
-              _.each(error[messageKey], function (errorItem) {
-                const errorMessage = new Message()
-                errorMessage.addErrorMessage(errorItem.code, errorItem.message)
-                resultMessages.push(errorMessage.toJson())
-              })
-            }
-          }
-        })
-
-        return cb(null, { messages: resultMessages })
-      }
-
-      return cb(err)
-    })
-  }
-
-  Tools.getCurrentCartId(context, (err, cartId) => {
-    if (err) cb(err)
-    updateProducts(cartId)
   })
+
+  // create a map to map all Shopgate item_numbers in the cart to Shopify variant_ids
+  const existingCartItemProducts = existingCartItems.filter(item => item.type === cartItem.TYPE_PRODUCT)
+
+  let variantMap = {}
+  existingCartItemProducts.forEach(item => {
+    let variantId = extractVariantId(importedProductsInCart.find(importedProduct =>
+      importedProduct.id === item.product.id && importedProduct.customData
+    ))
+
+    variantMap[item.product.id] = variantId || item.product.id
+  })
+
+  // identify all products that have changed in quantity and the one that have not
+  existingCartItemProducts.forEach(item => {
+    const updateItem = updateCartItems.find(updateItem => updateItem.CartItemId === item.id)
+
+    checkoutCartItems.push({
+      variant_id: variantMap[item.product.id],
+      quantity: updateItem ? updateItem.quantity : item.quantity
+    })
+  })
+
+  try {
+    return await new Promise((resolve, reject) => shopify.put(
+      `/admin/checkouts/${cartId}.json`,
+      { checkout: { line_items: checkoutCartItems } },
+      err => {
+        if (err) return reject(err)
+
+        resolve()
+      }
+    ))
+  } catch (err) {
+    if (!err.errors && !err.errors.line_items) throw err
+
+    const errorMessages = []
+    Object.values(err.errors.line_items).forEach(errorsPerLineItem => {
+      Object.entries(errorsPerLineItem).forEach(([errorType, errors]) => {
+        errors.forEach(error => {
+          let errorCode
+          switch (error.code) {
+            case 'not_enough_in_stock':
+              errorCode = 'EINSUFFICIENTSTOCK'
+              break
+            default:
+              errorCode = error.code
+          }
+
+          const errorMessage = new Message()
+          errorMessage.addErrorMessage(errorCode, error.message)
+          errorMessages.push(errorMessage.toJson())
+        })
+      })
+    })
+
+    return { messages: errorMessages }
+  }
 }
