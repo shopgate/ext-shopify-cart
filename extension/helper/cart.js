@@ -35,7 +35,8 @@ const updateCart = (updatedData, targetCartId, context) => {
 /**
  * @param {Object} product
  * @param {string} [product.customData]
- * @returns {number|null}
+ * @returns {string|null}
+ * @throws {SyntaxError} If product.customData does not contain valid JSON.
  */
 function extractVariantId (product) {
   if (!product || !product.customData) return null
