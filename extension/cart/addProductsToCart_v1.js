@@ -1,6 +1,5 @@
-const Message = require('../models/messages/message')
 const Tools = require('../lib/tools')
-const { extractVariantId } = require('../helper/cart')
+const { extractVariantId, handleCartError } = require('../helper/cart')
 
 /**
  * @param {Object} context
@@ -70,28 +69,6 @@ module.exports = async function (context, input) {
       }
     ))
   } catch (err) {
-    if (!err.errors || !err.errors.line_items) throw err
-
-    const errorMessages = []
-    Object.values(err.errors.line_items).forEach(errorsPerLineItem => {
-      Object.entries(errorsPerLineItem).forEach(([errorType, errors]) => {
-        errors.forEach(error => {
-          let errorCode
-          switch (error.code) {
-            case 'not_enough_in_stock':
-              errorCode = 'EINSUFFICIENTSTOCK'
-              break
-            default:
-              errorCode = error.code
-          }
-
-          const errorMessage = new Message()
-          errorMessage.addErrorMessage(errorCode, error.message)
-          errorMessages.push(errorMessage.toJson())
-        })
-      })
-    })
-
-    return { messages: errorMessages }
+    return { messages: handleCartError(err) }
   }
 }
