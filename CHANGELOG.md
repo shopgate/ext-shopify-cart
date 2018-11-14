@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 
 ### Changed
-- returns specific code for insufficient stock errors, allowing future templates to show localized error messagesg
+- returns specific code for insufficient stock errors, allowing future templates to show localized error messages
 
 ## [1.2.7] - 2018-10-15
 ### Changed
