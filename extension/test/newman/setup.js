@@ -7,10 +7,10 @@ const settableValues = envTemplate.values.filter(value => value.value === '***')
 
 if ((process.argv.length - 2) !== settableValues.length) {
   console.log('Usage:')
-  console.log(`setupNewman [${settableValues.map(value => value.key).join('] [')}]\n`)
+  console.log(`setup [${settableValues.map(value => value.key).join('] [')}]\n`)
   console.log('Parameters:')
   settableValues.forEach(value => console.log(`${value.key}\t${value.description}`))
-  console.log()
+  console.log() // add one newline
   process.exit(0)
 }
 

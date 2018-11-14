@@ -47,7 +47,179 @@
 					"response": []
 				},
 				{
-					"name": "Add product with sufficient stock",
+					"name": "Add product with unlimited stock",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b0c9ac79-82b8-4c41-8235-c9c18979152a",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('that the request succeeded', () => {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.json()).to.be.an('object').and.empty",
+									"})"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"products\": [\n\t\t{\n\t\t\t\"productId\": \"{{product_id_unlimited_stock}}\",\n\t\t\t\"quantity\": 2\n\t\t}\n\t]\n}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_add_products}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_add_products}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2b319e5d-a4f5-4238-9e5b-1fb2374e7ef2",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('that the cart is not empty anymore', () => {",
+									"    pm.expect(pm.response.json()).to.be.an('object').and.not.empty",
+									"    pm.expect(pm.response.json().cartItems).to.be.an('array').and.not.empty",
+									"    pm.expect(pm.response.json().cartItems.length).to.equal(1)",
+									"})",
+									"",
+									"const desiredItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
+									"pm.test('that the product is in the cart', () => {",
+									"    pm.expect(desiredItem).to.be.an('object').and.not.empty",
+									"})",
+									"",
+									"pm.test('that the product\\'s quantity is 2', () => {",
+									"    pm.expect(desiredItem.quantity).to.equal(2)",
+									"})"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_get_cart}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_get_cart}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add more of product with unlimited stock",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b0c9ac79-82b8-4c41-8235-c9c18979152a",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('that the request succeeded', () => {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.json()).to.be.an('object').and.empty",
+									"})"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"products\": [\n\t\t{\n\t\t\t\"productId\": \"{{product_id_unlimited_stock}}\",\n\t\t\t\"quantity\": 2\n\t\t}\n\t]\n}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_add_products}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_add_products}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "de4ab9a9-b5e8-4303-a7a9-9a5db9bc7213",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('that the cart is not empty anymore', () => {",
+									"    pm.expect(pm.response.json()).to.be.an('object').and.not.empty",
+									"    pm.expect(pm.response.json().cartItems).to.be.an('array').and.not.empty",
+									"    pm.expect(pm.response.json().cartItems.length).to.equal(1)",
+									"})",
+									"",
+									"const desiredItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
+									"pm.test('that the product is in the cart', () => {",
+									"    pm.expect(desiredItem).to.be.an('object').and.not.empty",
+									"})",
+									"",
+									"pm.test('that the product\\'s quantity is 4', () => {",
+									"    pm.expect(desiredItem.quantity).to.equal(4)",
+									"})"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_get_cart}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_get_cart}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add product with stock of 2",
 					"event": [
 						{
 							"listen": "test",
@@ -90,23 +262,27 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "98b1cf88-2bd8-4a98-8bcc-7f905f8d6652",
+								"id": "869ce366-f814-4ae4-906d-ba610cd5019a",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test('that the cart is not empty anymore', () => {",
 									"    pm.expect(pm.response.json()).to.be.an('object').and.not.empty",
 									"    pm.expect(pm.response.json().cartItems).to.be.an('array').and.not.empty",
-									"    pm.expect(pm.response.json().cartItems.length).to.equal(1)",
+									"    pm.expect(pm.response.json().cartItems.length).to.equal(2)",
 									"})",
 									"",
-									"pm.test('that the product is in the cart', () => {",
-									"    pm.expect(pm.response.json().cartItems[0]).to.be.an('object')",
-									"    pm.expect(pm.response.json().cartItems[0].product).to.be.an('object')",
-									"    pm.expect(pm.response.json().cartItems[0].product.id).to.equal(pm.environment.get('product_id_limited_stock_of_2'))",
+									"pm.test('that the previously added product is still in the cart', () => {",
+									"    const desiredCartItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
+									"    pm.expect(desiredCartItem).to.be.an('object')",
+									"})",
+									"",
+									"const desiredCartItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_limited_stock_of_2'))",
+									"pm.test('that the new product is in the cart', () => {",
+									"    pm.expect(desiredCartItem).to.be.an('object')",
 									"})",
 									"",
 									"pm.test('that the product\\'s quantity is 2', () => {",
-									"    pm.expect(pm.response.json().cartItems[0].quantity).to.equal(2)",
+									"    pm.expect(desiredCartItem.quantity).to.equal(2)",
 									"})"
 								]
 							}
@@ -139,7 +315,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ff2e0991-b0c6-4d78-a60c-d129d1ccf5dc",
+								"id": "33303287-24d6-485c-bee6-cca6d4299576",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test('that the response contains \"messages\"', () => {",
@@ -183,28 +359,358 @@
 					"response": []
 				},
 				{
-					"name": "Get cart again",
+					"name": "Get cart",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "bc95ae6f-bcc0-428b-83b1-2024832c3c8b",
+								"id": "8080c93e-50d7-4fae-899b-f88a9977ebca",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('that the cart is not empty anymore', () => {",
+									"    pm.expect(pm.response.json()).to.be.an('object').and.not.empty",
+									"    pm.expect(pm.response.json().cartItems).to.be.an('array').and.not.empty",
+									"    pm.expect(pm.response.json().cartItems.length).to.equal(2)",
+									"})",
+									"",
+									"const unlimitedStockCartItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
+									"pm.test('that the first product is still in the cart', () => {",
+									"    pm.expect(unlimitedStockCartItem).to.be.an('object')",
+									"    pm.environment.set('cart_item_id_unlimited_stock', unlimitedStockCartItem.id)",
+									"})",
+									"",
+									"pm.test('that the first product\\'s quantity is still 4', () => {",
+									"    pm.expect(unlimitedStockCartItem.quantity).to.equal(4)",
+									"})",
+									"",
+									"const limitedStockCartItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_limited_stock_of_2'))",
+									"pm.test('that the second product is still in the cart', () => {",
+									"    pm.expect(limitedStockCartItem).to.be.an('object')",
+									"    pm.environment.set('cart_item_id_limited_stock_of_2', limitedStockCartItem.id)",
+									"})",
+									"",
+									"pm.test('that the second product\\'s quantity is still 2', () => {",
+									"    pm.expect(limitedStockCartItem.quantity).to.equal(2)",
+									"})",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_get_cart}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_get_cart}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "997642ba-59c9-419d-81d2-04b2b3dca552",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "d8e6655b-89b8-4988-ba87-fb37610f9b97",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "shopgate.cart.updateProducts.v1",
+			"item": [
+				{
+					"name": "Update quantity of product with unlimited stock",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b0c9ac79-82b8-4c41-8235-c9c18979152a",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('that the request succeeded', () => {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.json()).to.be.an('object').and.empty",
+									"})"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"CartItem\": [\n\t\t{\n\t\t\t\"cartItemId\": \"{{cart_item_id_unlimited_stock}}\",\n\t\t\t\"quantity\": 2\n\t\t}\n\t]\n}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_update_products}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_update_products}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4e9f1182-f805-4853-bbb6-553a925e7c09",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test('that the cart is not empty', () => {",
 									"    pm.expect(pm.response.json()).to.be.an('object').and.not.empty",
 									"    pm.expect(pm.response.json().cartItems).to.be.an('array').and.not.empty",
-									"    pm.expect(pm.response.json().cartItems.length).to.equal(1)",
+									"    pm.expect(pm.response.json().cartItems.length).to.equal(2)",
 									"})",
 									"",
-									"pm.test('that the product is in the cart', () => {",
-									"    pm.expect(pm.response.json().cartItems[0]).to.be.an('object')",
-									"    pm.expect(pm.response.json().cartItems[0].product).to.be.an('object')",
-									"    pm.expect(pm.response.json().cartItems[0].product.id).to.equal(pm.environment.get('product_id_limited_stock_of_2'))",
+									"const unlimitedStockItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
+									"pm.test('that the first product is still in the cart', () => {",
+									"    pm.expect(unlimitedStockItem).to.be.an('object')",
+									"    pm.environment.set('cart_item_id_unlimited_stock', unlimitedStockItem.id)",
 									"})",
 									"",
-									"pm.test('that the product\\'s quantity is still 2', () => {",
-									"    pm.expect(pm.response.json().cartItems[0].quantity).to.equal(2)",
+									"pm.test('that the first product\\'s quantity is 2', () => {",
+									"    pm.expect(unlimitedStockItem.quantity).to.equal(2)",
+									"})"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_get_cart}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_get_cart}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update quantity of both products, sufficient stock",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b0c9ac79-82b8-4c41-8235-c9c18979152a",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('that the request succeeded', () => {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.json()).to.be.an('object').and.empty",
+									"})"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"CartItem\": [\n\t\t{\n\t\t\t\"cartItemId\": \"{{cart_item_id_unlimited_stock}}\",\n\t\t\t\"quantity\": 10\n\t\t},\n\t\t{\n\t\t\t\"cartItemId\": \"{{cart_item_id_limited_stock_of_2}}\",\n\t\t\t\"quantity\": 1\n\t\t}\n\t]\n}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_update_products}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_update_products}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e077b8f6-aa27-4360-aa73-2cfbe27f6ef4",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('that the cart is not empty', () => {",
+									"    pm.expect(pm.response.json()).to.be.an('object').and.not.empty",
+									"    pm.expect(pm.response.json().cartItems).to.be.an('array').and.not.empty",
+									"    pm.expect(pm.response.json().cartItems.length).to.equal(2)",
+									"})",
+									"",
+									"const unlimitedStockItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
+									"pm.test('that the first product is still in the cart', () => {",
+									"    pm.expect(unlimitedStockItem).to.be.an('object')",
+									"    pm.environment.set('cart_item_id_unlimited_stock', unlimitedStockItem.id)",
+									"})",
+									"",
+									"pm.test('that the first product\\'s quantity is 10', () => {",
+									"    pm.expect(unlimitedStockItem.quantity).to.equal(10)",
+									"})",
+									"",
+									"const limitedStockItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_limited_stock_of_2'))",
+									"pm.test('that the second product is still in the cart', () => {",
+									"    pm.expect(limitedStockItem).to.be.an('object')",
+									"    pm.environment.set('cart_item_id_limited_stock_of_2', limitedStockItem.id)",
+									"})",
+									"",
+									"pm.test('that the second product\\'s quantity is 1', () => {",
+									"    pm.expect(limitedStockItem.quantity).equals(1)",
+									"})"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_get_cart}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_get_cart}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update quantity of both products, insufficient stock",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "84492550-aa8c-4e29-93b9-ddc25cbe846c",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('that the response contains \"messages\"', () => {",
+									"    pm.expect(pm.response.json()).to.be.an('object').and.not.empty",
+									"    pm.expect(pm.response.json().messages).to.be.an('array').and.not.empty",
+									"",
+									"})",
+									"",
+									"pm.test('that the response contains exactly one error message', () => {",
+									"    pm.expect(pm.response.json().messages.length).to.equal(1)",
+									"    pm.expect(pm.response.json().messages[0]).to.be.an('object')",
+									"    pm.expect(pm.response.json().messages[0].type).to.equal('error')",
+									"})",
+									"",
+									"pm.test('that the error code of that one message is EINSUFFICIENTSTOCK', () => {",
+									"    pm.expect(pm.response.json().messages[0].code).to.equal('EINSUFFICIENTSTOCK')",
+									"})"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"CartItem\": [\n\t\t{\n\t\t\t\"cartItemId\": \"{{cart_item_id_unlimited_stock}}\",\n\t\t\t\"quantity\": 7\n\t\t},\n\t\t{\n\t\t\t\"cartItemId\": \"{{cart_item_id_limited_stock_of_2}}\",\n\t\t\t\"quantity\": 5\n\t\t}\n\t]\n}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_update_products}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_update_products}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a34638c6-34ea-4ae5-bc6d-2e7bc0c84393",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('that the cart is not empty', () => {",
+									"    pm.expect(pm.response.json()).to.be.an('object').and.not.empty",
+									"    pm.expect(pm.response.json().cartItems).to.be.an('array').and.not.empty",
+									"    pm.expect(pm.response.json().cartItems.length).to.equal(2)",
+									"})",
+									"",
+									"const unlimitedStockItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
+									"pm.test('that the first product is still in the cart', () => {",
+									"    pm.expect(unlimitedStockItem).to.be.an('object')",
+									"    pm.environment.set('cart_item_id_unlimited_stock', unlimitedStockItem.id)",
+									"})",
+									"",
+									"pm.test('that the first product\\'s quantity still is 10', () => {",
+									"    pm.expect(unlimitedStockItem.quantity).to.equal(10)",
+									"})",
+									"",
+									"const limitedStockItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_limited_stock_of_2'))",
+									"pm.test('that the second product is still in the cart', () => {",
+									"    pm.expect(limitedStockItem).to.be.an('object')",
+									"    pm.environment.set('cart_item_id_limited_stock_of_2', limitedStockItem.id)",
+									"})",
+									"",
+									"pm.test('that the second product\\'s quantity still is 1', () => {",
+									"    pm.expect(limitedStockItem.quantity).equals(1)",
 									"})"
 								]
 							}
