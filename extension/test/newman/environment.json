@@ -1,0 +1,15 @@
+{
+  "id": "24561ea0-b2a5-4f32-a8af-d30596e9c985",
+  "name": "shopify-cart",
+  "values": [
+    {
+      "key": "product_id_limited_stock_of_2",
+      "value": "1343375573049",
+      "description": "A Shopify product ID of a product with stock limited to 2 and active inventory control.",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2018-11-14T11:08:14.760Z",
+  "_postman_exported_using": "Postman/6.2.4"
+}

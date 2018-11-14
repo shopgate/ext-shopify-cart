@@ -1,0 +1,259 @@
+{
+	"info": {
+		"_postman_id": "72e28a96-08c3-4a8b-86c4-d010d27aff95",
+		"name": "shopify-cart-e2e",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "shopgate.cart.addProducts.v1",
+			"item": [
+				{
+					"name": "Create empty checkout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1e507e68-cbfb-4409-8109-09e3e8f344be",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('that the cart is empty', () => {",
+									"    pm.expect(pm.response.json().checkout).to.be.an('object')",
+									"    pm.expect(pm.response.json().checkout.line_items).to.be.an('array').and.empty",
+									"})"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"createNew\": true\n}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_fetch_shopify_checkout}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_fetch_shopify_checkout}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add product with sufficient stock",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b0c9ac79-82b8-4c41-8235-c9c18979152a",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('that the request succeeded', () => {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.json()).to.be.an('object').and.empty",
+									"})"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"products\": [\n\t\t{\n\t\t\t\"productId\": \"{{product_id_limited_stock_of_2}}\",\n\t\t\t\"quantity\": 2\n\t\t}\n\t]\n}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_add_products}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_add_products}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "98b1cf88-2bd8-4a98-8bcc-7f905f8d6652",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('that the cart is not empty anymore', () => {",
+									"    pm.expect(pm.response.json()).to.be.an('object').and.not.empty",
+									"    pm.expect(pm.response.json().cartItems).to.be.an('array').and.not.empty",
+									"    pm.expect(pm.response.json().cartItems.length).to.equal(1)",
+									"})",
+									"",
+									"pm.test('that the product is in the cart', () => {",
+									"    pm.expect(pm.response.json().cartItems[0]).to.be.an('object')",
+									"    pm.expect(pm.response.json().cartItems[0].product).to.be.an('object')",
+									"    pm.expect(pm.response.json().cartItems[0].product.id).to.equal(pm.environment.get('product_id_limited_stock_of_2'))",
+									"})",
+									"",
+									"pm.test('that the product\\'s quantity is 2', () => {",
+									"    pm.expect(pm.response.json().cartItems[0].quantity).to.equal(2)",
+									"})"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_get_cart}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_get_cart}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add product with insufficient stock",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ff2e0991-b0c6-4d78-a60c-d129d1ccf5dc",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('that the response contains \"messages\"', () => {",
+									"    pm.expect(pm.response.json()).to.be.an('object').and.not.empty",
+									"    pm.expect(pm.response.json().messages).to.be.an('array').and.not.empty",
+									"",
+									"})",
+									"",
+									"pm.test('that the response contains exactly one error message', () => {",
+									"    pm.expect(pm.response.json().messages.length).to.equal(1)",
+									"    pm.expect(pm.response.json().messages[0]).to.be.an('object')",
+									"    pm.expect(pm.response.json().messages[0].type).to.equal('error')",
+									"})",
+									"",
+									"pm.test('that the error code of that one message is EINSUFFICIENTSTOCK', () => {",
+									"    pm.expect(pm.response.json().messages[0].code).to.equal('EINSUFFICIENTSTOCK')",
+									"})"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"products\": [\n\t\t{\n\t\t\t\"productId\": \"{{product_id_limited_stock_of_2}}\",\n\t\t\t\"quantity\": 1\n\t\t}\n\t]\n}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_add_products}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_add_products}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get cart again",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bc95ae6f-bcc0-428b-83b1-2024832c3c8b",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('that the cart is not empty', () => {",
+									"    pm.expect(pm.response.json()).to.be.an('object').and.not.empty",
+									"    pm.expect(pm.response.json().cartItems).to.be.an('array').and.not.empty",
+									"    pm.expect(pm.response.json().cartItems.length).to.equal(1)",
+									"})",
+									"",
+									"pm.test('that the product is in the cart', () => {",
+									"    pm.expect(pm.response.json().cartItems[0]).to.be.an('object')",
+									"    pm.expect(pm.response.json().cartItems[0].product).to.be.an('object')",
+									"    pm.expect(pm.response.json().cartItems[0].product.id).to.equal(pm.environment.get('product_id_limited_stock_of_2'))",
+									"})",
+									"",
+									"pm.test('that the product\\'s quantity is still 2', () => {",
+									"    pm.expect(pm.response.json().cartItems[0].quantity).to.equal(2)",
+									"})"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_get_cart}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_get_cart}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "997642ba-59c9-419d-81d2-04b2b3dca552",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "d8e6655b-89b8-4988-ba87-fb37610f9b97",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}

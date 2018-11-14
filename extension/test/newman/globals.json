@@ -1,0 +1,40 @@
+{
+  "id": "146e52f0-fd32-4814-8e58-8a3c0f4d5eb7",
+  "values": [
+    {
+      "key": "domain",
+      "value": "http://localhost:{{port}}",
+      "description": "",
+      "enabled": true
+    },
+    {
+      "key": "port",
+      "value": "8090",
+      "description": "",
+      "enabled": true
+    },
+    {
+      "key": "endpoint_cart_add_products",
+      "value": "/pipelines/shopgate.cart.addProducts.v1",
+      "description": "",
+      "enabled": true
+    },
+    {
+      "key": "endpoint_cart_fetch_shopify_checkout",
+      "value": "/pipelines/shopgate.cart.fetchShopifyCheckout.v1",
+      "description": "",
+      "enabled": true
+    },
+    {
+      "key": "endpoint_cart_get_cart",
+      "value": "/pipelines/shopgate.cart.getCart.v1",
+      "description": "",
+      "type": "text",
+      "enabled": true
+    }
+  ],
+  "name": "My Workspace Globals",
+  "_postman_variable_scope": "globals",
+  "_postman_exported_at": "2018-11-14T11:04:51.338Z",
+  "_postman_exported_using": "Postman/6.2.4"
+}
