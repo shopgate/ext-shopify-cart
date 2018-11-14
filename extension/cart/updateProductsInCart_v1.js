@@ -40,7 +40,7 @@ module.exports = async function (context, input) {
 
   // identify all products that have changed in quantity and the one that have not
   existingCartItemProducts.forEach(item => {
-    const updateItem = updateCartItems.find(updateItem => updateItem.CartItemId === item.id)
+    const updateItem = updateCartItems.find(updateItem => updateItem.cartItemId === item.id)
 
     checkoutCartItems.push({
       variant_id: variantMap[item.product.id],
