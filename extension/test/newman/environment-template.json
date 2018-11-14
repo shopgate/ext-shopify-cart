@@ -6,10 +6,18 @@
       "key": "product_id_limited_stock_of_2",
       "value": "***",
       "description": "A Shopify product ID of a product with stock limited to 2 and active inventory control.",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "product_id_unlimited_stock",
+      "value": "***",
+      "description": "A Shopify product ID of a product, preferrably with inactive inventory control.",
+      "type": "text",
       "enabled": true
     }
   ],
   "_postman_variable_scope": "environment",
-  "_postman_exported_at": "2018-11-14T11:08:14.760Z",
+  "_postman_exported_at": "2018-11-14T13:03:04.303Z",
   "_postman_exported_using": "Postman/6.2.4"
 }
