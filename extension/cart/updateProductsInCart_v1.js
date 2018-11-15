@@ -3,7 +3,7 @@ const Tools = require('../lib/tools')
 const { extractVariantId, handleCartError } = require('../helper/cart')
 
 /**
- * @param context
+ * @param {SDKContext} context
  * @param {Object} input
  * @param {Object[]} input.importedProductsInCart The list of items in the cart in Shopgate format
  * @param {Object[]} input.cartItems The list of items currently in the cart

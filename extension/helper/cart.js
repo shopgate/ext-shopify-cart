@@ -2,7 +2,7 @@ const Message = require('../models/messages/message')
 
 /**
  * @param {int} sourceCartId
- * @param {object} context
+ * @param {SDKContext} context
  */
 const clearCart = (sourceCartId, context) => {
   const Shopify = require('../lib/shopify.api.js')(context.config, context.log)
@@ -20,7 +20,7 @@ const clearCart = (sourceCartId, context) => {
 /**
  * @param {object} updatedData
  * @param {int} targetCartId
- * @param {object} context
+ * @param {SDKContext} context
  */
 const updateCart = (updatedData, targetCartId, context) => {
   const Shopify = require('../lib/shopify.api.js')(context.config, context.log)

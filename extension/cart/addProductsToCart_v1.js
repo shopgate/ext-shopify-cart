@@ -2,7 +2,7 @@ const Tools = require('../lib/tools')
 const { extractVariantId, handleCartError } = require('../helper/cart')
 
 /**
- * @param {Object} context
+ * @param {SDKContext} context
  * @param {Object} input
  * @param {Object[]} input.products
  * @param {Object[]} input.importedProductsAddedToCart
