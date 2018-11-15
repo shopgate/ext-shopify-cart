@@ -61,7 +61,7 @@ class Tools {
   static setCurrentCartId (context, cartId, cb) {
     const storage = context.meta.userId ? context.storage.user : context.storage.device
 
-    storage.user.set('checkoutToken', cartId, function (sErr) {
+    storage.set('checkoutToken', cartId, function (sErr) {
       return cb(sErr, null)
     })
   }
