@@ -38,9 +38,9 @@
 							"raw": "{\n\t\"createNew\": true\n}"
 						},
 						"url": {
-							"raw": "{{domain}}{{endpoint_cart_fetch_shopify_checkout}}",
+							"raw": "{{domain}}{{endpoint_cart_shopify_checkout_get}}",
 							"host": [
-								"{{domain}}{{endpoint_cart_fetch_shopify_checkout}}"
+								"{{domain}}{{endpoint_cart_shopify_checkout_get}}"
 							]
 						}
 					},
@@ -76,9 +76,9 @@
 							"raw": "{\n\t\"products\": [\n\t\t{\n\t\t\t\"productId\": \"{{product_id_unlimited_stock}}\",\n\t\t\t\"quantity\": 2\n\t\t}\n\t]\n}"
 						},
 						"url": {
-							"raw": "{{domain}}{{endpoint_cart_add_products}}",
+							"raw": "{{domain}}{{endpoint_cart_products_add}}",
 							"host": [
-								"{{domain}}{{endpoint_cart_add_products}}"
+								"{{domain}}{{endpoint_cart_products_add}}"
 							]
 						}
 					},
@@ -124,9 +124,9 @@
 							"raw": "{}"
 						},
 						"url": {
-							"raw": "{{domain}}{{endpoint_cart_get_cart}}",
+							"raw": "{{domain}}{{endpoint_cart_get}}",
 							"host": [
-								"{{domain}}{{endpoint_cart_get_cart}}"
+								"{{domain}}{{endpoint_cart_get}}"
 							]
 						}
 					},
@@ -162,9 +162,9 @@
 							"raw": "{\n\t\"products\": [\n\t\t{\n\t\t\t\"productId\": \"{{product_id_unlimited_stock}}\",\n\t\t\t\"quantity\": 2\n\t\t}\n\t]\n}"
 						},
 						"url": {
-							"raw": "{{domain}}{{endpoint_cart_add_products}}",
+							"raw": "{{domain}}{{endpoint_cart_products_add}}",
 							"host": [
-								"{{domain}}{{endpoint_cart_add_products}}"
+								"{{domain}}{{endpoint_cart_products_add}}"
 							]
 						}
 					},
@@ -210,9 +210,9 @@
 							"raw": "{}"
 						},
 						"url": {
-							"raw": "{{domain}}{{endpoint_cart_get_cart}}",
+							"raw": "{{domain}}{{endpoint_cart_get}}",
 							"host": [
-								"{{domain}}{{endpoint_cart_get_cart}}"
+								"{{domain}}{{endpoint_cart_get}}"
 							]
 						}
 					},
@@ -248,9 +248,9 @@
 							"raw": "{\n\t\"products\": [\n\t\t{\n\t\t\t\"productId\": \"{{product_id_limited_stock_of_2}}\",\n\t\t\t\"quantity\": 2\n\t\t}\n\t]\n}"
 						},
 						"url": {
-							"raw": "{{domain}}{{endpoint_cart_add_products}}",
+							"raw": "{{domain}}{{endpoint_cart_products_add}}",
 							"host": [
-								"{{domain}}{{endpoint_cart_add_products}}"
+								"{{domain}}{{endpoint_cart_products_add}}"
 							]
 						}
 					},
@@ -301,9 +301,9 @@
 							"raw": "{}"
 						},
 						"url": {
-							"raw": "{{domain}}{{endpoint_cart_get_cart}}",
+							"raw": "{{domain}}{{endpoint_cart_get}}",
 							"host": [
-								"{{domain}}{{endpoint_cart_get_cart}}"
+								"{{domain}}{{endpoint_cart_get}}"
 							]
 						}
 					},
@@ -350,9 +350,9 @@
 							"raw": "{\n\t\"products\": [\n\t\t{\n\t\t\t\"productId\": \"{{product_id_limited_stock_of_2}}\",\n\t\t\t\"quantity\": 1\n\t\t}\n\t]\n}"
 						},
 						"url": {
-							"raw": "{{domain}}{{endpoint_cart_add_products}}",
+							"raw": "{{domain}}{{endpoint_cart_products_add}}",
 							"host": [
-								"{{domain}}{{endpoint_cart_add_products}}"
+								"{{domain}}{{endpoint_cart_products_add}}"
 							]
 						}
 					},
@@ -410,9 +410,9 @@
 							"raw": "{}"
 						},
 						"url": {
-							"raw": "{{domain}}{{endpoint_cart_get_cart}}",
+							"raw": "{{domain}}{{endpoint_cart_get}}",
 							"host": [
-								"{{domain}}{{endpoint_cart_get_cart}}"
+								"{{domain}}{{endpoint_cart_get}}"
 							]
 						}
 					},
@@ -475,9 +475,9 @@
 							"raw": "{\n\t\"CartItem\": [\n\t\t{\n\t\t\t\"cartItemId\": \"{{cart_item_id_unlimited_stock}}\",\n\t\t\t\"quantity\": 2\n\t\t}\n\t]\n}"
 						},
 						"url": {
-							"raw": "{{domain}}{{endpoint_cart_update_products}}",
+							"raw": "{{domain}}{{endpoint_cart_products_update}}",
 							"host": [
-								"{{domain}}{{endpoint_cart_update_products}}"
+								"{{domain}}{{endpoint_cart_products_update}}"
 							]
 						}
 					},
@@ -524,9 +524,9 @@
 							"raw": "{}"
 						},
 						"url": {
-							"raw": "{{domain}}{{endpoint_cart_get_cart}}",
+							"raw": "{{domain}}{{endpoint_cart_get}}",
 							"host": [
-								"{{domain}}{{endpoint_cart_get_cart}}"
+								"{{domain}}{{endpoint_cart_get}}"
 							]
 						}
 					},
@@ -562,9 +562,9 @@
 							"raw": "{\n\t\"CartItem\": [\n\t\t{\n\t\t\t\"cartItemId\": \"{{cart_item_id_unlimited_stock}}\",\n\t\t\t\"quantity\": 10\n\t\t},\n\t\t{\n\t\t\t\"cartItemId\": \"{{cart_item_id_limited_stock_of_2}}\",\n\t\t\t\"quantity\": 1\n\t\t}\n\t]\n}"
 						},
 						"url": {
-							"raw": "{{domain}}{{endpoint_cart_update_products}}",
+							"raw": "{{domain}}{{endpoint_cart_products_update}}",
 							"host": [
-								"{{domain}}{{endpoint_cart_update_products}}"
+								"{{domain}}{{endpoint_cart_products_update}}"
 							]
 						}
 					},
@@ -621,9 +621,9 @@
 							"raw": "{}"
 						},
 						"url": {
-							"raw": "{{domain}}{{endpoint_cart_get_cart}}",
+							"raw": "{{domain}}{{endpoint_cart_get}}",
 							"host": [
-								"{{domain}}{{endpoint_cart_get_cart}}"
+								"{{domain}}{{endpoint_cart_get}}"
 							]
 						}
 					},
@@ -670,9 +670,9 @@
 							"raw": "{\n\t\"CartItem\": [\n\t\t{\n\t\t\t\"cartItemId\": \"{{cart_item_id_unlimited_stock}}\",\n\t\t\t\"quantity\": 7\n\t\t},\n\t\t{\n\t\t\t\"cartItemId\": \"{{cart_item_id_limited_stock_of_2}}\",\n\t\t\t\"quantity\": 5\n\t\t}\n\t]\n}"
 						},
 						"url": {
-							"raw": "{{domain}}{{endpoint_cart_update_products}}",
+							"raw": "{{domain}}{{endpoint_cart_products_update}}",
 							"host": [
-								"{{domain}}{{endpoint_cart_update_products}}"
+								"{{domain}}{{endpoint_cart_products_update}}"
 							]
 						}
 					},
@@ -729,9 +729,9 @@
 							"raw": "{}"
 						},
 						"url": {
-							"raw": "{{domain}}{{endpoint_cart_get_cart}}",
+							"raw": "{{domain}}{{endpoint_cart_get}}",
 							"host": [
-								"{{domain}}{{endpoint_cart_get_cart}}"
+								"{{domain}}{{endpoint_cart_get}}"
 							]
 						}
 					},
