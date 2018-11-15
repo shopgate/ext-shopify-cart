@@ -40,7 +40,10 @@ module.exports = async function (context, input) {
 
   // identify all products that have changed in quantity and the one that have not
   existingCartItemProducts.forEach(item => {
-    const updateItem = updateCartItems.find(updateItem => updateItem.cartItemId === item.id)
+    // a note about "cartItemId vs. CartItemId" - this is a fix for documentation vs. reality mismatch
+    // cartItemId is according to documentation, Newman tests and PWA 6.x
+    // CartItemId is PWA 5.x reality
+    const updateItem = updateCartItems.find(updateItem => (updateItem.cartItemId || updateItem.CartItemId) === item.id)
 
     checkoutCartItems.push({
       variant_id: variantMap[item.product.id],
