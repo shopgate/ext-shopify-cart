@@ -54,7 +54,7 @@ function extractVariantId (product) {
  * @param {Object} err.errors.line_items
  * @param {{code: string, message: string}[]} err.errors.line_items.[errorType]
  *
- * @return {{code: string, message: string}[]}
+ * @return {{code: string, message: string, type: string}[]}
  * @throws {Error} If err does not have an errors or error.line_items property
  */
 function handleCartError (err) {
