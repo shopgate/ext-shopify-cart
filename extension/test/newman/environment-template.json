@@ -12,7 +12,7 @@
     {
       "key": "product_id_unlimited_stock",
       "value": "***",
-      "description": "A Shopify product ID of a product, preferrably with inactive inventory control.",
+      "description": "A Shopify product ID of a product, preferably with inactive inventory control.",
       "type": "text",
       "enabled": true
     }
