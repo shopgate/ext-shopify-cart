@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "72e28a96-08c3-4a8b-86c4-d010d27aff95",
-		"name": "shopify-cart-e2e",
+		"name": "Shopify Connect - Cart",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -90,16 +90,17 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "2b319e5d-a4f5-4238-9e5b-1fb2374e7ef2",
+								"id": "530f83a8-51da-40d0-bbe1-eb0dde1c48ae",
 								"type": "text/javascript",
 								"exec": [
+									"const response = pm.response.json()",
 									"pm.test('that the cart is not empty anymore', () => {",
-									"    pm.expect(pm.response.json()).to.be.an('object').and.not.empty",
-									"    pm.expect(pm.response.json().cartItems).to.be.an('array').and.not.empty",
-									"    pm.expect(pm.response.json().cartItems.length).to.equal(1)",
+									"    pm.expect(response).to.be.an('object').and.not.empty",
+									"    pm.expect(response.cartItems).to.be.an('array').and.not.empty",
+									"    pm.expect(response.cartItems.length).to.equal(1)",
 									"})",
 									"",
-									"const desiredItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
+									"const desiredItem = response.cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
 									"pm.test('that the product is in the cart', () => {",
 									"    pm.expect(desiredItem).to.be.an('object').and.not.empty",
 									"})",
@@ -176,16 +177,17 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "de4ab9a9-b5e8-4303-a7a9-9a5db9bc7213",
+								"id": "ae318326-cea7-44f9-8935-0daf3ddf4954",
 								"type": "text/javascript",
 								"exec": [
+									"const response = pm.response.json()",
 									"pm.test('that the cart is not empty anymore', () => {",
-									"    pm.expect(pm.response.json()).to.be.an('object').and.not.empty",
-									"    pm.expect(pm.response.json().cartItems).to.be.an('array').and.not.empty",
-									"    pm.expect(pm.response.json().cartItems.length).to.equal(1)",
+									"    pm.expect(response).to.be.an('object').and.not.empty",
+									"    pm.expect(response.cartItems).to.be.an('array').and.not.empty",
+									"    pm.expect(response.cartItems.length).to.equal(1)",
 									"})",
 									"",
-									"const desiredItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
+									"const desiredItem = response.cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
 									"pm.test('that the product is in the cart', () => {",
 									"    pm.expect(desiredItem).to.be.an('object').and.not.empty",
 									"})",
@@ -262,21 +264,22 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "869ce366-f814-4ae4-906d-ba610cd5019a",
+								"id": "5bcd0e5b-3a1b-4aef-a647-1263aff5496e",
 								"type": "text/javascript",
 								"exec": [
+									"const response = pm.response.json()",
 									"pm.test('that the cart is not empty anymore', () => {",
-									"    pm.expect(pm.response.json()).to.be.an('object').and.not.empty",
-									"    pm.expect(pm.response.json().cartItems).to.be.an('array').and.not.empty",
-									"    pm.expect(pm.response.json().cartItems.length).to.equal(2)",
+									"    pm.expect(response).to.be.an('object').and.not.empty",
+									"    pm.expect(response.cartItems).to.be.an('array').and.not.empty",
+									"    pm.expect(response.cartItems.length).to.equal(2)",
 									"})",
 									"",
 									"pm.test('that the previously added product is still in the cart', () => {",
-									"    const desiredCartItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
+									"    const desiredCartItem = response.cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
 									"    pm.expect(desiredCartItem).to.be.an('object')",
 									"})",
 									"",
-									"const desiredCartItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_limited_stock_of_2'))",
+									"const desiredCartItem = response.cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_limited_stock_of_2'))",
 									"pm.test('that the new product is in the cart', () => {",
 									"    pm.expect(desiredCartItem).to.be.an('object')",
 									"})",
@@ -315,23 +318,24 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "33303287-24d6-485c-bee6-cca6d4299576",
+								"id": "74a4de5f-5e83-43e4-bc02-58de1d072754",
 								"type": "text/javascript",
 								"exec": [
+									"const response = pm.response.json()",
 									"pm.test('that the response contains \"messages\"', () => {",
-									"    pm.expect(pm.response.json()).to.be.an('object').and.not.empty",
-									"    pm.expect(pm.response.json().messages).to.be.an('array').and.not.empty",
+									"    pm.expect(response).to.be.an('object').and.not.empty",
+									"    pm.expect(response.messages).to.be.an('array').and.not.empty",
 									"",
 									"})",
 									"",
 									"pm.test('that the response contains exactly one error message', () => {",
-									"    pm.expect(pm.response.json().messages.length).to.equal(1)",
-									"    pm.expect(pm.response.json().messages[0]).to.be.an('object')",
-									"    pm.expect(pm.response.json().messages[0].type).to.equal('error')",
+									"    pm.expect(response.messages.length).to.equal(1)",
+									"    pm.expect(response.messages[0]).to.be.an('object')",
+									"    pm.expect(response.messages[0].type).to.equal('error')",
 									"})",
 									"",
 									"pm.test('that the error code of that one message is EINSUFFICIENTSTOCK', () => {",
-									"    pm.expect(pm.response.json().messages[0].code).to.equal('EINSUFFICIENTSTOCK')",
+									"    pm.expect(response.messages[0].code).to.equal('EINSUFFICIENTSTOCK')",
 									"})"
 								]
 							}
@@ -364,16 +368,17 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "8080c93e-50d7-4fae-899b-f88a9977ebca",
+								"id": "c79f4aef-b6ce-4024-85a3-2ff6eee22252",
 								"type": "text/javascript",
 								"exec": [
+									"const response = pm.response.json()",
 									"pm.test('that the cart is not empty anymore', () => {",
-									"    pm.expect(pm.response.json()).to.be.an('object').and.not.empty",
-									"    pm.expect(pm.response.json().cartItems).to.be.an('array').and.not.empty",
-									"    pm.expect(pm.response.json().cartItems.length).to.equal(2)",
+									"    pm.expect(response).to.be.an('object').and.not.empty",
+									"    pm.expect(response.cartItems).to.be.an('array').and.not.empty",
+									"    pm.expect(response.cartItems.length).to.equal(2)",
 									"})",
 									"",
-									"const unlimitedStockCartItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
+									"const unlimitedStockCartItem = response.cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
 									"pm.test('that the first product is still in the cart', () => {",
 									"    pm.expect(unlimitedStockCartItem).to.be.an('object')",
 									"    pm.environment.set('cart_item_id_unlimited_stock', unlimitedStockCartItem.id)",
@@ -383,7 +388,7 @@
 									"    pm.expect(unlimitedStockCartItem.quantity).to.equal(4)",
 									"})",
 									"",
-									"const limitedStockCartItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_limited_stock_of_2'))",
+									"const limitedStockCartItem = response.cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_limited_stock_of_2'))",
 									"pm.test('that the second product is still in the cart', () => {",
 									"    pm.expect(limitedStockCartItem).to.be.an('object')",
 									"    pm.environment.set('cart_item_id_limited_stock_of_2', limitedStockCartItem.id)",
@@ -489,16 +494,17 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "4e9f1182-f805-4853-bbb6-553a925e7c09",
+								"id": "ccc806ea-85d4-4372-811f-fcee89608efc",
 								"type": "text/javascript",
 								"exec": [
+									"const response = pm.response.json()",
 									"pm.test('that the cart is not empty', () => {",
-									"    pm.expect(pm.response.json()).to.be.an('object').and.not.empty",
-									"    pm.expect(pm.response.json().cartItems).to.be.an('array').and.not.empty",
-									"    pm.expect(pm.response.json().cartItems.length).to.equal(2)",
+									"    pm.expect(response).to.be.an('object').and.not.empty",
+									"    pm.expect(response.cartItems).to.be.an('array').and.not.empty",
+									"    pm.expect(response.cartItems.length).to.equal(2)",
 									"})",
 									"",
-									"const unlimitedStockItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
+									"const unlimitedStockItem = response.cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
 									"pm.test('that the first product is still in the cart', () => {",
 									"    pm.expect(unlimitedStockItem).to.be.an('object')",
 									"    pm.environment.set('cart_item_id_unlimited_stock', unlimitedStockItem.id)",
@@ -576,16 +582,17 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "e077b8f6-aa27-4360-aa73-2cfbe27f6ef4",
+								"id": "0f6458b2-23ff-4576-94ec-78ed10dc1ebc",
 								"type": "text/javascript",
 								"exec": [
+									"const response = pm.response.json()",
 									"pm.test('that the cart is not empty', () => {",
-									"    pm.expect(pm.response.json()).to.be.an('object').and.not.empty",
-									"    pm.expect(pm.response.json().cartItems).to.be.an('array').and.not.empty",
-									"    pm.expect(pm.response.json().cartItems.length).to.equal(2)",
+									"    pm.expect(response).to.be.an('object').and.not.empty",
+									"    pm.expect(response.cartItems).to.be.an('array').and.not.empty",
+									"    pm.expect(response.cartItems.length).to.equal(2)",
 									"})",
 									"",
-									"const unlimitedStockItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
+									"const unlimitedStockItem = response.cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
 									"pm.test('that the first product is still in the cart', () => {",
 									"    pm.expect(unlimitedStockItem).to.be.an('object')",
 									"    pm.environment.set('cart_item_id_unlimited_stock', unlimitedStockItem.id)",
@@ -595,7 +602,7 @@
 									"    pm.expect(unlimitedStockItem.quantity).to.equal(10)",
 									"})",
 									"",
-									"const limitedStockItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_limited_stock_of_2'))",
+									"const limitedStockItem = response.cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_limited_stock_of_2'))",
 									"pm.test('that the second product is still in the cart', () => {",
 									"    pm.expect(limitedStockItem).to.be.an('object')",
 									"    pm.environment.set('cart_item_id_limited_stock_of_2', limitedStockItem.id)",
@@ -635,23 +642,24 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "84492550-aa8c-4e29-93b9-ddc25cbe846c",
+								"id": "c07c052b-4a15-488d-bb95-7a90a808fb79",
 								"type": "text/javascript",
 								"exec": [
+									"const response = pm.response.json()",
 									"pm.test('that the response contains \"messages\"', () => {",
-									"    pm.expect(pm.response.json()).to.be.an('object').and.not.empty",
-									"    pm.expect(pm.response.json().messages).to.be.an('array').and.not.empty",
+									"    pm.expect(response).to.be.an('object').and.not.empty",
+									"    pm.expect(response.messages).to.be.an('array').and.not.empty",
 									"",
 									"})",
 									"",
 									"pm.test('that the response contains exactly one error message', () => {",
-									"    pm.expect(pm.response.json().messages.length).to.equal(1)",
-									"    pm.expect(pm.response.json().messages[0]).to.be.an('object')",
-									"    pm.expect(pm.response.json().messages[0].type).to.equal('error')",
+									"    pm.expect(response.messages.length).to.equal(1)",
+									"    pm.expect(response.messages[0]).to.be.an('object')",
+									"    pm.expect(response.messages[0].type).to.equal('error')",
 									"})",
 									"",
 									"pm.test('that the error code of that one message is EINSUFFICIENTSTOCK', () => {",
-									"    pm.expect(pm.response.json().messages[0].code).to.equal('EINSUFFICIENTSTOCK')",
+									"    pm.expect(response.messages[0].code).to.equal('EINSUFFICIENTSTOCK')",
 									"})"
 								]
 							}
@@ -684,16 +692,17 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "a34638c6-34ea-4ae5-bc6d-2e7bc0c84393",
+								"id": "b2609129-b601-4d24-afac-e646ebbcc316",
 								"type": "text/javascript",
 								"exec": [
+									"const response = pm.response.json()",
 									"pm.test('that the cart is not empty', () => {",
-									"    pm.expect(pm.response.json()).to.be.an('object').and.not.empty",
-									"    pm.expect(pm.response.json().cartItems).to.be.an('array').and.not.empty",
-									"    pm.expect(pm.response.json().cartItems.length).to.equal(2)",
+									"    pm.expect(response).to.be.an('object').and.not.empty",
+									"    pm.expect(response.cartItems).to.be.an('array').and.not.empty",
+									"    pm.expect(response.cartItems.length).to.equal(2)",
 									"})",
 									"",
-									"const unlimitedStockItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
+									"const unlimitedStockItem = response.cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
 									"pm.test('that the first product is still in the cart', () => {",
 									"    pm.expect(unlimitedStockItem).to.be.an('object')",
 									"    pm.environment.set('cart_item_id_unlimited_stock', unlimitedStockItem.id)",
@@ -703,7 +712,7 @@
 									"    pm.expect(unlimitedStockItem.quantity).to.equal(10)",
 									"})",
 									"",
-									"const limitedStockItem = pm.response.json().cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_limited_stock_of_2'))",
+									"const limitedStockItem = response.cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_limited_stock_of_2'))",
 									"pm.test('that the second product is still in the cart', () => {",
 									"    pm.expect(limitedStockItem).to.be.an('object')",
 									"    pm.environment.set('cart_item_id_limited_stock_of_2', limitedStockItem.id)",
@@ -760,6 +769,28 @@
 					}
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "3ce03b4f-1f37-4d4a-86f5-22346273e1fe",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "fe1e716a-968b-48e0-9ba4-ecb289a7b176",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
