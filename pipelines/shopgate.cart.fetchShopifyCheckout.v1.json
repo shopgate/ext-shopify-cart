@@ -3,7 +3,9 @@
   "pipeline": {
     "id": "shopgate.cart.fetchShopifyCheckout.v1",
     "public": true,
-    "input": [],
+    "input": [
+      {"key": "createNew", "id": "2", "optional": true}
+    ],
     "output": [
       {"key": "checkout", "id": "1"}
     ],
@@ -12,7 +14,9 @@
         "type": "extension",
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/fetchShopifyCheckout_v1.js",
-        "input": [],
+        "input": [
+          {"key": "createNew", "id": "2", "optional": true}
+        ],
         "output": [
           {"key": "checkout", "id": "1"}
         ]

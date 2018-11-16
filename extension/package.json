@@ -4,7 +4,9 @@
   "description": "",
   "scripts": {
     "test": "JUNIT_REPORT_PATH=../build/mocha.xml JUNIT_REPORT_STACK=1 mocha --recursive test -R mochawesome --reporter-options reportDir=coverage",
-    "cover": "istanbul cover _mocha -- --recursive"
+    "cover": "istanbul cover _mocha -- --recursive",
+    "newman": "newman run ./test/newman/collection.json --color on --environment ./test/newman/environment.json --globals ./test/newman/globals.json",
+    "init-newman": "node ./test/newman/setup.js"
   },
   "repository": {
     "type": "git",
@@ -31,6 +33,7 @@
     "expect": "^22.4.3",
     "mocha": "^5.2.0",
     "mochawesome": "3.0.2",
+    "newman": "^4.2.2",
     "nock": "^9.4.4",
     "rewire": "^2.5.2",
     "sinon": "^5.1.1",

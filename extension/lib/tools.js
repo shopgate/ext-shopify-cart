@@ -4,7 +4,6 @@ class Tools {
    * @param {Object} obj
    * @param {String} path
    * @return {Boolean}
-   * @public
    */
   static propertyExists (obj, path) {
     if (!obj) return false
@@ -26,7 +25,6 @@ class Tools {
    *
    * @param {Object} obj
    * @return {Boolean}
-   * @public
    */
   static isObject (obj) {
     return obj !== undefined && obj !== null && typeof obj === 'object'
@@ -37,51 +35,35 @@ class Tools {
    *
    * @param {Object} obj
    * @return {Boolean}
-   * @public
    */
   static isEmpty (obj) {
     return (!obj || Object.keys(obj).length <= 0)
   }
 
   /**
-   * @property {string | int} context.meta.userId
-   * @param {Object} context
+   * @param {SDKContext} context
    * @param {function} cb
-   * @public
    */
   static getCurrentCartId (context, cb) {
-    const userId = context.meta.userId
-    if (userId) {
-      context.storage.user.get('checkoutToken', (sErr, cartId) => {
-        return cb(sErr, cartId)
-      })
-    } else {
-      context.storage.device.get('checkoutToken', (sErr, cartId) => {
-        return cb(sErr, cartId)
-      })
-    }
+    const storage = context.meta.userId ? context.storage.user : context.storage.device
+
+    storage.get('checkoutToken', (sErr, cartId) => {
+      return cb(sErr, cartId)
+    })
   }
 
   /**
    *
-   * @param {Object} context
-   * @param {String} cartId
+   * @param {SDKContext} context
+   * @param {string} cartId
    * @param {function} cb
-   * @public
    */
   static setCurrentCartId (context, cartId, cb) {
-    const userId = context.meta.userId
-    if (userId) {
-      context.storage.user.set('checkoutToken', cartId, function (sErr) {
-        if (sErr) return cb(sErr)
-        return cb(null)
-      })
-    } else {
-      context.storage.device.set('checkoutToken', cartId, function (sErr) {
-        if (sErr) return cb(sErr)
-        return cb(null)
-      })
-    }
+    const storage = context.meta.userId ? context.storage.user : context.storage.device
+
+    storage.set('checkoutToken', cartId, function (sErr) {
+      return cb(sErr, null)
+    })
   }
 }
 
