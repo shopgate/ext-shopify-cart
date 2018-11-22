@@ -107,4 +107,33 @@ function getOutOfStockLineItemIds(lineItems) {
   return itemsToDelete
 }
 
-module.exports = { clearCart, updateCart, extractVariantId, handleCartError, getOutOfStockLineItemIds }
+/**
+ * @param {Array} lineItems
+ * @param {int} targetCartId
+ * @param {SDKContext} context
+ */
+const filterUnavailableProducts = (lineItems, targetCartId, context) => {
+  const Shopify = require('../lib/shopify.api.js')(context.config, context.log)
+
+  const productData = {
+    'checkout': {
+      'line_items': lineItems
+    }
+  }
+
+  return new Promise((resolve, reject) => {
+    Shopify.put('/admin/checkouts/' + targetCartId + '.json', productData, function (err) {
+      if (err) {
+        const itemsToDelete = getOutOfStockLineItemIds(err.errors.line_items).sort((a, b) => b - a)
+
+        for (let itemId of itemsToDelete) {
+          lineItems.splice(itemId, 1)
+        }
+      }
+
+      resolve(lineItems)
+    })
+  })
+}
+
+module.exports = { clearCart, updateCart, extractVariantId, handleCartError, getOutOfStockLineItemIds, filterUnavailableProducts }

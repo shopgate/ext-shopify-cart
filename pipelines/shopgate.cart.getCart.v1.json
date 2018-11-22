@@ -38,17 +38,6 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/filterUnavailableProducts.js",
-        "input": [
-          {"key": "checkout", "id": "100"}
-        ],
-        "output": [
-          {"key": "checkout", "id": "100", "optional": true}
-        ]
-      },
-      {
-        "type": "extension",
-        "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/remapCheckoutToShopifyCartData_v1.js",
         "input": [
           {"key": "checkout", "id": "100"}

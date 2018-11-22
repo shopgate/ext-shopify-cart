@@ -1,5 +1,5 @@
 const Tools = require('../lib/tools')
-const { extractVariantId, handleCartError } = require('../helper/cart')
+const { extractVariantId, handleCartError, filterUnavailableProducts } = require('../helper/cart')
 
 /**
  * @param {SDKContext} context
@@ -40,7 +40,7 @@ module.exports = async function (context, input) {
     items[newCartItem.productId] += newCartItem.quantity
   })
 
-  const checkoutCartItems = Object.entries(items).map(([id, quantity]) => {
+  let checkoutCartItems = Object.entries(items).map(([id, quantity]) => {
     let variantId = extractVariantId(importedProductsAddedToCart.find(importedProductAddedToCart =>
       importedProductAddedToCart.id === id && importedProductAddedToCart.customData
     ))
@@ -59,6 +59,8 @@ module.exports = async function (context, input) {
   })
 
   try {
+    checkoutCartItems = await filterUnavailableProducts(checkoutCartItems, cartId, context)
+
     return await new Promise((resolve, reject) => shopify.put(
       `/admin/checkouts/${cartId}.json`,
       { checkout: { line_items: checkoutCartItems } },
