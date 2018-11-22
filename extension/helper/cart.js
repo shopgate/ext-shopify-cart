@@ -83,4 +83,28 @@ function handleCartError (err) {
   return errorMessages
 }
 
-module.exports = { clearCart, updateCart, extractVariantId, handleCartError }
+/**
+ *
+ * @param {Object} lineItems
+ * @returns {Array}
+ */
+function getOutOfStockLineItemIds(lineItems) {
+  const itemsToDelete = []
+
+  for (let itemId in lineItems) {
+    Object.entries(lineItems[itemId]).forEach(([errorType, errors]) => {
+      errors.forEach(error => {
+        if (error.code === 'not_enough_in_stock'
+          && error.options
+          && error.options.remaining === 0
+        ) {
+          itemsToDelete.push(parseInt(itemId))
+        }
+      })
+    })
+  }
+
+  return itemsToDelete
+}
+
+module.exports = { clearCart, updateCart, extractVariantId, handleCartError, getOutOfStockLineItemIds }
