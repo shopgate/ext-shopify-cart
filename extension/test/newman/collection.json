@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "bc877c85-1ba6-4c3a-92db-9e944157724e",
+		"_postman_id": "f7ee3a18-c1a9-4e79-96c0-14639f5611bd",
 		"name": "Shopify Connect - Cart",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -782,6 +782,369 @@
 							"raw": "{{domain}}{{endpoint_cart_shopify_checkout_get}}",
 							"host": [
 								"{{domain}}{{endpoint_cart_shopify_checkout_get}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "997642ba-59c9-419d-81d2-04b2b3dca552",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "d8e6655b-89b8-4988-ba87-fb37610f9b97",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "shopgate.cart.deleteProducts.v1",
+			"item": [
+				{
+					"name": "Create empty checkout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1e507e68-cbfb-4409-8109-09e3e8f344be",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('that the cart is empty', () => {",
+									"    pm.expect(pm.response.json().checkout).to.be.an('object')",
+									"    pm.expect(pm.response.json().checkout.line_items).to.be.an('array').and.empty",
+									"})"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"createNew\": true\n}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_shopify_checkout_get}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_shopify_checkout_get}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add first product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b0c9ac79-82b8-4c41-8235-c9c18979152a",
+								"exec": [
+									"pm.test('that the request succeeded', () => {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.json()).to.be.an('object').and.empty",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"products\": [\n\t\t{\n\t\t\t\"productId\": \"{{product_id_unlimited_stock}}\",\n\t\t\t\"quantity\": 1\n\t\t}\n\t]\n}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_products_add}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_products_add}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add second product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "74a4de5f-5e83-43e4-bc02-58de1d072754",
+								"exec": [
+									"pm.test('that the request succeeded', () => {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.json()).to.be.an('object').and.empty",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"products\": [\n\t\t{\n\t\t\t\"productId\": \"{{product_id_limited_stock_of_2}}\",\n\t\t\t\"quantity\": 1\n\t\t}\n\t]\n}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_products_add}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_products_add}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check products were added",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "530f83a8-51da-40d0-bbe1-eb0dde1c48ae",
+								"exec": [
+									"const response = pm.response.json()",
+									"pm.test('that the cart is not empty anymore', () => {",
+									"    pm.expect(response).to.be.an('object').and.not.empty",
+									"    pm.expect(response.cartItems).to.be.an('array').and.not.empty",
+									"    pm.expect(response.cartItems.length).to.equal(2)",
+									"})",
+									"",
+									"const firstStockItem = response.cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_unlimited_stock'))",
+									"pm.test('that the first product is in the cart', () => {",
+									"    pm.expect(firstStockItem).to.be.an('object')",
+									"    pm.environment.set('cart-item-id-first-product', firstStockItem.id)",
+									"})",
+									"",
+									"const secondStockItem = response.cartItems.find(item => item.product && item.product.id === pm.environment.get('product_id_limited_stock_of_2'))",
+									"pm.test('that the second product is in the cart', () => {",
+									"    pm.expect(secondStockItem).to.be.an('object')",
+									"    pm.environment.set('cart-item-id-second-product', secondStockItem.id)",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_get}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_get}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete first product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b0c9ac79-82b8-4c41-8235-c9c18979152a",
+								"exec": [
+									"pm.test('that the request succeeded', () => {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.json()).to.be.an('object').and.empty",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"CartItemIds\": [\n\t\t\"{{cart-item-id-first-product}}\"\n\t]\n}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_products_delete}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_products_delete}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check first product was deleted",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ae318326-cea7-44f9-8935-0daf3ddf4954",
+								"exec": [
+									"const response = pm.response.json()",
+									"pm.test('that the cart is not empty', () => {",
+									"    pm.expect(response).to.be.an('object').and.not.empty",
+									"    pm.expect(response.cartItems).to.be.an('array').and.not.empty",
+									"    pm.expect(response.cartItems.length).to.equal(1)",
+									"})",
+									"",
+									"const firstStockItem = response.cartItems.filter(item => item.id === pm.environment.get('cart-item-id-first-product'))",
+									"",
+									"pm.test('that the first product is not in the cart anymore', () => {",
+									"    pm.expect(firstStockItem).to.be.empty",
+									"})",
+									"",
+									"const secondStockItem = response.cartItems.find(item => item.id === pm.environment.get('cart-item-id-second-product'))",
+									"",
+									"pm.test('that the second product is still in the cart', () => {",
+									"    pm.expect(secondStockItem).to.be.an('object')",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_get}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_get}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete second product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b0c9ac79-82b8-4c41-8235-c9c18979152a",
+								"exec": [
+									"pm.test('that the request succeeded', () => {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.json()).to.be.an('object').and.empty",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"CartItemIds\": [\n\t\t\"{{cart-item-id-second-product}}\"\n\t]\n}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_products_delete}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_products_delete}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check second product was deleted & cleanup Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ae318326-cea7-44f9-8935-0daf3ddf4954",
+								"exec": [
+									"const response = pm.response.json()",
+									"pm.test('that the cart is empty again', () => {",
+									"    pm.expect(response).to.be.an('object').and.not.empty",
+									"    pm.expect(response.cartItems).to.be.an('array').and.empty",
+									"})",
+									"",
+									"pm.environment.unset('cart-item-id-first-product')",
+									"pm.environment.unset('cart-item-id-second-product')"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{domain}}{{endpoint_cart_get}}",
+							"host": [
+								"{{domain}}{{endpoint_cart_get}}"
 							]
 						}
 					},
