@@ -102,8 +102,7 @@ function getOutOfStockLineItemIds (lineItems) {
 
   for (let itemId in lineItems) {
     Object.entries(lineItems[itemId]).forEach(([errorType, errors]) => {
-      if (errors.find(error =>
-          error.code === 'not_enough_in_stock' &&
+      if (errors.find(error => error.code === 'not_enough_in_stock' &&
           error.options &&
           error.options.remaining === 0
       )) {
