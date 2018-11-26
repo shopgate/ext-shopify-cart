@@ -148,4 +148,4 @@ function fixCheckoutQuantities (checkoutCartItems, itemsToDelete, error, cartId,
   })
 }
 
-module.exports = { clearCart, updateCart, extractVariantId, handleCartError }
+module.exports = { clearCart, updateCart, extractVariantId, handleCartError, getOutOfStockLineItemIds }
