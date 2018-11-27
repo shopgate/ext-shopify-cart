@@ -20,6 +20,12 @@
       "enabled": true
     },
     {
+      "key": "endpoint_cart_products_delete",
+      "value": "/pipelines/shopgate.cart.deleteProducts.v1",
+      "description": "",
+      "enabled": true
+    },
+    {
       "key": "endpoint_cart_shopify_checkout_get",
       "value": "/pipelines/shopgate.cart.fetchShopifyCheckout.v1",
       "description": "",
