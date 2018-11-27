@@ -12,7 +12,6 @@ window.SGPipelineScript.PAGE_CHECKOUTS = '/[0-9]+/checkouts/[0-9a-f]+'
  */
 window.SGPipelineScript.STORAGE_KEY_WEBLOGIN_PAYLOAD = 'shopgateWebloginPayload'
 window.SGPipelineScript.STORAGE_KEY_TAB_PARAMS = 'shopgateParams'
-window.SGPipelineScript.STORAGE_KEY_CHECKOUT_URL = 'shopifyCheckoutUrl'
 window.SGPipelineScript.STORAGE_KEY_PAGE_HISTORY = 'shopgatePageHistory'
 window.SGPipelineScript.STORAGE_KEY_LOADING_SCREEN_ENABLED = 'shopgateAppLoadingScreenEnabled'
 /**
