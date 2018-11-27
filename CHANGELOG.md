@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Changed
 - returns specific code for insufficient stock errors, allowing future templates to show localized error messages
+### Fixed
+- cart errors for products that gone out of stock after they were added to the cart
 
 ## [1.2.7] - 2018-10-15
 ### Changed

@@ -69,6 +69,6 @@ module.exports = async function (context, input) {
       }
     ))
   } catch (err) {
-    return { messages: handleCartError(err) }
+    return { messages: await handleCartError(err, checkoutCartItems, cartId, context) }
   }
 }

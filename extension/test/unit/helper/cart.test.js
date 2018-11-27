@@ -88,7 +88,7 @@ describe('Cart Helper', () => {
       })
     })
 
-    it('should return a "flattened" summary of all error messages', () => {
+    it('should return a "flattened" summary of all error messages', async () => {
       const error = new Error()
       error.errors = {
         line_items: {
@@ -116,7 +116,7 @@ describe('Cart Helper', () => {
       }
 
       assert.deepStrictEqual(
-        handleCartError(error),
+        await handleCartError(error),
         [
           { code: 'some_error_code', message: 'some message', type: 'error' },
           { code: 'some_other_error_code', message: 'some other message', type: 'error' },
@@ -130,7 +130,7 @@ describe('Cart Helper', () => {
       )
     })
 
-    it('should convert "not_enough_in_stock" error codes into "EINSUFFICIENTSTOCK"', () => {
+    it('should convert "not_enough_in_stock" error codes into "EINSUFFICIENTSTOCK"', async () => {
       const error = new Error()
       error.errors = {
         line_items: {
@@ -143,8 +143,67 @@ describe('Cart Helper', () => {
       }
 
       assert.deepStrictEqual(
-        handleCartError(error),
+        await handleCartError(error),
         [{ code: 'EINSUFFICIENTSTOCK', message: 'some message', type: 'error' }]
+      )
+    })
+  })
+
+  describe('getOutOfStockLineItemIds', () => {
+    const getOutOfStockLineItemIds = require('../../../../extension/helper/cart').getOutOfStockLineItemIds
+
+    it('should return id of line item with error "not_enough_in_stock" and remaining quantity 0', () => {
+      const lineItems = {
+        0: {
+          quantity: [
+            {code: 'not_enough_in_stock', message: 'some message', options: {remaining: 0}}
+          ]
+        }
+      }
+
+      assert.deepStrictEqual(
+        getOutOfStockLineItemIds(lineItems),
+        [0]
+      )
+    })
+
+    it('should NOT return id of line item with error "not_enough_in_stock" and remaining quantity > 0', () => {
+      const lineItems = {
+        0: {
+          quantity: [
+            {code: 'not_enough_in_stock', message: 'some message', options: {remaining: 2}}
+          ]
+        }
+      }
+
+      assert.deepStrictEqual(
+        getOutOfStockLineItemIds(lineItems),
+        []
+      )
+    })
+
+    it('should return all id of line item with error "not_enough_in_stock" and remaining quantity = 0', () => {
+      const lineItems = {
+        0: {
+          quantity: [
+            {code: 'not_enough_in_stock', message: 'some message', options: {remaining: 0}}
+          ]
+        },
+        1: {
+          quantity: [
+            {code: 'not_enough_in_stock', message: 'some message', options: {remaining: 2}}
+          ]
+        },
+        2: {
+          quantity: [
+            {code: 'not_enough_in_stock', message: 'some message', options: {remaining: 0}}
+          ]
+        }
+      }
+
+      assert.deepStrictEqual(
+        getOutOfStockLineItemIds(lineItems),
+        [0, 2]
       )
     })
   })
