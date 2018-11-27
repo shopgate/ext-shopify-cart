@@ -47,37 +47,5 @@ window.SGPipelineScript.loginInApp = function (payload) {
         }
       })
     }
-
-    // the registration or login can be triggered just before checkout or as a standalone action
-    if (shopgateParams && shopgateParams.sgcloudCheckout) {
-      return window.SGPipelineScript.proceedToCheckout()
-    }
-
-    // close loading screen, because otherwise it will even be visible after closing the tab
-    window.SGPipelineScript.closeLoadingScreen()
-
-    // close loading screen and close in app browser tab if it was just a standalone action (send back callback data)
-    var closeTabData = [(shopgateParams ? shopgateParams.sgcloudCallbackData : {})]
-    console.log('# Closing in app browser tab with data: ' + JSON.stringify(closeTabData))
-    window.SGAppConnector.sendAppCommand({
-      c: 'broadcastEvent',
-      p: {
-        event: 'closeInAppBrowser',
-        data: closeTabData
-      }
-    })
   }, shopgateParams)
-}
-
-/**
- * Fetches the checkout url for the users cart and redirects him to the checkout.
- */
-window.SGPipelineScript.proceedToCheckout = function () {
-  // take checkout url from cache, clean up and redirect
-  var checkoutUrl = window.localStorage.getItem(this.STORAGE_KEY_CHECKOUT_URL)
-  window.localStorage.removeItem(this.STORAGE_KEY_CHECKOUT_URL)
-  if (checkoutUrl) {
-    console.log('# Proceeding to checkout after successfol web login/registration (in app browser).')
-    window.location.replace(window.atob(checkoutUrl))
-  }
 }
