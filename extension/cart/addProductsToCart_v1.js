@@ -40,7 +40,7 @@ module.exports = async function (context, input) {
     items[newCartItem.productId] += newCartItem.quantity
   })
 
-  let checkoutCartItems = Object.entries(items).map(([id, quantity]) => {
+  const checkoutCartItems = Object.entries(items).map(([id, quantity]) => {
     let variantId = extractVariantId(importedProductsAddedToCart.find(importedProductAddedToCart =>
       importedProductAddedToCart.id === id && importedProductAddedToCart.customData
     ))
