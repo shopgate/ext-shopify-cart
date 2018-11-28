@@ -6,3 +6,7 @@ extension/package-lock.json
 **/extension/config.json
 .idea/
 npm-debug.log
+**/package-lock.json
+extension/test/newman/environment.json
+extension/coverage
+package-lock.json
