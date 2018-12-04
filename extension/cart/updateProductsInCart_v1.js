@@ -5,8 +5,8 @@ const _ = require('underscore')
 
 /**
  * @typedef {object} input
- * @property {Array} shopifyCartItems
  * @property {Array} cartItems
+ * @property {Array} updateCartItems
  * @property {Array} importedProductsInCart
  */
 
@@ -18,7 +18,7 @@ const _ = require('underscore')
 module.exports = function (context, input, cb) {
   const Shopify = require('../lib/shopify.api.js')(context.config, context.log)
   const existCartItems = input.cartItems
-  const updateCartItems = input.CartItem
+  const updateCartItems = input.updateCartItems
   const resultMessages = []
   const importedProductsInCart = input.importedProductsInCart
   const cartItem = new CartItem()
@@ -52,11 +52,11 @@ module.exports = function (context, input, cb) {
         let found = false
         /**
          * @typedef {object} item
-         * @property {string} CartItemId
+         * @property {string} cartItemId
          * @property {int} quantity
          */
         updateCartItems.find(function (item) {
-          if (item.CartItemId === existCartItem.id) {
+          if (item.cartItemId === existCartItem.id) {
             checkoutCartItems.push(
               {
                 'variant_id': variantMap[existCartItem.product.id],

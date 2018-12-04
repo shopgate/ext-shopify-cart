@@ -4,12 +4,25 @@
     "id": "shopgate.cart.deleteProducts.v1",
     "public": true,
     "input": [
-      {"key": "CartItemIds", "id": "1080"}
+      {"key": "CartItemIds", "id": "1080", "optional": true},
+      {"key": "cartItemIds", "id": "1081", "optional": true}
     ],
     "output": [
       {"key": "messages", "id": "1100", "optional": true}
     ],
     "steps": [
+      {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/deleteProductsInput_v1.js",
+        "input": [
+          {"key": "CartItemIds", "id": "1080", "optional": true},
+          {"key": "cartItemIds", "id": "1081", "optional": true}
+        ],
+        "output": [
+          {"key": "cartItemIds", "id": "1081"}
+        ]
+      },
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
@@ -101,7 +114,7 @@
         "input": [
           {"key": "importedProductsInCart", "id": "103", "optional": true},
           {"key": "cartItems", "id": "1060"},
-          {"key": "CartItemIds", "id": "1080"}
+          {"key": "cartItemIds", "id": "1081"}
         ],
         "output": [
           {"key": "messages", "id": "1100", "optional": true}
