@@ -12,16 +12,15 @@
     ],
     "steps": [
       {
-        "type": "extension",
-        "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/deleteProductsInput_v1.js",
-        "input": [
-          {"key": "CartItemIds", "id": "1080", "optional": true},
-          {"key": "cartItemIds", "id": "1081", "optional": true}
-        ],
-        "output": [
-          {"key": "cartItemIds", "id": "1081"}
-        ]
+        "type": "conditional",
+        "input": [{"key": "cartItemIds", "id": "1081", "optional": true}],
+        "expression": {"notok": [{"name": "cartItemIds"}]},
+        "then": {
+          "type": "staticValue",
+          "input": [{"key": "CartItemIds", "id": "1080", "optional": true}],
+          "values": [{"key": "cartItemIds", "passthrough": "CartItemIds"}],
+          "output": [{"key": "cartItemIds", "id": "1081"}]
+        }
       },
       {
         "type": "extension",
