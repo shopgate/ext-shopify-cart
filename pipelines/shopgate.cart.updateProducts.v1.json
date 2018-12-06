@@ -4,12 +4,24 @@
     "id": "shopgate.cart.updateProducts.v1",
     "public": true,
     "input": [
-      {"key": "CartItem", "id": "1010"}
+      {"key": "CartItem", "id": "1010", "optional": true},
+      {"key": "cartItems", "id": "1011", "optional": true}
     ],
     "output": [
       {"key": "messages", "id": "1100", "optional": true}
     ],
     "steps": [
+      {
+        "type": "conditional",
+        "input": [{"key": "cartItems", "id": "1011", "optional": true}],
+        "expression": {"notok": [{"name": "cartItems"}]},
+        "then": {
+          "type": "staticValue",
+          "input": [{"key": "CartItem", "id": "1010", "optional": true}],
+          "values": [{"key": "cartItems", "passthrough": "CartItem"}],
+          "output": [{"key": "cartItems", "id": "1011"}]
+        }
+      },
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
@@ -100,8 +112,8 @@
         "path": "@shopgate/shopify-cart/cart/updateProductsInCart_v1.js",
         "input": [
           {"key": "importedProductsInCart", "id": "103", "optional": true},
-          {"key": "cartItems", "id": "1060"},
-          {"key": "CartItem", "id": "1010"}
+          {"key": "existingCartItems", "id": "1060"},
+          {"key": "updateCartItems", "id": "1011"}
         ],
         "output": [
           {"key": "messages", "id": "1100", "optional": true}

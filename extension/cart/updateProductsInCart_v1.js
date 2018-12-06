@@ -4,39 +4,39 @@ const Tools = require('../lib/tools')
 const _ = require('underscore')
 
 /**
- * @typedef {object} input
- * @property {Array} shopifyCartItems
- * @property {Array} cartItems
- * @property {Array} importedProductsInCart
+ * @typedef {Object} input
+ * @property {Object[]} existingCartItems
+ * @property {Object[]} updateCartItems
+ * @property {Object[]} importedProductsInCart
  */
 
 /**
- * @param context
- * @param input
- * @param cb
+ * @param {{config: Object, log: function}} context Shopgate Connect context
+ * @param {input} input Pipeline step input data
+ * @param {function} cb Return callback
  */
 module.exports = function (context, input, cb) {
   const Shopify = require('../lib/shopify.api.js')(context.config, context.log)
-  const existCartItems = input.cartItems
-  const updateCartItems = input.CartItem
   const resultMessages = []
-  const importedProductsInCart = input.importedProductsInCart
+  const { importedProductsInCart, updateCartItems, existingCartItems: existCartItems } = input
   const cartItem = new CartItem()
 
-  let checkoutCartItems = []
+  const checkoutCartItems = []
 
   /**
-   * @param {string} cartId
+   * @param {string} cartId Id of the cart to update products in
    */
-  let updateProducts = function (cartId) {
+  const updateProducts = function (cartId) {
     // create a map to map all Shopgate item_numbers in the cart to Shopify variant_ids
-    let variantMap = []
-    _.each(existCartItems, function (existCartItem) {
+    const variantMap = []
+    _.each(existCartItems, (existCartItem) => {
       if (existCartItem.type === cartItem.TYPE_PRODUCT) {
         variantMap[existCartItem.product.id] = existCartItem.product.id
-        _.each(importedProductsInCart, function (importedProductInCart) {
-          if (importedProductInCart.id === existCartItem.product.id && Object.keys(importedProductInCart.customData).length >= 0) {
-            // if the product has a variant id then use it, because it is a a normal product in Shopify context then
+        _.each(importedProductsInCart, (importedProductInCart) => {
+          if (importedProductInCart.id === existCartItem.product.id &&
+            Object.keys(importedProductInCart.customData).length >= 0) {
+            // if the product has a variant id then use it, because it is a a normal product in
+            // Shopify context then
             const customData = JSON.parse(importedProductInCart.customData)
             if (customData.variant_id !== undefined) {
               variantMap[existCartItem.product.id] = customData.variant_id
@@ -47,48 +47,44 @@ module.exports = function (context, input, cb) {
     })
 
     // identify all products that have changed in quantity and the one that have not
-    _.each(existCartItems, function (existCartItem) {
+    _.each(existCartItems, (existCartItem) => {
       if (existCartItem.type === cartItem.TYPE_PRODUCT) {
         let found = false
         /**
          * @typedef {object} item
-         * @property {string} CartItemId
+         * @property {string} cartItemId
          * @property {int} quantity
          */
         updateCartItems.find(function (item) {
-          if (item.CartItemId === existCartItem.id) {
-            checkoutCartItems.push(
-              {
-                'variant_id': variantMap[existCartItem.product.id],
-                'quantity': item.quantity
-              }
-            )
+          if (item.cartItemId === existCartItem.id) {
+            checkoutCartItems.push({
+              variant_id: variantMap[existCartItem.product.id],
+              quantity: item.quantity
+            })
             found = true
           }
         })
         if (!found) {
-          checkoutCartItems.push(
-            {
-              'variant_id': variantMap[existCartItem.product.id],
-              'quantity': existCartItem.quantity
-            }
-          )
+          checkoutCartItems.push({
+            variant_id: variantMap[existCartItem.product.id],
+            quantity: existCartItem.quantity
+          })
         }
       }
     })
 
     const updatedData = {
-      'checkout': {
-        'line_items': checkoutCartItems
+      checkout: {
+        line_items: checkoutCartItems
       }
     }
 
-    Shopify.put('/admin/checkouts/' + cartId + '.json', updatedData, function (err) {
+    Shopify.put(`/admin/checkouts/${cartId}.json`, updatedData, (err) => {
       if (err && err.hasOwnProperty('errors') && err.errors.hasOwnProperty('line_items')) {
-        _.each(err.errors.line_items, function (error) {
-          for (let messageKey in error) {
+        _.each(err.errors.line_items, (error) => {
+          for (const messageKey in error) {
             if (error.hasOwnProperty(messageKey)) {
-              _.each(error[messageKey], function (errorItem) {
+              _.each(error[messageKey], (errorItem) => {
                 const errorMessage = new Message()
                 errorMessage.addErrorMessage(errorItem.code, errorItem.message)
                 resultMessages.push(errorMessage.toJson())
