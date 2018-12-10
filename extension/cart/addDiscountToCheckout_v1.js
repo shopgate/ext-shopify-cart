@@ -36,11 +36,9 @@ module.exports = function (context, input, cb) {
       let resultMessages = []
       if (err) {
         Object.keys(data.errors).map(function (objectKey) {
-          const messages = data.errors[objectKey]
-          const len = messages.length
-          for (let i = 0; i < len; i++) {
-            const message = new Message()
-            message.addErrorMessage(messages[i]['code'], messages[i]['message'])
+          for (let message of data.errors[objectKey]) {
+            const messageModel = new Message()
+            messageModel.addErrorMessage(message['code'], message['message'])
             resultMessages.push(message.toJson())
           }
         })

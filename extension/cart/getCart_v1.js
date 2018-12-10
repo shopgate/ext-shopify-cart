@@ -136,28 +136,10 @@ module.exports = function (context, input, cb) {
          * @property {Array} variants
          * @property {Array} options
          */
-        let shopifyProduct = null
         let shopifyProductVariant = null
-
-        // find current product
-        if (shopifyProducts.length > 0) {
-          for (let i = 0; i < shopifyProducts.length; i++) {
-            if (shopifyProducts[i].id.toString() === item.product_id.toString()) {
-              shopifyProduct = shopifyProducts[i]
-              break
-            }
-          }
-        }
-
-        // find current variant if the current product has been found earlier
-        if (shopifyProduct !== null) {
-          // find current variant of current product
-          for (let i = 0; i < shopifyProduct.variants.length; i++) {
-            if (shopifyProduct.variants[i].id.toString() === item.variant_id.toString()) {
-              shopifyProductVariant = shopifyProduct.variants[i]
-              break
-            }
-          }
+        const shopifyProduct = shopifyProducts.find(product => product.id.toString() === item.product_id.toString())
+        if (shopifyProduct && shopifyProduct.variants) {
+          shopifyProductVariant = shopifyProduct.variants.find(variant => variant.id.toString() === item.variant_id.toString())
         }
 
         // item number mapping: use variant_id for children and product id for parents and normal products
