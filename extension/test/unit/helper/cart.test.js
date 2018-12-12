@@ -71,16 +71,16 @@ describe('Cart Helper', () => {
   describe('handleCartError', () => {
     const handleCartError = require('../../../../extension/helper/cart').handleCartError
 
-    it('should throw the error if it is not in the expected format', () => {
+    it('should throw the error if it is not in the expected format', async () => {
       const testArgs = [
         new Error('not what we expected'),
         { errors: { message: 'still not what we expected' } },
         { errors: { line_items: false } }
       ]
 
-      testArgs.forEach(arg => {
+      testArgs.forEach(async arg => {
         try {
-          handleCartError(arg)
+          await handleCartError(arg)
           assert.fail('Expected an error to be thrown; none thrown.')
         } catch (err) {
           // all fine
