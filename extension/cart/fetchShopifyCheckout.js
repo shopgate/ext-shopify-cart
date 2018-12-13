@@ -3,7 +3,7 @@ const UnknownError = require('../models/Errors/UnknownError')
 const Tools = require('../lib/tools')
 
 /**
- * @param {Object} context
+ * @param {SDKContext} context
  * @param {Object} input
  */
 module.exports = async function (context, input) {
@@ -16,8 +16,8 @@ module.exports = async function (context, input) {
  * Creates a new checkout on request or creates/loads a checkout, based on a checkout token being available, or not
  *
  * @param {Object} Shopify
- * @param {Boolean} createNew
- * @param {Object} context
+ * @param {boolean} createNew
+ * @param {SDKContext} context
  */
 async function fetchCheckout (Shopify, createNew, context) {
   const checkoutToken = await loadCheckoutToken(context)
@@ -59,7 +59,7 @@ async function fetchCheckout (Shopify, createNew, context) {
 /**
  * Loads the current checkout token from internal storage (user or device)
  *
- * @param {Object} context
+ * @param {SDKContext} context
  * @return {string}
  */
 async function loadCheckoutToken (context) {
@@ -76,7 +76,7 @@ async function loadCheckoutToken (context) {
  * Saves the current checkout token into internal storage (user or device)
  *
  * @param {string} checkoutToken
- * @param {Object} context
+ * @param {SDKContext} context
  */
 async function saveCheckoutToken (checkoutToken, context) {
   // select storage to use: device or user, if logged in
