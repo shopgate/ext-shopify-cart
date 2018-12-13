@@ -18,7 +18,6 @@ module.exports = async function (context, input) {
  * @param {Object} Shopify
  * @param {Boolean} createNew
  * @param {Object} context
- * @param {function ({Object}, {Boolean}, {Object}) | function({UnknownError})} cb
  */
 async function fetchCheckout (Shopify, createNew, context) {
   const checkoutToken = await loadCheckoutToken(context)
@@ -61,7 +60,7 @@ async function fetchCheckout (Shopify, createNew, context) {
  * Loads the current checkout token from internal storage (user or device)
  *
  * @param {Object} context
- * @retirm {string}
+ * @return {string}
  */
 async function loadCheckoutToken (context) {
   // select storage to use: device or user, if logged in
