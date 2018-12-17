@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+## [1.2.9] - 2018-12-19
 ### Fixed
 - create new checkout if old one is not available at Shopify anymore
 
@@ -39,7 +40,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - logging request duration and other info when requesting the Shopify API
 
 [Unreleased]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/compare/commits?targetBranch=refs%2Fheads%2Fmaster&sourceBranch=refs%2Ftags%2Fv1.2.9
-[1.2.8]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/compare/commits?targetBranch=refs%2Ftags%2Fv1.2.8&sourceBranch=refs%2Ftags%2Fv1.2.9
+[1.2.9]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/compare/commits?targetBranch=refs%2Ftags%2Fv1.2.8&sourceBranch=refs%2Ftags%2Fv1.2.9
 [1.2.8]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/compare/commits?targetBranch=refs%2Ftags%2Fv1.2.7&sourceBranch=refs%2Ftags%2Fv1.2.8
 [1.2.7]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/compare/commits?targetBranch=refs%2Ftags%2Fv1.2.6&sourceBranch=refs%2Ftags%2Fv1.2.7
 [1.2.6]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/compare/commits?targetBranch=refs%2Ftags%2Fv1.2.5&sourceBranch=refs%2Ftags%2Fv1.2.6
