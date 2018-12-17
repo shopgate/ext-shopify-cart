@@ -33,7 +33,7 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/deleteDiscountsFromCheckout.js",
+        "path": "@shopgate/shopify-cart/cart/deleteDiscountsFromCheckout_v1.js",
         "input": [
           {"key": "checkout", "id": "100"},
           {"key": "discountCodes", "id": "1020"}
