@@ -1,10 +1,12 @@
 {
   "name": "@shopgate/shopify-cart",
-  "version": "1.2.7",
+  "version": "1.2.9",
   "description": "",
   "scripts": {
-    "test": "JUNIT_REPORT_PATH=../build/mocha.xml JUNIT_REPORT_STACK=1 mocha --recursive test -R mochawesome --reporter-options reportDir=coverage",
-    "cover": "istanbul cover _mocha -- --recursive"
+    "test": "./node_modules/.bin/_mocha --use_strict --recursive ./test/unit",
+    "cover": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --recursive",
+    "newman": "./node_modules/.bin/newman run ./test/newman/collection.json --color on --environment ./test/newman/environment.json --globals ./test/newman/globals.json",
+    "init-newman": "node ./test/newman/setup.js"
   },
   "repository": {
     "type": "git",
@@ -30,7 +32,7 @@
     "eslint-plugin-standard": "^3.1.0",
     "expect": "^22.4.3",
     "mocha": "^5.2.0",
-    "mochawesome": "3.0.2",
+    "newman": "^4.2.2",
     "nock": "^9.4.4",
     "rewire": "^2.5.2",
     "sinon": "^5.1.1",

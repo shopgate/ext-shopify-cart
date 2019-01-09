@@ -1,4 +1,4 @@
-const fetchCheckout = require('./fetchShopifyCheckout_v1')
+const fetchCheckout = require('./fetchShopifyCheckout')
 
 const Tools = require('../lib/tools')
 

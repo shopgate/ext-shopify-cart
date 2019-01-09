@@ -1,0 +1,51 @@
+{
+  "id": "146e52f0-fd32-4814-8e58-8a3c0f4d5eb7",
+  "values": [
+    {
+      "key": "domain",
+      "value": "http://localhost:{{port}}",
+      "description": "",
+      "enabled": true
+    },
+    {
+      "key": "port",
+      "value": "8090",
+      "description": "",
+      "enabled": true
+    },
+    {
+      "key": "endpoint_cart_products_add",
+      "value": "/pipelines/shopgate.cart.addProducts.v1",
+      "description": "",
+      "enabled": true
+    },
+    {
+      "key": "endpoint_cart_products_delete",
+      "value": "/pipelines/shopgate.cart.deleteProducts.v1",
+      "description": "",
+      "enabled": true
+    },
+    {
+      "key": "endpoint_cart_shopify_checkout_get",
+      "value": "/pipelines/shopgate.cart.fetchShopifyCheckout.v1",
+      "description": "",
+      "enabled": true
+    },
+    {
+      "key": "endpoint_cart_get",
+      "value": "/pipelines/shopgate.cart.getCart.v1",
+      "description": "",
+      "enabled": true
+    },
+    {
+      "key": "endpoint_cart_products_update",
+      "value": "/pipelines/shopgate.cart.updateProducts.v1",
+      "description": "",
+      "enabled": true
+    }
+  ],
+  "name": "Shopify Cart Globals",
+  "_postman_variable_scope": "globals",
+  "_postman_exported_at": "2018-11-15T08:54:19.929Z",
+  "_postman_exported_using": "Postman/6.2.4"
+}
