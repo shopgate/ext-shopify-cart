@@ -13,8 +13,7 @@ const Tools = require('../lib/tools')
 module.exports = function (context, input, cb) {
   const Shopify = require('../lib/shopify.api.js')(context.config, context.log)
 
-  Tools.getCurrentCartId(context, (err, cartId) => {
-    if (err) cb(err)
+  Tools.getCurrentCartId(context).then((cartId) => {
     if (!cartId) {
       Shopify.post('/admin/checkouts.json', {}, function (err, data) {
         cb(null, {
@@ -30,5 +29,7 @@ module.exports = function (context, input, cb) {
         })
       })
     }
+  }).catch((err) => {
+    cb(err)
   })
 }

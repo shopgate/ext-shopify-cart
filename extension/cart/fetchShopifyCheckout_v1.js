@@ -1,7 +1,5 @@
 const UnknownError = require('../models/Errors/UnknownError')
 
-const Tools = require('../lib/tools')
-
 /**
  * @param {Object} context
  * @param {Object} input
@@ -18,13 +16,11 @@ module.exports = function (context, input, cb) {
     }
 
     if (isNew) {
-      return saveCheckoutToken(result.checkout.token, context, (err) => {
-        if (!Tools.isEmpty(err)) {
-          context.log.error('Failed to save Shopify checkout token. Error: ' + JSON.stringify(err))
-          return cb(new UnknownError())
-        }
-
+      return saveCheckoutToken(result.checkout.token, context).then(() => {
         return cb(null, result)
+      }).catch((err) => {
+        context.log.error('Failed to save Shopify checkout token. Error: ' + JSON.stringify(err))
+        return cb(new UnknownError())
       })
     }
 
@@ -41,16 +37,11 @@ module.exports = function (context, input, cb) {
  * @param {function ({Object}, {Boolean}, {Object}) | function({UnknownError})} cb
  */
 function fetchCheckout (Shopify, createNew, context, cb) {
-  loadCheckoutToken(context, (err, checkoutToken) => {
-    if (err) {
-      context.log.error('Fetching the checkout token was unsuccessful. Error: ' + JSON.stringify(err))
-      return cb(new UnknownError())
-    }
-
+  loadCheckoutToken(context).then((checkoutToken) => {
     // load checkout, if available, create otherwise
-    if (!createNew && !Tools.isEmpty(checkoutToken)) {
+    if (!createNew && checkoutToken) {
       Shopify.getCheckout(checkoutToken, (shopifyErr, result) => {
-        if (!Tools.isEmpty(shopifyErr)) {
+        if (shopifyErr) {
           context.log.error('Failed to load shopify checkout. Error: ' + JSON.stringify(shopifyErr))
           return cb(new UnknownError())
         }
@@ -59,7 +50,7 @@ function fetchCheckout (Shopify, createNew, context, cb) {
       })
     } else {
       Shopify.createCheckout((shopifyErr, result) => {
-        if (!Tools.isEmpty(shopifyErr)) {
+        if (shopifyErr) {
           context.log.error('Failed to create a new checkout (cart) at Shopify. Error: ' + JSON.stringify(shopifyErr))
           return cb(new UnknownError())
         }
@@ -67,6 +58,9 @@ function fetchCheckout (Shopify, createNew, context, cb) {
         return cb(null, true, result)
       })
     }
+  }).catch((err) => {
+    context.log.error('Fetching the checkout token was unsuccessful. Error: ' + JSON.stringify(err))
+    return cb(new UnknownError())
   })
 }
 
@@ -74,17 +68,22 @@ function fetchCheckout (Shopify, createNew, context, cb) {
  * Loads the current checkout token from internal storage (user or device)
  *
  * @param {Object} context
- * @param {function({Object}, {string})} cb
+ * @returns {Promise}
  */
-function loadCheckoutToken (context, cb) {
+function loadCheckoutToken (context) {
   // select storage to use: device or user, if logged in
   let storage = context.storage.device
   if (context.meta.userId) {
     storage = context.storage.user
   }
 
-  storage.get('checkoutToken', (err, checkoutToken) => {
-    return cb(err, checkoutToken)
+  return new Promise((resolve, reject) => {
+    storage.get('checkoutToken', (err, checkoutToken) => {
+      if (err) {
+        reject(err)
+      }
+      resolve(checkoutToken)
+    })
   })
 }
 
@@ -93,16 +92,21 @@ function loadCheckoutToken (context, cb) {
  *
  * @param {string} checkoutToken
  * @param {Object} context
- * @param {function({Object})} cb
+ * @returns {Promise}
  */
-function saveCheckoutToken (checkoutToken, context, cb) {
+function saveCheckoutToken (checkoutToken, context) {
   // select storage to use: device or user, if logged in
   let storage = context.storage.device
   if (context.meta.userId) {
     storage = context.storage.user
   }
 
-  storage.set('checkoutToken', checkoutToken, (err) => {
-    return cb(err || null)
+  return new Promise((resolve, reject) => {
+    storage.set('checkoutToken', checkoutToken, (err) => {
+      if (err) {
+        reject(err)
+      }
+      resolve()
+    })
   })
 }

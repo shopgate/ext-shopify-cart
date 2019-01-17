@@ -1,5 +1,3 @@
-const Tools = require('../lib/tools')
-
 const InvalidCallError = require('../models/Errors/InvalidCallError')
 const Message = require('../models/messages/message')
 
@@ -22,7 +20,7 @@ module.exports = function (context, input, cb) {
   function addDiscounts (context, checkoutToken, discountCodes) {
     const Shopify = require('../lib/shopify.api.js')(context.config, context.log)
 
-    if (Tools.isEmpty(discountCodes) || !Array.isArray(discountCodes) || !discountCodes[0]) {
+    if (!discountCodes || !Array.isArray(discountCodes) || !discountCodes[0]) {
       context.log.error('Error: Wrong parameter format or no discount (coupon) codes given.')
       return cb(new InvalidCallError())
     }

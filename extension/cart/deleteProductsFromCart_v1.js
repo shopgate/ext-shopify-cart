@@ -7,50 +7,46 @@ module.exports = async function (context, input) {
   const itemsIdsToDelete = input.CartItemIds
   const importedProductsInCart = input.importedProductsInCart
 
-  const cartId = await new Promise((resolve, reject) => {
-    Tools.getCurrentCartId(context, (err, cartId) => {
-      if (err) return reject(err)
-
-      resolve(cartId)
-    })
-  })
-
-  const items = {}
-  existingCartItems.forEach(existingCartItem => {
-    if (existingCartItem.product && existingCartItem.product.id &&
+  Tools.getCurrentCartId(context).then((cartId) => {
+    const items = {}
+    existingCartItems.forEach(existingCartItem => {
+      if (existingCartItem.product && existingCartItem.product.id &&
         !itemsIdsToDelete.find(productId => existingCartItem.id === productId)
-    ) {
-      items[existingCartItem.product.id] = existingCartItem.quantity
-    }
-  })
-
-  let checkoutCartItems = Object.entries(items).map(([id, quantity]) => {
-    const variantId = extractVariantId(importedProductsInCart.find(importedProductInCart =>
-      importedProductInCart.id === id && importedProductInCart.customData
-    ))
-
-    return {
-      variant_id: variantId || id,
-      quantity
-    }
-  })
-
-  if (Object.keys(items).length === existingCartItems.length) {
-    context.log.error(`No cartItem(s) found for cart ${cartId}`)
-
-    return {}
-  }
-
-  try {
-    return await new Promise((resolve, reject) => shopify.put(
-      `/admin/checkouts/${cartId}.json`,
-      { checkout: { line_items: checkoutCartItems } },
-      err => {
-        if (err) return reject(err)
-        resolve()
+      ) {
+        items[existingCartItem.product.id] = existingCartItem.quantity
       }
-    ))
-  } catch (err) {
-    return { messages: await handleCartError(err, checkoutCartItems, cartId, context) }
-  }
+    })
+
+    let checkoutCartItems = Object.entries(items).map(([id, quantity]) => {
+      const variantId = extractVariantId(importedProductsInCart.find(importedProductInCart =>
+        importedProductInCart.id === id && importedProductInCart.customData
+      ))
+
+      return {
+        variant_id: variantId || id,
+        quantity
+      }
+    })
+
+    if (Object.keys(items).length === existingCartItems.length) {
+      context.log.error(`No cartItem(s) found for cart ${cartId}`)
+
+      return {}
+    }
+
+    try {
+      return new Promise((resolve, reject) => shopify.put(
+        `/admin/checkouts/${cartId}.json`,
+        { checkout: { line_items: checkoutCartItems } },
+        err => {
+          if (err) return reject(err)
+          resolve()
+        }
+      ))
+    } catch (err) {
+      return { messages: handleCartError(err, checkoutCartItems, cartId, context) }
+    }
+  }).catch((err) => {
+    return err
+  })
 }

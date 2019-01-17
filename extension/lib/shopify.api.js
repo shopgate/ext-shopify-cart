@@ -1,4 +1,3 @@
-const Tools = require('./tools')
 const ShopifyRequest = require('./shopify.request')
 
 /**
@@ -64,7 +63,7 @@ module.exports = function (config, log) {
        * @property {int} id
        * @property {string} title
        */
-      if (Tools.propertyExists(response, 'storefront_access_tokens')) {
+      if (response.storefront_access_tokens) {
         for (let i = 0; i < response.storefront_access_tokens.length; i++) {
           if (response.storefront_access_tokens[i].title === storefrontAccessTokenTitle) {
             return cb(null, response.storefront_access_tokens[i].access_token)
@@ -149,7 +148,7 @@ module.exports = function (config, log) {
         return cb(err)
       }
 
-      if (Tools.isEmpty(userData.customer)) {
+      if (!userData.customer) {
         return cb(new Error('Customer not found'))
       }
 
@@ -167,7 +166,7 @@ module.exports = function (config, log) {
         return cb(err)
       }
 
-      if (Tools.isEmpty(userData.customers)) {
+      if (!userData.customers) {
         return cb(new Error('No customers not found'))
       }
 
