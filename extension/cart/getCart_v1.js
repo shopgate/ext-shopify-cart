@@ -303,8 +303,6 @@ module.exports = async function (context, input) {
       return err
     })
   }).catch((err) => {
-    return new Promise((resolve, reject) => {
-      reject(err)
-    })
+    return err
   })
 }

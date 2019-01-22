@@ -1,3 +1,3 @@
-module.exports = function (context, input, cb) {
-  cb(null, {shopifyCartData: {checkout: input.checkout}})
+module.exports = async function (context, input) {
+  return { shopifyCartData: { checkout: input.checkout } }
 }

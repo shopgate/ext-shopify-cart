@@ -5,13 +5,11 @@ const _ = require('underscore')
  * @param {object} input - Properties depend on the pipeline this is used for
  *
  * @param {Object} [input.products]
- *
- * @param {Function} cb
  */
-module.exports = function (context, input, cb) {
+module.exports = async function (context, input) {
   const products = input.products
 
-  if (!Array.isArray(products)) return cb(new Error('products does not contain any product entries'))
+  if (!Array.isArray(products)) return new Error('products does not contain any product entries')
 
   let query = {
     images: true
@@ -22,7 +20,7 @@ module.exports = function (context, input, cb) {
     productIds.push(product.productId)
   })
 
-  if (productIds.length > 100) return cb(new Error('the limit of product numbers is 100'))
+  if (productIds.length > 100) return new Error('the limit of product numbers is 100')
 
   Object.assign(query, {
     productNumbers: productIds
@@ -36,5 +34,5 @@ module.exports = function (context, input, cb) {
     query
   }
 
-  cb(null, apiParams)
+  return apiParams
 }

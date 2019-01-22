@@ -18,7 +18,7 @@ module.exports = async function (context, input) {
 
   let checkoutCartItems = []
 
-  Tools.getCurrentCartId(context).then((cartId) => {
+  return Tools.getCurrentCartId(context).then((cartId) => {
     // create a map to map all Shopgate item_numbers in the cart to Shopify variant_ids
     const existingCartItemProducts = existingCartItems.filter(item => item.type === cartItem.TYPE_PRODUCT)
 
@@ -44,19 +44,24 @@ module.exports = async function (context, input) {
       })
     })
 
-    try {
-      return new Promise((resolve, reject) => shopify.put(
-        `/admin/checkouts/${cartId}.json`,
-        { checkout: { line_items: checkoutCartItems } },
-        err => {
-          if (err) return reject(err)
-
-          resolve()
-        }
-      ))
-    } catch (err) {
-      return { messages: handleCartError(err, checkoutCartItems, cartId, context) }
-    }
+    return new Promise((resolve, reject) => {
+      try {
+        shopify.put(
+          `/admin/checkouts/${cartId}.json`,
+          { checkout: { line_items: checkoutCartItems } },
+          err => {
+            if (err) {
+              resolve(handleCartError(err, checkoutCartItems, cartId, context))
+            }
+            resolve()
+          }
+        )
+      } catch (err) {
+        reject(err)
+      }
+    })
+  }).then(messages => {
+    return {messages}
   }).catch((err) => {
     return err
   })

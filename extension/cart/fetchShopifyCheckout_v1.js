@@ -3,28 +3,26 @@ const UnknownError = require('../models/Errors/UnknownError')
 /**
  * @param {Object} context
  * @param {Object} input
- * @param {function} cb
  */
-module.exports = function (context, input, cb) {
+module.exports = async function (context, input) {
   const Shopify = require('../lib/shopify.api.js')(context.config, context.log)
   const createNew = Boolean(input.createNew)
 
   // creates a checkout if forced or none available, loads an existing one otherwise
-  fetchCheckout(Shopify, createNew, context, (err, isNew, result) => {
-    if (err) {
-      return cb(err)
-    }
-
+  return fetchCheckout(Shopify, createNew, context).then(result => {
+    const {isNew, checkout} = result
     if (isNew) {
-      return saveCheckoutToken(result.checkout.token, context).then(() => {
-        return cb(null, result)
+      return saveCheckoutToken(checkout.checkout.token, context).then(() => {
+        return checkout
       }).catch((err) => {
         context.log.error('Failed to save Shopify checkout token. Error: ' + JSON.stringify(err))
-        return cb(new UnknownError())
+        return (err)
       })
+    } else {
+      return checkout
     }
-
-    return cb(null, result)
+  }).catch(err => {
+    return err
   })
 }
 
@@ -34,33 +32,32 @@ module.exports = function (context, input, cb) {
  * @param {Object} Shopify
  * @param {Boolean} createNew
  * @param {Object} context
- * @param {function ({Object}, {Boolean}, {Object}) | function({UnknownError})} cb
+ * @returns {Promise}
  */
-function fetchCheckout (Shopify, createNew, context, cb) {
-  loadCheckoutToken(context).then((checkoutToken) => {
-    // load checkout, if available, create otherwise
-    if (!createNew && checkoutToken) {
-      Shopify.getCheckout(checkoutToken, (shopifyErr, result) => {
-        if (shopifyErr) {
-          context.log.error('Failed to load shopify checkout. Error: ' + JSON.stringify(shopifyErr))
-          return cb(new UnknownError())
-        }
-
-        return cb(null, false, result)
-      })
-    } else {
-      Shopify.createCheckout((shopifyErr, result) => {
-        if (shopifyErr) {
-          context.log.error('Failed to create a new checkout (cart) at Shopify. Error: ' + JSON.stringify(shopifyErr))
-          return cb(new UnknownError())
-        }
-
-        return cb(null, true, result)
-      })
-    }
-  }).catch((err) => {
-    context.log.error('Fetching the checkout token was unsuccessful. Error: ' + JSON.stringify(err))
-    return cb(new UnknownError())
+async function fetchCheckout (Shopify, createNew, context) {
+  return new Promise((resolve, reject) => {
+    loadCheckoutToken(context).then((checkoutToken) => {
+      if (!createNew && checkoutToken) {
+        Shopify.getCheckout(checkoutToken, (shopifyErr, result) => {
+          if (shopifyErr) {
+            context.log.error('Failed to load shopify checkout. Error: ' + JSON.stringify(shopifyErr))
+            reject(new UnknownError())
+          }
+          resolve({isNew: false, checkout: result})
+        })
+      } else {
+        Shopify.createCheckout((shopifyErr, result) => {
+          if (shopifyErr) {
+            context.log.error('Failed to create a new checkout (cart) at Shopify. Error: ' + JSON.stringify(shopifyErr))
+            reject(new UnknownError())
+          }
+          resolve({isNew: true, checkout: result})
+        })
+      }
+    }).catch((err) => {
+      context.log.error('Fetching the checkout token was unsuccessful. Error: ' + JSON.stringify(err))
+      reject(err)
+    })
   })
 }
 
@@ -106,7 +103,7 @@ function saveCheckoutToken (checkoutToken, context) {
       if (err) {
         reject(err)
       }
-      resolve()
+      resolve(checkoutToken)
     })
   })
 }
