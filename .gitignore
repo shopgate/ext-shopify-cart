@@ -1,7 +1,7 @@
 .DS_Store
 build
+package-lock.json
 extension/coverage
-extension/package-lock.json
 extension/test/newman/environment.json
 **/node_modules
 **/extension/config.json
