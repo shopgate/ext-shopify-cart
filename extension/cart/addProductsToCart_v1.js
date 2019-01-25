@@ -17,7 +17,7 @@ module.exports = async function (context, input) {
   const newCartItems = input.products
   const existingCartItems = input.cartItems
 
-  Tools.getCurrentCartId(context).then((cartId) => {
+  return Tools.getCurrentCartId(context).then((cartId) => {
     const items = {}
     existingCartItems.forEach(existingCartItem => {
       if (existingCartItem.product && existingCartItem.product.id) {
@@ -51,19 +51,17 @@ module.exports = async function (context, input) {
       }
     })
 
-    try {
-      return new Promise((resolve, reject) => shopify.put(
-        `/admin/checkouts/${cartId}.json`,
-        { checkout: { line_items: checkoutCartItems } },
-        err => {
-          if (err) return reject(err)
-
-          resolve()
-        }
-      ))
-    } catch (err) {
-      return { messages: handleCartError(err, checkoutCartItems, cartId, context) }
-    }
+    return new Promise((resolve) => shopify.put(
+      `/admin/checkouts/${cartId}.json`,
+      { checkout: { line_items: checkoutCartItems } },
+      cartErrorMessages => {
+        return resolve(cartErrorMessages)
+      }
+    )).then(cartErrorMessages => {
+      return handleCartError(cartErrorMessages, checkoutCartItems, cartId, context).then(messages => {
+        return {messages}
+      })
+    })
   }).catch((err) => {
     return err
   })

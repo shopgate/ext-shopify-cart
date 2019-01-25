@@ -57,39 +57,44 @@ function extractVariantId (product) {
  * @param {int} cartId
  * @param {SDKContext} context
  *
- * @return {{code: string, message: string, type: string}[]}
+ * @return {Promise{code: string, message: string, type: string}[]}
  * @throws {Error} If err does not have an errors or error.line_items property
  */
-async function handleCartError (err, checkoutCartItems, cartId, context) {
-  if (!err || !err.errors || !err.errors.line_items) throw err
+const handleCartError = (err, checkoutCartItems, cartId, context) => {
+  return new Promise((resolve, reject) => {
+    if (!err || !err.errors || !err.errors.line_items) reject(err)
 
-  const itemsToDelete = getOutOfStockLineItemIds(err.errors.line_items).sort((a, b) => b - a)
-
-  if (itemsToDelete.length > 0) {
-    await fixCheckoutQuantities(checkoutCartItems, itemsToDelete, err, cartId, context)
-  }
-
-  const errorMessages = []
-  Object.values(err.errors.line_items).forEach(errorsPerLineItem => {
-    Object.entries(errorsPerLineItem).forEach(([errorType, errors]) => {
-      errors.forEach(error => {
-        let errorCode
-        switch (error.code) {
-          case 'not_enough_in_stock':
-            errorCode = 'EINSUFFICIENTSTOCK'
-            break
-          default:
-            errorCode = error.code
-        }
-
-        const errorMessage = new Message()
-        errorMessage.addErrorMessage(errorCode, error.message)
-        errorMessages.push(errorMessage.toJson())
+    const renderErrorItems = (errorItems) => {
+      const errorMessages = []
+      Object.values(errorItems.errors.line_items).forEach(errorsPerLineItem => {
+        Object.entries(errorsPerLineItem).forEach(([errorType, errors]) => {
+          errors.forEach(error => {
+            let errorCode
+            switch (error.code) {
+              case 'not_enough_in_stock':
+                errorCode = 'EINSUFFICIENTSTOCK'
+                break
+              default:
+                errorCode = error.code
+            }
+            const errorMessage = new Message()
+            errorMessage.addErrorMessage(errorCode, error.message)
+            errorMessages.push(errorMessage.toJson())
+          })
+        })
       })
-    })
-  })
+      return errorMessages
+    }
 
-  return errorMessages
+    const itemsToDelete = getOutOfStockLineItemIds(err.errors.line_items).sort((a, b) => b - a)
+    if (itemsToDelete.length > 0) {
+      return fixCheckoutQuantities(checkoutCartItems, itemsToDelete, err, cartId, context).then(() => {
+        return resolve(renderErrorItems(err))
+      })
+    }
+
+    resolve(renderErrorItems(err))
+  })
 }
 
 /**
