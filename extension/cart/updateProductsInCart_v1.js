@@ -18,11 +18,11 @@ module.exports = async function (context, input) {
 
   let checkoutCartItems = []
 
-  return Tools.getCurrentCartId(context).then((cartId) => {
-    // create a map to map all Shopgate item_numbers in the cart to Shopify variant_ids
+  try {
+    const cartId = await Tools.getCurrentCartId(context)
     const existingCartItemProducts = existingCartItems.filter(item => item.type === cartItem.TYPE_PRODUCT)
-
     let variantMap = {}
+
     existingCartItemProducts.forEach(item => {
       let variantId = extractVariantId(importedProductsInCart.find(importedProduct =>
         importedProduct.id === item.product.id && importedProduct.customData
@@ -31,7 +31,6 @@ module.exports = async function (context, input) {
       variantMap[item.product.id] = variantId || item.product.id
     })
 
-    // identify all products that have changed in quantity and the one that have not
     existingCartItemProducts.forEach(item => {
       // a note about "cartItemId vs. CartItemId" - this is a fix for documentation vs. reality mismatch
       // cartItemId is according to documentation, Newman tests and PWA 6.x
@@ -44,25 +43,19 @@ module.exports = async function (context, input) {
       })
     })
 
-    return new Promise((resolve, reject) => {
-      try {
-        shopify.put(
-          `/admin/checkouts/${cartId}.json`,
-          { checkout: { line_items: checkoutCartItems } },
-          err => {
-            if (err) {
-              resolve(handleCartError(err, checkoutCartItems, cartId, context))
-            }
-            resolve()
+    const messages = await new Promise(resolve => {
+      shopify.put(
+        `/admin/checkouts/${cartId}.json`,
+        { checkout: { line_items: checkoutCartItems } },
+        err => {
+          if (err) {
+            resolve(handleCartError(err, checkoutCartItems, cartId, context))
           }
-        )
-      } catch (err) {
-        reject(err)
-      }
+          resolve()
+        })
     })
-  }).then(messages => {
-    return {messages}
-  }).catch((err) => {
+    return { messages }
+  } catch (err) {
     return err
-  })
+  }
 }
