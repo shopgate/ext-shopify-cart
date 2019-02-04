@@ -1,7 +1,7 @@
 const CartItem = require('../models/cart/cartItems/cartItem')
 const Tools = require('../lib/tools')
 const { extractVariantId, handleCartError } = require('../helper/cart')
-
+const ShopifyApiRequest = require('../lib/shopify.api.js')
 /**
  * @param {SDKContext} context
  * @param {Object} input
@@ -10,7 +10,7 @@ const { extractVariantId, handleCartError } = require('../helper/cart')
  * @param {Object[]} input.CartItem The list of items to be changed
  */
 module.exports = async function (context, input) {
-  const shopify = require('../lib/shopify.api.js')(context.config, context.log)
+  const shopifyApiRequest = new ShopifyApiRequest(context.config, context.log)
   const existingCartItems = input.cartItems
   const updateCartItems = input.CartItem
   const importedProductsInCart = input.importedProductsInCart
@@ -43,18 +43,11 @@ module.exports = async function (context, input) {
       })
     })
 
-    const messages = await new Promise(resolve => {
-      shopify.put(
-        `/admin/checkouts/${cartId}.json`,
-        { checkout: { line_items: checkoutCartItems } },
-        err => {
-          if (err) {
-            resolve(handleCartError(err, checkoutCartItems, cartId, context))
-          }
-          resolve()
-        })
-    })
-    return { messages }
+    try {
+      await shopifyApiRequest.put(`/admin/checkouts/${cartId}.json`, { checkout: { line_items: checkoutCartItems } })
+    } catch (err) {
+      return {messages: await handleCartError(err, checkoutCartItems, cartId, context)}
+    }
   } catch (err) {
     return err
   }

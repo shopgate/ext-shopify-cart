@@ -1,10 +1,9 @@
-module.exports = function (context, input, cb) {
+module.exports = async function (context, input) {
   const shopifyCartData = input.shopifyCartData
   const shopifyRequestErr = input.shopifyRequestErr
 
-  if (shopifyRequestErr) cb(shopifyRequestErr, {})
+  if (shopifyRequestErr) return shopifyRequestErr
 
-  // only load "non variant" or parent products to be able to map them to imported products at Shopgate
   let products = []
   shopifyCartData.checkout.line_items.forEach(function (item) {
     let product = {
@@ -14,7 +13,5 @@ module.exports = function (context, input, cb) {
     products.push(product)
   })
 
-  return cb(null, {
-    products: products
-  })
+  return { products }
 }

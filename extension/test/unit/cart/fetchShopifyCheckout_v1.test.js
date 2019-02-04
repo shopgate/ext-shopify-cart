@@ -8,7 +8,10 @@ describe('fetchShopifyCheckout', () => {
   /** @var {StepContext} */
   const context = {
     storage: {
-      device: {}
+      device: {},
+      user: {
+        get: () => {}
+      }
     },
     config: {
     },
@@ -23,28 +26,19 @@ describe('fetchShopifyCheckout', () => {
     }
   }
 
+  const input = {
+    createNew: false
+  }
+
   let loadCheckoutTokenSpy
-  let loadCheckoutToken
 
   before(() => {
-    // loadCheckoutTokenSpy = sinon.spy(step.__get__('loadCheckoutToken'))
-    // step.__set__('loadCheckoutToken', loadCheckoutTokenSpy)
-
-    loadCheckoutTokenSpy = sinon.stub('loadCheckoutToken').returns(
-      new Promise((resolve, reject) => {
-        return resolve(true)
-      })
-    )
+    loadCheckoutTokenSpy = sinon.spy(step.__get__('loadCheckoutToken'))
     step.__set__('loadCheckoutToken', loadCheckoutTokenSpy)
   })
 
-  it('should load the checkout token or a existing customer', (done) => {
-    const Shopify = require('../lib/shopify.api.js')(context.config, context.log)
-    step(context, (err) => {
-      assert.ifError(err)
-      sinon.assert.calledWith(loadCheckoutTokenSpy, Shopify, false, context)
-
-      done()
-    })
+  it('should load the checkout token or a existing customer', async () => {
+    await step(context, input)
+    assert(loadCheckoutTokenSpy.calledOnce, 'loadCheckoutToken should be called once')
   })
 })

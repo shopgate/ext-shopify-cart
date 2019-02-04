@@ -1,5 +1,6 @@
 const Tools = require('../lib/tools')
 const { extractVariantId, handleCartError } = require('../helper/cart')
+const ShopifyApiRequest = require('../lib/shopify.api.js')
 
 /**
  * @param {SDKContext} context
@@ -11,28 +12,26 @@ const { extractVariantId, handleCartError } = require('../helper/cart')
  * @param {Object[]} input.cartItems
  */
 module.exports = async function (context, input) {
-  const shopify = require('../lib/shopify.api.js')(context.config, context.log)
+  const shopifyApiRequest = new ShopifyApiRequest(context.config, context.log)
   const importedProductsAddedToCart = input.importedProductsAddedToCart
   const importedProductsInCart = input.importedProductsInCart
   const newCartItems = input.products
   const existingCartItems = input.cartItems
 
-  return Tools.getCurrentCartId(context).then((cartId) => {
+  try {
+    const cartId = await Tools.getCurrentCartId(context)
     const items = {}
     existingCartItems.forEach(existingCartItem => {
       if (existingCartItem.product && existingCartItem.product.id) {
         items[existingCartItem.product.id] = existingCartItem.quantity
       }
     })
-
     newCartItems.forEach(newCartItem => {
       if (!(newCartItem.productId in items)) {
         items[newCartItem.productId] = 0
       }
-
       items[newCartItem.productId] += newCartItem.quantity
     })
-
     const checkoutCartItems = Object.entries(items).map(([id, quantity]) => {
       let variantId = extractVariantId(importedProductsAddedToCart.find(importedProductAddedToCart =>
         importedProductAddedToCart.id === id && importedProductAddedToCart.customData
@@ -50,19 +49,12 @@ module.exports = async function (context, input) {
         quantity
       }
     })
-
-    return new Promise((resolve) => shopify.put(
-      `/admin/checkouts/${cartId}.json`,
-      { checkout: { line_items: checkoutCartItems } },
-      cartErrorMessages => {
-        return resolve(cartErrorMessages)
-      }
-    )).then(cartErrorMessages => {
-      return handleCartError(cartErrorMessages, checkoutCartItems, cartId, context).then(messages => {
-        return {messages}
-      })
-    })
-  }).catch((err) => {
+    try {
+      await shopifyApiRequest.put(`/admin/checkouts/${cartId}.json`, { checkout: { line_items: checkoutCartItems } })
+    } catch (err) {
+      return {messages: await handleCartError(err, checkoutCartItems, cartId, context)}
+    }
+  } catch (err) {
     return err
-  })
+  }
 }

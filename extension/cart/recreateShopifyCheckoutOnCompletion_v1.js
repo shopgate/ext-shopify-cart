@@ -9,9 +9,8 @@ module.exports = async function (context, input) {
 
   if (checkout.completed_at) {
     input.createNew = true
-    return fetchCheckout(context, input).then(result => {
-      return (result.checkout)
-    })
+    const newCheckout = await fetchCheckout(context, input)
+    return newCheckout.checkout
   } else {
     return checkout
   }

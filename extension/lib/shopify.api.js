@@ -1,241 +1,124 @@
 const ShopifyRequest = require('./shopify.request')
 
-/**
- * @typedef {object} config
- * @property {string} shopifyShopAlias
- * @property {string} shopifyApiKey
- * @property {string} shopifyAccessToken
- */
-
-/**
- * @param {object} config
- * @param {Logger} log
- * @return {{}}
- */
-module.exports = function (config, log) {
-  /**
-   * @typedef {object} SGShopifyApi
-   * @property {function} get
-   * @property {function} put
-   * @property {function} delete
-   * @property {function} post
-   */
-  const ShopifyApiRequest = new ShopifyRequest(
-    {
-      shop: config.shopifyShopAlias + '.myshopify.com',
-      shopify_api_key: null, // not required
-      access_token: config.shopifyAccessToken, // not required
-      verbose: false
-    },
-    log
-  )
-
-  const module = {}
-
-  // -------------------------------------------------------------------------------------------------------------------
-
-  /**
-   * @return {string}
-   */
-  module.getGraphQlUrl = function () {
-    let shopDomain = 'https://' + config.shopifyShopAlias + '.myshopify.com'
-    return shopDomain + '/api/graphql'
+class ShopifyApi {
+  constructor (config, log) {
+    this.config = config
+    this.log = log
+    this.shopifyApiRequest = new ShopifyRequest(
+      {
+        shop: config.shopifyShopAlias + '.myshopify.com',
+        shopify_api_key: null, // not required
+        access_token: config.shopifyAccessToken, // not required
+        verbose: false
+      },
+      log
+    )
   }
 
-  /**
-   * @param {function} cb
-   */
-  module.getStorefrontAccessToken = function (cb) {
+  getGraphQlUrl () {
+    return `https://${this.config.shopifyShopAlias}.myshopify.com/api/graphql`
+  }
+
+  async getStorefrontAccessToken () {
     const endpoint = '/admin/storefront_access_tokens.json'
-    // try to fetch a storefront access token with the correct scope
-    this.get(endpoint, {}, (err, response) => {
-      if (err) return cb(err)
+    const response = await this.shopifyApiRequest.get(endpoint, {})
+    const storefrontAccessTokenTitle = 'Web Checkout Storefront Access Token'
 
-      const storefrontAccessTokenTitle = 'Web Checkout Storefront Access Token'
-
-      /**
-       * @typedef {object} response
-       * @property {storefront_access_token[]} storefront_access_tokens
-       * @typedef {object} storefront_access_token
-       * @property {string} access_token
-       * @property {string} access_scope
-       * @property {string} created_at
-       * @property {int} id
-       * @property {string} title
-       */
-      if (response.storefront_access_tokens) {
-        for (let i = 0; i < response.storefront_access_tokens.length; i++) {
-          if (response.storefront_access_tokens[i].title === storefrontAccessTokenTitle) {
-            return cb(null, response.storefront_access_tokens[i].access_token)
-          }
-        }
-      }
-
-      // create a new access token, because no valid token was found at this point
-      const requestBody = {
-        'storefront_access_token': {
-          'title': storefrontAccessTokenTitle
-        }
-      }
-      this.post(endpoint, requestBody, (err, response) => {
-        if (err) return cb(err)
-
-        return cb(null, response.storefront_access_token.access_token)
+    if (response.storefront_access_tokens) {
+      const token = response.storefront_access_tokens.find((token) => {
+        return token.title === storefrontAccessTokenTitle
       })
-    })
+      if (token && token.access_token) return token.access_token
+    }
+
+    const requestBody = {
+      'storefront_access_token': {
+        'title': storefrontAccessTokenTitle
+      }
+    }
+
+    return this.shopifyApiRequest.post(endpoint, requestBody)
   }
 
-  /**
-   * @param {function} cb
-   */
-  module.createCheckout = function (cb) {
-    this.post('/admin/checkouts.json', {}, function (err, response) {
-      return cb(err, response)
-    })
+  async createCheckout () {
+    return this.shopifyApiRequest.post('/admin/checkouts.json', {})
   }
 
-  /**
-   * @param {string} checkoutToken
-   * @param {function} cb
-   */
-  module.getCheckout = function (checkoutToken, cb) {
-    this.get('/admin/checkouts/' + checkoutToken + '.json', {}, function (err, response) {
-      return cb(err, response)
-    })
+  async getCheckout (checkoutToken) {
+    return this.shopifyApiRequest.get(`/admin/checkouts/${checkoutToken}.json`)
   }
 
-  /**
-   * @param {String} checkoutToken
-   * @param {Array} productList
-   * @param {function} cb
-   */
-  module.setCheckoutProducts = function (checkoutToken, productList, cb) {
+  async setCheckoutProducts (checkoutToken, productList) {
     const data = {
       'checkout': {
         'line_items': productList
       }
     }
 
-    this.put('/admin/checkouts/' + checkoutToken + '.json', data, (err, response) => {
-      return cb(err, response)
-    })
+    return this.shopifyApiRequest.put(`/admin/checkouts/${checkoutToken}.json`, data)
   }
 
-  /**
-   * @param {String} checkoutToken
-   * @param {String|null} discountCode
-   * @param {function} cb
-   */
-  module.setCheckoutDiscount = function (checkoutToken, discountCode, cb) {
+  async setCheckoutDiscount (checkoutToken, discountCode) {
     const data = {
       'checkout': {
         'discount_code': discountCode
       }
     }
 
-    this.put('/admin/checkouts/' + checkoutToken + '.json', data, (err, response) => {
-      return cb(err, response)
-    })
+    return this.shopifyApiRequest.put(`/admin/checkouts/${checkoutToken}.json`, data)
   }
 
   /**
-   * @param {number} customersId
-   * @param {function} cb
+   *
+   * @param {string} customersId
    */
-  module.getCustomerById = function (customersId, cb) {
-    this.get(`/admin/customers/${customersId}.json`, {}, (err, userData) => {
-      if (err) {
-        return cb(err)
-      }
-
-      if (!userData.customer) {
-        return cb(new Error('Customer not found'))
-      }
-
-      cb(null, userData.customer)
-    })
+  async getCustomerById (customersId) {
+    const userData = await this.shopifyApiRequest.get(`/admin/customers/${customersId}.json`, {})
+    if (!userData.customer) throw new Error('Customer not found')
+    return userData.customer
   }
 
   /**
+   *
    * @param {string} email
-   * @param {function} cb
    */
-  module.findUserByEmail = function (email, cb) {
-    this.get(`/admin/customers/search.json?query=${email}`, {}, (err, userData) => {
-      if (err) {
-        return cb(err)
-      }
-
-      if (!userData.customers) {
-        return cb(new Error('No customers not found'))
-      }
-
-      cb(null, userData.customers)
-    })
-  }
-
-  // -------------------------------------------------------------------------------------------------------------------
-  /**
-   * @param {String} endpoint
-   * @param {Object} params
-   * @param {function} cb
-   */
-  module.get = function (endpoint, params, cb) {
-    ShopifyApiRequest.get(endpoint, params)
-      .then((response) => {
-        cb(null, response)
-      })
-      .catch((err) => {
-        cb(err)
-      })
+  async findUserByEmail (email) {
+    const userData = await this.shopifyApiRequest.get(`/admin/customers/search.json?query=${email}`, {})
+    if (!userData.customers) throw new Error('No customers not found')
+    return userData.customers
   }
 
   /**
-   * @param {String} endpoint
-   * @param {Object} params
-   * @param {function} cb
+   * @param {string} endpoint
+   * @param {Obkect} params
    */
-  module.put = function (endpoint, params, cb) {
-    ShopifyApiRequest.put(endpoint, params)
-      .then((response) => {
-        cb(null, response)
-      })
-      .catch((err) => {
-        cb(err)
-      })
+  put (endpoint, params) {
+    return this.shopifyApiRequest.put(endpoint, params)
   }
 
   /**
-   * @param {String} endpoint
-   * @param {Object} params
-   * @param {function} cb
+   * @param {string} endpoint
+   * @param {Obkect} params
    */
-  module.delete = function (endpoint, params, cb) {
-    ShopifyApiRequest.delete(endpoint, params)
-      .then((response) => {
-        cb(null, response)
-      })
-      .catch((err) => {
-        cb(err)
-      })
+  get (endpoint, params) {
+    return this.shopifyApiRequest.get(endpoint, params)
   }
 
   /**
-   * @param {String} endpoint
-   * @param {Object} params
-   * @param {function} cb
+   * @param {string} endpoint
+   * @param {Obkect} params
    */
-  module.post = function (endpoint, params, cb) {
-    ShopifyApiRequest.post(endpoint, params)
-      .then((response) => {
-        cb(null, response)
-      })
-      .catch((err) => {
-        cb(err)
-      })
+  post (endpoint, params) {
+    return this.shopifyApiRequest.post(endpoint, params)
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
-
-  return module
+  /**
+   * @param {string} endpoint
+   * @param {Obkect} params
+   */
+  delete (endpoint, params) {
+    return this.shopifyApiRequest.delete(endpoint, params)
+  }
 }
+
+module.exports = ShopifyApi

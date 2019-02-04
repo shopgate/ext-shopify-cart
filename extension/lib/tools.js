@@ -1,33 +1,24 @@
 class Tools {
   /**
    * @param {SDKContext} context
-   * @returns {Promise}
+   * @returns {string}
    */
-  static getCurrentCartId (context) {
+  static async getCurrentCartId (context) {
     const storage = context.meta.userId ? context.storage.user : context.storage.device
-
-    return new Promise((resolve, reject) => {
-      storage.get('checkoutToken', (sErr, cartId) => {
-        if (sErr) reject(sErr)
-        resolve(cartId)
-      })
-    })
+    const currentCartId = await storage.get('checkoutToken')
+    return currentCartId
   }
 
   /**
    *
    * @param {SDKContext} context
    * @param {string} cartId
-   * @returns {Promise}
+   * @returns {string}
    */
-  static setCurrentCartId (context, cartId) {
+  static async setCurrentCartId (context, cartId) {
     const storage = context.meta.userId ? context.storage.user : context.storage.device
-    return new Promise((resolve, reject) => {
-      storage.set('checkoutToken', cartId, (sErr) => {
-        if (sErr) reject(sErr)
-        resolve(cartId)
-      })
-    })
+    const currentCartId = await storage.set('checkoutToken', cartId)
+    return currentCartId
   }
 }
 
