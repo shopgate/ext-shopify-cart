@@ -1,6 +1,30 @@
 const assert = require('assert')
 
 describe('Cart Helper', () => {
+  const context = {
+    storage: {
+      device: {
+        get: () => {
+          return '1234_GUEST'
+        },
+        set: () => {
+          return '1234_GUEST'
+        }
+      },
+      user: {
+        get: () => {
+          return '1234_USER'
+        },
+        set: () => {
+          return '1234_USER'
+        }
+      }
+    },
+    meta: {
+      userId: false
+    }
+  }
+
   describe('extractVariantId', () => {
     const extractVariantId = require('../../../../extension/helper/cart').extractVariantId
 
@@ -64,7 +88,44 @@ describe('Cart Helper', () => {
     })
 
     it('should return a variant ID if "product.customData" does include one', () => {
-      assert.strictEqual(extractVariantId({customData: '{"variant_id": "123"}'}), '123')
+      assert.strictEqual(extractVariantId({ customData: '{"variant_id": "123"}' }), '123')
+    })
+  })
+
+  describe('getCurrentCartId', () => {
+    const getCurrentCartId = require('../../../../extension/helper/cart').getCurrentCartId
+
+    it('should return the current cart id for a customer', async () => {
+      context.meta.userId = 1234
+      assert.deepStrictEqual(
+        await getCurrentCartId(context), '1234_USER'
+      )
+    })
+
+    it('should return the current cart id for a guest', async () => {
+      context.meta.userId = false
+
+      assert.deepStrictEqual(
+        await getCurrentCartId(context), '1234_GUEST'
+      )
+    })
+  })
+
+  describe('setCurrentCartId', () => {
+    const setCurrentCartId = require('../../../../extension/helper/cart').setCurrentCartId
+
+    it('should return the current cart id for a customer after set', async () => {
+      context.meta.userId = 1234
+      assert.deepStrictEqual(
+        await setCurrentCartId(context), '1234_USER'
+      )
+    })
+
+    it('should return the current cart id for a guest after set', async () => {
+      context.meta.userId = false
+      assert.deepStrictEqual(
+        await setCurrentCartId(context), '1234_GUEST'
+      )
     })
   })
 
@@ -156,7 +217,7 @@ describe('Cart Helper', () => {
       const lineItems = {
         0: {
           quantity: [
-            {code: 'not_enough_in_stock', message: 'some message', options: {remaining: 0}}
+            { code: 'not_enough_in_stock', message: 'some message', options: { remaining: 0 } }
           ]
         }
       }
@@ -171,7 +232,7 @@ describe('Cart Helper', () => {
       const lineItems = {
         0: {
           quantity: [
-            {code: 'not_enough_in_stock', message: 'some message', options: {remaining: 2}}
+            { code: 'not_enough_in_stock', message: 'some message', options: { remaining: 2 } }
           ]
         }
       }
@@ -186,17 +247,17 @@ describe('Cart Helper', () => {
       const lineItems = {
         0: {
           quantity: [
-            {code: 'not_enough_in_stock', message: 'some message', options: {remaining: 0}}
+            { code: 'not_enough_in_stock', message: 'some message', options: { remaining: 0 } }
           ]
         },
         1: {
           quantity: [
-            {code: 'not_enough_in_stock', message: 'some message', options: {remaining: 2}}
+            { code: 'not_enough_in_stock', message: 'some message', options: { remaining: 2 } }
           ]
         },
         2: {
           quantity: [
-            {code: 'not_enough_in_stock', message: 'some message', options: {remaining: 0}}
+            { code: 'not_enough_in_stock', message: 'some message', options: { remaining: 0 } }
           ]
         }
       }
