@@ -134,4 +134,34 @@ async function fixCheckoutQuantities (checkoutCartItems, itemsToDelete, error, c
   }
 }
 
-module.exports = { clearCart, updateCart, extractVariantId, handleCartError, getOutOfStockLineItemIds }
+/**
+  * @param {SDKContext} context
+  * @returns {string}
+  */
+async function getCurrentCartId (context) {
+  const storage = context.meta.userId ? context.storage.user : context.storage.device
+  const currentCartId = await storage.get('checkoutToken')
+  return currentCartId
+}
+
+/**
+   *
+   * @param {SDKContext} context
+   * @param {string} cartId
+   * @returns {string}
+   */
+async function setCurrentCartId (context, cartId) {
+  const storage = context.meta.userId ? context.storage.user : context.storage.device
+  const currentCartId = await storage.set('checkoutToken', cartId)
+  return currentCartId
+}
+
+module.exports = {
+  clearCart,
+  updateCart,
+  extractVariantId,
+  handleCartError,
+  getOutOfStockLineItemIds,
+  getCurrentCartId,
+  setCurrentCartId
+}

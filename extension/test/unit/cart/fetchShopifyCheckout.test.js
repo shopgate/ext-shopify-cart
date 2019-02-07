@@ -2,7 +2,7 @@ const sinon = require('sinon')
 const assert = require('assert')
 const rewire = require('rewire')
 
-const step = rewire('../../../cart/fetchShopifyCheckout_v1.js')
+const step = rewire('../../../cart/fetchShopifyCheckout.js')
 
 describe('fetchShopifyCheckout', () => {
   /** @var {StepContext} */

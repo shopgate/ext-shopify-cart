@@ -12,7 +12,7 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/fetchShopifyCheckout_v1.js",
+        "path": "@shopgate/shopify-cart/cart/fetchShopifyCheckout.js",
         "input": [],
         "output": [
           {"key": "checkout", "id": "101"}
@@ -21,7 +21,7 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/recreateShopifyCheckoutOnCompletion_v1.js",
+        "path": "@shopgate/shopify-cart/cart/recreateShopifyCheckoutOnCompletion.js",
         "input": [
           {"key": "checkout", "id": "101"}
         ],
@@ -32,7 +32,7 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/remapCheckoutToShopifyCartData_v1.js",
+        "path": "@shopgate/shopify-cart/cart/remapCheckoutToShopifyCartData.js",
         "input": [
           {"key": "checkout", "id": "101"}
         ],
@@ -43,7 +43,7 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/getShopifyCartProducts_v1.js",
+        "path": "@shopgate/shopify-cart/cart/getShopifyCartProducts.js",
         "input": [
           {"key": "shopifyCartData", "id": "100"}
         ],
@@ -54,7 +54,7 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/products/getProducts_v1.js",
+        "path": "@shopgate/shopify-cart/products/getProducts.js",
         "input": [
           {"key": "products", "id": "102"}
         ],
@@ -84,7 +84,7 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/getCart_v1.js",
+        "path": "@shopgate/shopify-cart/cart/getCart.js",
         "input": [
           {"key": "shopifyCartData", "id": "100"},
           {"key": "importedProductsInCart", "id": "103", "optional": true}

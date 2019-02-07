@@ -2,14 +2,14 @@ const sinon = require('sinon')
 const assert = require('assert')
 const rewire = require('rewire')
 
-const step = rewire('../../../cart/migrateCartContents_v1')
+const step = rewire('../../../cart/migrateCartContents')
 const cart = require('../../../helper/cart')
 
 describe('migrateCartContents', () => {
   /** @var {StepContext} */
   const context = {
     tracedRequest: () => {
-      return request
+      return {}
     },
     config: {
     },

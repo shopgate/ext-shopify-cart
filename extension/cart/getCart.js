@@ -9,7 +9,7 @@ const Price = require('../models/cart/cartItems/products/price/price')
 const Property = require('../models/cart/cartItems/products/properties/property')
 const AdditionalInfo = require('../models/cart/cartItems/products/additionalInfo/additionalInfo')
 const Message = require('../models/messages/message')
-const Tools = require('../lib/tools')
+const { getCurrentCartId, setCurrentCartId } = require('../helper/cart')
 
 /**
  * @typedef {object} input
@@ -29,9 +29,9 @@ module.exports = async function (context, input) {
   const shopifyProducts = input.shopifyProducts === undefined ? [] : input.shopifyProducts
 
   try {
-    await Tools.getCurrentCartId(context)
+    await getCurrentCartId(context)
     const cart = await createCart(shopifyCartData)
-    await Tools.setCurrentCartId(context, cart.id)
+    await setCurrentCartId(context, cart.id)
     return cart
   } catch (err) {
     return err

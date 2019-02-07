@@ -1,6 +1,5 @@
 const CartItem = require('../models/cart/cartItems/cartItem')
-const Tools = require('../lib/tools')
-const { extractVariantId, handleCartError } = require('../helper/cart')
+const { extractVariantId, handleCartError, getCurrentCartId } = require('../helper/cart')
 const ShopifyApiRequest = require('../lib/shopify.api.js')
 /**
  * @param {SDKContext} context
@@ -19,7 +18,7 @@ module.exports = async function (context, input) {
   let checkoutCartItems = []
 
   try {
-    const cartId = await Tools.getCurrentCartId(context)
+    const cartId = await getCurrentCartId(context)
     const existingCartItemProducts = existingCartItems.filter(item => item.type === cartItem.TYPE_PRODUCT)
     let variantMap = {}
 

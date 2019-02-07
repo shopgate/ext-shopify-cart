@@ -1,5 +1,4 @@
-const Tools = require('../lib/tools')
-const { extractVariantId, handleCartError } = require('../helper/cart')
+const { extractVariantId, handleCartError, getCurrentCartId } = require('../helper/cart')
 const ShopifyApiRequest = require('../lib/shopify.api.js')
 
 module.exports = async function (context, input) {
@@ -9,7 +8,7 @@ module.exports = async function (context, input) {
   const importedProductsInCart = input.importedProductsInCart
 
   try {
-    const cartId = await Tools.getCurrentCartId(context)
+    const cartId = await getCurrentCartId(context)
     const items = {}
     existingCartItems.forEach(existingCartItem => {
       if (existingCartItem.product && existingCartItem.product.id &&
