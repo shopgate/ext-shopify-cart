@@ -2,25 +2,25 @@ const Message = require('../models/messages/message')
 const ShopifyApiRequest = require('../lib/shopify.api.js')
 
 /**
- * @param {int} sourceCartId
+ * @param {number} sourceCartId
  * @param {SDKContext} context
  */
 const clearCart = async (sourceCartId, context) => {
   const shopifyApiRequest = new ShopifyApiRequest(context.config, context.log)
   const clearData = { 'checkout': { 'line_items': [] } }
-  const clear = await shopifyApiRequest.put(`/admin/checkouts/${sourceCartId}.json`, clearData)
-  return clear
+
+  return shopifyApiRequest.put(`/admin/checkouts/${sourceCartId}.json`, clearData)
 }
 
 /**
- * @param {object} updatedData
- * @param {int} targetCartId
+ * @param {Object} updatedData
+ * @param {number} targetCartId
  * @param {SDKContext} context
  */
 const updateCart = async (updatedData, targetCartId, context) => {
   const shopifyApiRequest = new ShopifyApiRequest(context.config, context.log)
-  const update = await shopifyApiRequest.put(`/admin/checkouts/${targetCartId}.json`, updatedData)
-  return update
+
+  return shopifyApiRequest.put(`/admin/checkouts/${targetCartId}.json`, updatedData)
 }
 
 /**
@@ -43,10 +43,10 @@ function extractVariantId (product) {
  * @param {Object} err.errors.line_items
  * @param {{code: string, message: string}[]} err.errors.line_items.[errorType]
  * @param {Array} checkoutCartItems
- * @param {int} cartId
+ * @param {number} cartId
  * @param {SDKContext} context
  *
- * @return {Promise{code: string, message: string, type: string}[]}
+ * @return {Promise<{code: string, message: string, type: string}[]>}
  * @throws {Error} If err does not have an errors or error.line_items property
  */
 const handleCartError = async (err, checkoutCartItems, cartId, context) => {
@@ -57,14 +57,7 @@ const handleCartError = async (err, checkoutCartItems, cartId, context) => {
     Object.values(errorItems.errors.line_items).forEach(errorsPerLineItem => {
       Object.entries(errorsPerLineItem).forEach(([errorType, errors]) => {
         errors.forEach(error => {
-          let errorCode
-          switch (error.code) {
-            case 'not_enough_in_stock':
-              errorCode = 'EINSUFFICIENTSTOCK'
-              break
-            default:
-              errorCode = error.code
-          }
+          const errorCode = error.code === 'not_enough_in_stock' ? 'EINSUFFICIENTSTOCK' : error.code
           const errorMessage = new Message()
           errorMessage.addErrorMessage(errorCode, error.message)
           errorMessages.push(errorMessage.toJson())
@@ -77,8 +70,10 @@ const handleCartError = async (err, checkoutCartItems, cartId, context) => {
   const itemsToDelete = getOutOfStockLineItemIds(err.errors.line_items).sort((a, b) => b - a)
   if (itemsToDelete.length > 0) {
     await fixCheckoutQuantities(checkoutCartItems, itemsToDelete, err, cartId, context)
+
     return renderErrorItems(err)
   }
+
   return renderErrorItems(err)
 }
 
@@ -110,7 +105,7 @@ function getOutOfStockLineItemIds (lineItems) {
  * @param {Error} error
  * @param {Object} error.errors
  * @param {Object} error.errors.line_items
- * @param {int} cartId
+ * @param {number} cartId
  * @param {SDKContext} context
  */
 async function fixCheckoutQuantities (checkoutCartItems, itemsToDelete, error, cartId, context) {
@@ -135,25 +130,25 @@ async function fixCheckoutQuantities (checkoutCartItems, itemsToDelete, error, c
 }
 
 /**
-  * @param {SDKContext} context
-  * @returns {string}
-  */
+ * @param {SDKContext} context
+ * @returns {string}
+ */
 async function getCurrentCartId (context) {
   const storage = context.meta.userId ? context.storage.user : context.storage.device
-  const currentCartId = await storage.get('checkoutToken')
-  return currentCartId
+
+  return storage.get('checkoutToken')
 }
 
 /**
-   *
-   * @param {SDKContext} context
-   * @param {string} cartId
-   * @returns {string}
-   */
+ *
+ * @param {SDKContext} context
+ * @param {string} cartId
+ * @returns {string}
+ */
 async function setCurrentCartId (context, cartId) {
   const storage = context.meta.userId ? context.storage.user : context.storage.device
-  const currentCartId = await storage.set('checkoutToken', cartId)
-  return currentCartId
+
+  return storage.set('checkoutToken', cartId)
 }
 
 module.exports = {

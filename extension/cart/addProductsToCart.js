@@ -1,5 +1,6 @@
 const { extractVariantId, handleCartError, getCurrentCartId } = require('../helper/cart')
 const ShopifyApiRequest = require('../lib/shopify.api.js')
+const UnknownError = require('../models/Errors/UnknownError')
 
 /**
  * @param {SDKContext} context
@@ -10,7 +11,7 @@ const ShopifyApiRequest = require('../lib/shopify.api.js')
  * @param {Object[]} input.products
  * @param {Object[]} input.cartItems
  */
-module.exports = async function (context, input) {
+module.exports = async (context, input) => {
   const shopifyApiRequest = new ShopifyApiRequest(context.config, context.log)
   const importedProductsAddedToCart = input.importedProductsAddedToCart
   const importedProductsInCart = input.importedProductsInCart
@@ -43,17 +44,14 @@ module.exports = async function (context, input) {
         ))
       }
 
-      return {
-        variant_id: variantId || id,
-        quantity
-      }
+      return { variant_id: variantId || id, quantity }
     })
     try {
       await shopifyApiRequest.put(`/admin/checkouts/${cartId}.json`, { checkout: { line_items: checkoutCartItems } })
     } catch (err) {
-      return {messages: await handleCartError(err, checkoutCartItems, cartId, context)}
+      return { messages: await handleCartError(err, checkoutCartItems, cartId, context) }
     }
   } catch (err) {
-    return err
+    throw new UnknownError()
   }
 }

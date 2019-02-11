@@ -4,14 +4,14 @@ let { updateCart, clearCart } = require('./../helper/cart')
 
 /**
  *
- * @typedef {object} input
- * @property {object} sourceCart
- * @property {object} targetCart
+ * @typedef {Object} input
+ * @property {Object} sourceCart
+ * @property {Object} targetCart
  *
- * @param {object} context
- * @param {object} input
+ * @param {Object} context
+ * @param {Object} input
  */
-module.exports = async function (context, input) {
+module.exports = async (context, input) => {
   migrateCartContents(
     context,
     input.sourceCart.token,
@@ -44,13 +44,13 @@ async function migrateCartContents (context, sourceCartId, sourceCartLineItems, 
   const checkoutCartItems = []
 
   // update quantity for existing items, add to the checkoutCartItems, otherwise
-  _.each(sourceCartLineItems, function (sourceCartLineItem) {
+  sourceCartLineItems.forEach(sourceCartLineItem => {
     const targetCartLineItem = _.findWhere(targetCartLineItems, { variant_id: sourceCartLineItem.variant_id })
     checkoutCartItems.push(mergeCheckoutCartItems(sourceCartLineItem, targetCartLineItem))
   })
 
   // re-attach the lineItems which were already in the user cart and check for duplicated items
-  _.each(targetCartLineItems, function (targetCartLineItem) {
+  targetCartLineItems.forEach(targetCartLineItem => {
     if (!_.findWhere(checkoutCartItems, { variant_id: targetCartLineItem.variant_id })) {
       checkoutCartItems.push(
         {
@@ -70,7 +70,7 @@ async function migrateCartContents (context, sourceCartId, sourceCartLineItems, 
     context.log.error(
       'Couldn\'t clear checkout with id ' + sourceCartId + ' failed with error: ' + JSON.stringify(err)
     )
-    return new UnknownError()
+    throw new UnknownError()
   }
 }
 
@@ -88,7 +88,7 @@ async function updateAndAdjustCart (updatedData, targetCartId, context) {
       context.log.error(
         'Couldn\'t update checkout with id ' + targetCartId + ' failed with error: ' + JSON.stringify(err)
       )
-      throw new Error('Unable to merge carts')
+      throw new UnknownError()
     }
 
     if (err & err.hasOwnProperty('errors') && err.errors.hasOwnProperty('line_items')) {
@@ -108,12 +108,13 @@ async function updateAndAdjustCart (updatedData, targetCartId, context) {
         }
         try {
           updateCart(updatedData, targetCartId, context)
+
           return true
         } catch (err) {
           context.log.error(
             'Couldn\'t update checkout with id ' + targetCartId + ' failed with error: ' + JSON.stringify(err)
           )
-          throw new Error('Unable to merge carts')
+          throw new UnknownError()
         }
       })
     }

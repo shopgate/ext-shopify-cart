@@ -1,8 +1,6 @@
-const _ = require('underscore')
-
 /**
- * @param {object} context
- * @param {object} input - Properties depend on the pipeline this is used for
+ * @param {Object} context
+ * @param {Object} input - Properties depend on the pipeline this is used for
  *
  * @param {Object} [input.products]
  */
@@ -16,7 +14,7 @@ module.exports = async function (context, input) {
   }
 
   let productIds = []
-  _.each(products, function (product) {
+  products.forEach(product => {
     productIds.push(product.variantId)
   })
 
@@ -26,13 +24,11 @@ module.exports = async function (context, input) {
     productNumbers: productIds
   })
 
-  const apiParams = {
+  return {
     service: 'product',
     version: 'v1',
     method: 'GET',
     path: `${context.meta.appId.split('_')[1]}/products`,
     query
   }
-
-  return apiParams
 }

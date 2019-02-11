@@ -1,3 +1,3 @@
-module.exports = async function (context, input) {
+module.exports = async (context, input) => {
   return { shopifyCartData: { checkout: input.checkout } }
 }

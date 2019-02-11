@@ -12,17 +12,17 @@ const Message = require('../models/messages/message')
 const { getCurrentCartId, setCurrentCartId } = require('../helper/cart')
 
 /**
- * @typedef {object} input
- * @property {object} shopifyRequestErr
+ * @typedef {Object} input
+ * @property {Object} shopifyRequestErr
  * @property {Array} importedProductsInCart
  * @property {Array} importedChildProductsInCart
  */
 
 /**
- * @typedef {object} context
- * @property {object} config
+ * @typedef {Object} context
+ * @property {Object} config
  */
-module.exports = async function (context, input) {
+module.exports = async (context, input) => {
   const shopifyCartData = input.shopifyCartData
   const importedProductsInCart = input.importedProductsInCart
   const importedChildProductsInCart = input.importedChildProductsInCart
@@ -42,7 +42,7 @@ module.exports = async function (context, input) {
    */
   async function createCart (data) {
     /**
-     * @typedef {object} data.checkout
+     * @typedef {Object} data.checkout
      * @property {boolean} taxes_included
      * @property {string} token
      * @property {number} subtotal_price
@@ -50,7 +50,7 @@ module.exports = async function (context, input) {
      * @property {number} total_tax
      * @property {Array} tax_lines
      * @property {string} shipping_line
-     * @property {object} applied_discount
+     * @property {Object} applied_discount
      * @property {boolean} applied_discount.applicable
      * @property {string} applied_discount.non_applicable_reason
      * @property {string} web_url
@@ -59,7 +59,7 @@ module.exports = async function (context, input) {
 
     const cart = new Cart()
 
-    /** @var {object} checkout */
+    /** @var {Object} checkout */
     const checkout = data.checkout
 
     /* global */
@@ -115,22 +115,22 @@ module.exports = async function (context, input) {
     }
 
     /**
-   * @typedef {object} item
-   * @property {number} line_price
-   * @property {number} compare_at_price
-   * @property {string} variant_title
-   * @property {string} sku
-   * @property {string} vendor
-   * @property {number} product_id
-   *
-   * cartItems */
+     * @typedef {Object} item
+     * @property {number} line_price
+     * @property {number} compare_at_price
+     * @property {string} variant_title
+     * @property {string} sku
+     * @property {string} vendor
+     * @property {number} product_id
+     *
+     * cartItems */
     checkout.line_items.forEach(function (item) {
       const cartItem = new CartItem()
       /**
-     * @typedef {object} shopifyProduct
-     * @property {Array} variants
-     * @property {Array} options
-     */
+       * @typedef {Object} shopifyProduct
+       * @property {Array} variants
+       * @property {Array} options
+       */
       let shopifyProductVariant = null
       const shopifyProduct = shopifyProducts.find(product => product.id.toString() === item.product_id.toString())
       if (shopifyProduct && shopifyProduct.variants) {
@@ -142,10 +142,10 @@ module.exports = async function (context, input) {
       let isChild = true
 
       /**
-     * @typedef {Object} importedProductInCart
-     * @property {number} id
-     * @property {string} customData
-     */
+       * @typedef {Object} importedProductInCart
+       * @property {number} id
+       * @property {string} customData
+       */
       importedProductsInCart.forEach(function (importedProductInCart) {
         let customData = JSON.parse(importedProductInCart.customData)
         if (customData.variant_id === item.variant_id) {
@@ -195,9 +195,9 @@ module.exports = async function (context, input) {
       price.special = null
 
       /**
-     * Compare at price is same as MSRP,
-     * so use that as a higher price if present
-     */
+       * Compare at price is same as MSRP,
+       * so use that as a higher price if present
+       */
       if (item.compare_at_price > item.price) {
         price.special = price.default
         price.default = item.compare_at_price * item.quantity

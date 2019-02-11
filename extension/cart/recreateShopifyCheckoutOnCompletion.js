@@ -4,7 +4,7 @@ const fetchCheckout = require('./fetchShopifyCheckout')
  * @param {Object} context
  * @param {Object} input
  */
-module.exports = async function (context, input) {
+module.exports = async (context, input) => {
   const checkout = input.checkout
 
   if (checkout.completed_at) {

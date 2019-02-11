@@ -1,10 +1,11 @@
 const ShopifyApiRequest = require('../lib/shopify.api.js')
+const UnknownError = require('../models/Errors/UnknownError')
 
 /**
  * @param {Object} context
  * @param {Object} input
  */
-module.exports = async function (context, input) {
+module.exports = async (context, input) => {
   const shopifyApiRequest = new ShopifyApiRequest(context.config, context.log)
   const { checkout, isNew } = await fetchCheckout(shopifyApiRequest, Boolean(input.createNew), context)
   if (isNew) {
@@ -12,9 +13,11 @@ module.exports = async function (context, input) {
       saveCheckoutToken(checkout.checkout.token, context)
     } catch (err) {
       context.log.error('Failed to save Shopify checkout token. Error: ' + JSON.stringify(err))
-      return (err)
+
+      throw new UnknownError()
     }
   }
+
   return checkout
 }
 
@@ -35,10 +38,12 @@ async function fetchCheckout (shopifyApiRequest, createNew, context) {
     } else {
       checkout = await shopifyApiRequest.createCheckout()
     }
-    return ({isNew: createNew, checkout})
+
+    return ({ isNew: createNew, checkout })
   } catch (err) {
     context.log.error('Failed to create / load a new checkout (cart) at Shopify. Error: ' + JSON.stringify(err))
-    return (err)
+
+    throw new UnknownError()
   }
 }
 
@@ -50,12 +55,9 @@ async function fetchCheckout (shopifyApiRequest, createNew, context) {
  */
 async function loadCheckoutToken (context) {
   // select storage to use: device or user, if logged in
-  let storage = context.storage.device
-  if (context.meta.userId) {
-    storage = context.storage.user
-  }
-  const token = await storage.get('checkoutToken')
-  return token
+  const storage = context.meta.userId ? context.storage.user : context.storage.device
+
+  return storage.get('checkoutToken')
 }
 
 /**
@@ -67,11 +69,7 @@ async function loadCheckoutToken (context) {
  */
 async function saveCheckoutToken (checkoutToken, context) {
   // select storage to use: device or user, if logged in
-  let storage = context.storage.device
-  if (context.meta.userId) {
-    storage = context.storage.user
-  }
+  const storage = context.meta.userId ? context.storage.user : context.storage.device
 
-  const token = await storage.set('checkoutToken', checkoutToken)
-  return token
+  return storage.set('checkoutToken', checkoutToken)
 }

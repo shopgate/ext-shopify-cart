@@ -37,15 +37,15 @@ class ShopifyApi {
       }
     }
 
-    return this.shopifyApiRequest.post(endpoint, requestBody)
+    return this.post(endpoint, requestBody)
   }
 
   async createCheckout () {
-    return this.shopifyApiRequest.post('/admin/checkouts.json', {})
+    return this.post('/admin/checkouts.json', {})
   }
 
   async getCheckout (checkoutToken) {
-    return this.shopifyApiRequest.get(`/admin/checkouts/${checkoutToken}.json`)
+    return this.get(`/admin/checkouts/${checkoutToken}.json`, {})
   }
 
   async setCheckoutProducts (checkoutToken, productList) {
@@ -55,7 +55,7 @@ class ShopifyApi {
       }
     }
 
-    return this.shopifyApiRequest.put(`/admin/checkouts/${checkoutToken}.json`, data)
+    return this.put(`/admin/checkouts/${checkoutToken}.json`, data)
   }
 
   async setCheckoutDiscount (checkoutToken, discountCode) {
@@ -65,32 +65,32 @@ class ShopifyApi {
       }
     }
 
-    return this.shopifyApiRequest.put(`/admin/checkouts/${checkoutToken}.json`, data)
+    return this.put(`/admin/checkouts/${checkoutToken}.json`, data)
   }
 
   /**
-   *
    * @param {string} customersId
    */
   async getCustomerById (customersId) {
-    const userData = await this.shopifyApiRequest.get(`/admin/customers/${customersId}.json`, {})
+    const userData = await this.get(`/admin/customers/${customersId}.json`, {})
     if (!userData.customer) throw new Error('Customer not found')
+
     return userData.customer
   }
 
   /**
-   *
    * @param {string} email
    */
   async findUserByEmail (email) {
-    const userData = await this.shopifyApiRequest.get(`/admin/customers/search.json?query=${email}`, {})
+    const userData = await this.get(`/admin/customers/search.json?query=${email}`, {})
     if (!userData.customers) throw new Error('No customers not found')
+
     return userData.customers
   }
 
   /**
    * @param {string} endpoint
-   * @param {Obkect} params
+   * @param {Object} params
    */
   put (endpoint, params) {
     return this.shopifyApiRequest.put(endpoint, params)
@@ -98,7 +98,7 @@ class ShopifyApi {
 
   /**
    * @param {string} endpoint
-   * @param {Obkect} params
+   * @param {Object} params
    */
   get (endpoint, params) {
     return this.shopifyApiRequest.get(endpoint, params)
@@ -106,7 +106,7 @@ class ShopifyApi {
 
   /**
    * @param {string} endpoint
-   * @param {Obkect} params
+   * @param {Object} params
    */
   post (endpoint, params) {
     return this.shopifyApiRequest.post(endpoint, params)
@@ -114,7 +114,7 @@ class ShopifyApi {
 
   /**
    * @param {string} endpoint
-   * @param {Obkect} params
+   * @param {Object} params
    */
   delete (endpoint, params) {
     return this.shopifyApiRequest.delete(endpoint, params)

@@ -1,16 +1,15 @@
-const _ = require('underscore')
 const ShopifyApiRequest = require('../lib/shopify.api.js')
 
 /**
- * @param {object} context
- * @param {object} input - Properties depend on the pipeline this is used for
+ * @param {Object} context
+ * @param {Object} input - Properties depend on the pipeline this is used for
  * @param {Object} [input.products]
  */
 module.exports = async function (context, input) {
   const shopifyApiRequest = new ShopifyApiRequest(context.config, context.log)
   const products = input.products
   let productIds = []
-  _.each(products, function (product) {
+  products.forEach(product => {
     productIds.push(product.productId)
   })
 

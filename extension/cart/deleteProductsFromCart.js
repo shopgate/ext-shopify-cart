@@ -1,7 +1,8 @@
 const { extractVariantId, handleCartError, getCurrentCartId } = require('../helper/cart')
 const ShopifyApiRequest = require('../lib/shopify.api.js')
+const UnknownError = require('../models/Errors/UnknownError')
 
-module.exports = async function (context, input) {
+module.exports = async (context, input) => {
   const shopifyApiRequest = new ShopifyApiRequest(context.config, context.log)
   const existingCartItems = input.cartItems
   const itemsIdsToDelete = input.CartItemIds
@@ -21,21 +22,20 @@ module.exports = async function (context, input) {
       const variantId = extractVariantId(importedProductsInCart.find(importedProductInCart =>
         importedProductInCart.id === id && importedProductInCart.customData
       ))
-      return {
-        variant_id: variantId || id,
-        quantity
-      }
+
+      return { variant_id: variantId || id, quantity }
     })
     if (Object.keys(items).length === existingCartItems.length) {
       context.log.error(`No cartItem(s) found for cart ${cartId}`)
+
       return {}
     }
     try {
       await shopifyApiRequest.put(`/admin/checkouts/${cartId}.json`, { checkout: { line_items: checkoutCartItems } })
     } catch (err) {
-      return {messages: await handleCartError(err, checkoutCartItems, cartId, context)}
+      return { messages: await handleCartError(err, checkoutCartItems, cartId, context) }
     }
   } catch (err) {
-    return err
+    throw new UnknownError()
   }
 }

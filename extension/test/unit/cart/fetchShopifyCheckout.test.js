@@ -37,8 +37,9 @@ describe('fetchShopifyCheckout', () => {
     step.__set__('loadCheckoutToken', loadCheckoutTokenSpy)
   })
 
-  it('should load the checkout token or a existing customer', async () => {
-    await step(context, input)
+  it('should load the checkout token or a existing customer', done => {
+    step(context, input)
     assert(loadCheckoutTokenSpy.calledOnce, 'loadCheckoutToken should be called once')
+    done()
   })
 })

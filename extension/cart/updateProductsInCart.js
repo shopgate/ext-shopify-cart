@@ -8,7 +8,7 @@ const ShopifyApiRequest = require('../lib/shopify.api.js')
  * @param {Object[]} input.cartItems The list of items currently in the cart
  * @param {Object[]} input.CartItem The list of items to be changed
  */
-module.exports = async function (context, input) {
+module.exports = async (context, input) => {
   const shopifyApiRequest = new ShopifyApiRequest(context.config, context.log)
   const existingCartItems = input.cartItems
   const updateCartItems = input.CartItem

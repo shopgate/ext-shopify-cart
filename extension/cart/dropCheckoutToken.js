@@ -1,14 +1,9 @@
 /**
  * @param {Object} context
- * @param {Object} input
  */
-module.exports = async function (context, input) {
+module.exports = async function (context) {
   // select storage to use: device or user, if logged in
-  let storage = context.storage.device
-  if (context.meta.userId) {
-    storage = context.storage.user
-  }
+  const storage = context.meta.userId ? context.storage.user : context.storage.device
 
-  const token = await storage.set('checkoutToken', null)
-  return token
+  return storage.set('checkoutToken', null)
 }

@@ -1,4 +1,4 @@
-module.exports = async function (context, input) {
+module.exports = async (context, input) => {
   const shopifyCartData = input.shopifyCartData
   const shopifyRequestErr = input.shopifyRequestErr
 
