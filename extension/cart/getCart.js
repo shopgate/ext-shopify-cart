@@ -10,17 +10,18 @@ const Property = require('../models/cart/cartItems/products/properties/property'
 const AdditionalInfo = require('../models/cart/cartItems/products/additionalInfo/additionalInfo')
 const Message = require('../models/messages/message')
 const { getCurrentCartId, setCurrentCartId } = require('../helper/cart')
+const UnknownError = require('../models/Errors/UnknownError')
 
 /**
- * @typedef {Object} input
+ * @typedef {Object} getCartInput
  * @property {Object} shopifyRequestErr
  * @property {Array} importedProductsInCart
  * @property {Array} importedChildProductsInCart
  */
-
 /**
- * @typedef {Object} context
- * @property {Object} config
+ * @param {SDKContext} context
+ * @param {getCartInput} input
+ * @return {Promise<Cart>}
  */
 module.exports = async (context, input) => {
   const shopifyCartData = input.shopifyCartData
@@ -32,9 +33,10 @@ module.exports = async (context, input) => {
     await getCurrentCartId(context)
     const cart = await createCart(shopifyCartData)
     await setCurrentCartId(context, cart.id)
+
     return cart
   } catch (err) {
-    return err
+    throw UnknownError()
   }
 
   /**
