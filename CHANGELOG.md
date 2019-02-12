@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Removed
+- coupon/discount related logic as it will be handled in the desktop checkout instead
+- usage of tools.js logic
+### Changed
+- callback functions to async/await ones
+
 ## [1.2.9] - 2018-12-19
 ### Fixed
 - create new checkout if old one is not available at Shopify anymore

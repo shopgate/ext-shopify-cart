@@ -13,7 +13,7 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/products/getProducts_v1.js",
+        "path": "@shopgate/shopify-cart/products/getProducts.js",
         "input": [
           {"key": "products", "id": "1080"}
         ],
@@ -53,7 +53,7 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/addProductsToCart_v1.js",
+        "path": "@shopgate/shopify-cart/cart/addProductsToCart.js",
         "input": [
           {"key": "importedProductsAddedToCart", "id": "100"},
           {"key": "importedProductsInCart", "id": "103", "optional": true},
