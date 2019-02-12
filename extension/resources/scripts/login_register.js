@@ -10,13 +10,11 @@ window.SGPipelineScript.login_register = function () {
   // attach a click-event-listener to each relevant form-submit button
   switch (this.getPage()) {
     case this.PAGE_LOGIN: {
-      this.requestCheckoutUrl()
       this.attachSubmitListener('customer_login')
       history.push('login')
       break
     }
     case this.PAGE_REGISTER: {
-      this.requestCheckoutUrl()
       this.attachSubmitListener('create_customer')
       history.push('register')
       break
@@ -113,18 +111,4 @@ window.SGPipelineScript.initAppLogin = function (formId) {
 
   // abort form submission (wait for pipeline response)
   return false
-}
-
-/**
- * Fetches the checkout url in the background and caches it for later usage.
- */
-window.SGPipelineScript.requestCheckoutUrl = function () {
-  window.SGAppConnector.sendPipelineRequest('shopgate.checkout.getUrl.v1', false, null, function (err, output, storageKey) {
-    if (err) {
-      return console.error(err)
-    }
-
-    console.log('# Cached checkout url')
-    window.localStorage.setItem(storageKey, window.btoa(output.url))
-  }, this.STORAGE_KEY_CHECKOUT_URL)
 }
