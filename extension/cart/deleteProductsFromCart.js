@@ -5,7 +5,7 @@ const UnknownError = require('../models/Errors/UnknownError')
 module.exports = async (context, input) => {
   const shopifyApiRequest = new ShopifyApiRequest(context.config, context.log)
   const existingCartItems = input.cartItems
-  const itemsIdsToDelete = input.CartItemIds
+  const itemsIdsToDelete = input.cartItemIds
   const importedProductsInCart = input.importedProductsInCart
 
   try {

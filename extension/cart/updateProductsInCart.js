@@ -5,15 +5,15 @@ const UnknownError = require('../models/Errors/UnknownError')
 
 /**
  * @param {SDKContext} context
- * @param {Object} input
+ * @param input
  * @param {Object[]} input.importedProductsInCart The list of items in the cart in Shopgate format
  * @param {Object[]} input.cartItems The list of items currently in the cart
- * @param {Object[]} input.CartItem The list of items to be changed
+ * @param {Object[]} input.updateCartItems
  */
 module.exports = async (context, input) => {
   const shopifyApiRequest = new ShopifyApiRequest(context.config, context.log)
   const existingCartItems = input.cartItems
-  const updateCartItems = input.CartItem
+  const updateCartItems = input.updateCartItems
   const importedProductsInCart = input.importedProductsInCart
   const cartItem = new CartItem()
 
