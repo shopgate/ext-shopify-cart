@@ -92,7 +92,7 @@ class ShopifyApi {
    * @param {string} endpoint
    * @param {Object} params
    */
-  put (endpoint, params) {
+  async put (endpoint, params) {
     return this.shopifyApiRequest.put(endpoint, params)
   }
 
@@ -100,7 +100,7 @@ class ShopifyApi {
    * @param {string} endpoint
    * @param {Object} params
    */
-  get (endpoint, params) {
+  async get (endpoint, params) {
     return this.shopifyApiRequest.get(endpoint, params)
   }
 
@@ -108,7 +108,7 @@ class ShopifyApi {
    * @param {string} endpoint
    * @param {Object} params
    */
-  post (endpoint, params) {
+  async post (endpoint, params) {
     return this.shopifyApiRequest.post(endpoint, params)
   }
 
@@ -116,7 +116,7 @@ class ShopifyApi {
    * @param {string} endpoint
    * @param {Object} params
    */
-  delete (endpoint, params) {
+  async delete (endpoint, params) {
     return this.shopifyApiRequest.delete(endpoint, params)
   }
 }
