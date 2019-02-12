@@ -7,14 +7,12 @@ const Url = require('../models/url')
  * @typedef {Object} config
  * @property {String} shopifyShopAlias
  */
-
 /**
  *
  * @param {Object} context
  * @param {Object} input
- * @param {function} cb
  */
-module.exports = function (context, input, cb) {
+module.exports = async (context, input) => {
   // limit expiry time to two hours from "now", because we don't have any info about the real expiry time
   const date = new Date()
   date.setTime(date.getTime() + 1000 * 60 * 60 * 2)
@@ -24,5 +22,5 @@ module.exports = function (context, input, cb) {
   const shopDomain = 'https://' + context.config.shopifyShopAlias + '.myshopify.com'
   const checkoutDomain = input.checkout.web_url.replace(/(https:\/\/checkout\.shopify\.com)/, shopDomain)
 
-  return cb(null, new Url(checkoutDomain, expires))
+  return new Url(checkoutDomain, expires)
 }

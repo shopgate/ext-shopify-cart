@@ -21,7 +21,7 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/recreateShopifyCheckoutOnCompletion_v1.js",
+        "path": "@shopgate/shopify-cart/cart/recreateShopifyCheckoutOnCompletion.js",
         "input": [
           {"key": "checkout", "id": "100"}
         ],
@@ -32,7 +32,7 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/getCheckoutUrl_v1.js",
+        "path": "@shopgate/shopify-cart/cart/getCheckoutUrl.js",
         "input": [
           {"key": "checkout", "id": "100"}
         ],

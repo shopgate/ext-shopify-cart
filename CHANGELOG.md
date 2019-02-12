@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Removed
+- coupon/discount related logic as it will be handled in the desktop checkout instead
+- usage of tools.js logic
+### Changed
+- callback functions to async/await ones
+
 ## [2.0.0] - 2019-02-07
 ### Changed
 - Updated Web Checkout to be compatible with Shopgate PWA version 6.1 and higher
