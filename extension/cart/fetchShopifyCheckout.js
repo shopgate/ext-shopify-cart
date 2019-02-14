@@ -10,7 +10,7 @@ module.exports = async (context, input) => {
   const { checkout, isNew } = await fetchCheckout(shopifyApiRequest, Boolean(input.createNew), context)
   if (isNew) {
     try {
-      saveCheckoutToken(checkout.checkout.token, context)
+      await saveCheckoutToken(checkout.checkout.token, context)
     } catch (err) {
       context.log.error('Failed to save Shopify checkout token. Error: ' + JSON.stringify(err))
 
