@@ -7,7 +7,7 @@ const UnknownError = require('../models/Errors/UnknownError')
  * @param {SDKContext} context
  * @param input
  * @param {Object[]} input.importedProductsInCart The list of items in the cart in Shopgate format
- * @param {Object[]} input.cartItems The list of items currently in the cart
+ * @param {Object[]} input.existingCartItems The list of items currently in the cart
  * @param {Object[]} input.updateCartItems
  */
 module.exports = async (context, input) => {
