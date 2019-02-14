@@ -12,7 +12,7 @@ const UnknownError = require('../models/Errors/UnknownError')
  */
 module.exports = async (context, input) => {
   const shopifyApiRequest = new ShopifyApiRequest(context.config, context.log)
-  const existingCartItems = input.cartItems
+  const existingCartItems = input.existingCartItems
   const updateCartItems = input.updateCartItems
   const importedProductsInCart = input.importedProductsInCart
   const cartItem = new CartItem()
