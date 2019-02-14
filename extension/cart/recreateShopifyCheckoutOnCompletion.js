@@ -5,13 +5,13 @@ const fetchCheckout = require('./fetchShopifyCheckout')
  * @param {Object} input
  */
 module.exports = async (context, input) => {
-  const checkout = input.checkout
+  let checkout = input.checkout
 
   if (checkout.completed_at) {
     input.createNew = true
     const newCheckout = await fetchCheckout(context, input)
-    return newCheckout.checkout
-  } else {
-    return checkout
+    checkout =  newCheckout.checkout
   }
+
+  return { checkout }
 }
