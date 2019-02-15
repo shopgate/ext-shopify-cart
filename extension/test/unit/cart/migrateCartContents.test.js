@@ -25,11 +25,11 @@ describe('migrateCartContents', () => {
   const input = {
     sourceCart: {
       token: '1',
-      line_items: [{'variant_id': 123, 'quantity': 6}, {'variant_id': 124, 'quantity': 1}]
+      line_items: [{ 'variant_id': 123, 'quantity': 6 }, { 'variant_id': 124, 'quantity': 1 }]
     },
     targetCart: {
       token: '2',
-      line_items: [{'variant_id': 123, 'quantity': 2}]
+      line_items: [{ 'variant_id': 123, 'quantity': 2 }]
     }
   }
 
@@ -54,9 +54,9 @@ describe('migrateCartContents', () => {
 
   it('should merge cart content to target cart and call updateCart with new data', async () => {
     const expectedResult = {
-      'checkout': {'line_items': [
+      'checkout': { 'line_items': [
         { quantity: 8, variant_id: 123 }, { quantity: 1, variant_id: 124 }
-      ]}
+      ] }
     }
 
     await step(context, input)
