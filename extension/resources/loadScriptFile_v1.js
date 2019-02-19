@@ -36,6 +36,6 @@ module.exports = function (context, input, cb) {
       return cb(new ScriptFileEmptyOrLoadingFailed(scriptName))
     }
 
-    cb(null, {scriptName: scriptName, scriptCode: Buffer.from(scriptCode).toString('base64')})
+    cb(null, { scriptName: scriptName, scriptCode: Buffer.from(scriptCode).toString('base64') })
   })
 }

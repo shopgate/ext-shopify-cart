@@ -68,7 +68,7 @@ class AppliedDiscount {
   }
 
   set savedPrice (parameters) {
-    let {value, type} = parameters
+    let { value, type } = parameters
     this._savedPrice = {
       value: value,
       type: type

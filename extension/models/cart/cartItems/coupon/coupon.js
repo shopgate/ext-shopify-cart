@@ -71,7 +71,7 @@ class Coupon {
    * @param parameters
    */
   set savedPrice (parameters) {
-    let {value, type} = parameters
+    let { value, type } = parameters
     this._savedPrice = {
       value: parseFloat(value),
       type: type

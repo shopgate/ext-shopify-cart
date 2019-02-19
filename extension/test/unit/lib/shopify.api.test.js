@@ -1,4 +1,3 @@
-const assert = require('assert')
 const nock = require('nock')
 const sinon = require('sinon')
 const shopifyApiUrl = 'https://shopgate.myshopify.com'
@@ -28,7 +27,7 @@ describe('Shopify API', () => {
     sinon.assert.calledWith(logSpy, sinon.match.has('shopifyRequest'))
     sinon.assert.calledWith(logSpy, sinon.match.hasNested('shopifyRequest.response'))
     sinon.assert.calledWith(logSpy, sinon.match.hasNested('shopifyRequest.request'))
-    sinon.assert.calledWith(logSpy, sinon.match({statusCode: httpCodeSuccess}))
+    sinon.assert.calledWith(logSpy, sinon.match({ statusCode: httpCodeSuccess }))
   })
 
   it('should create logs for all POST requests', async () => {
@@ -41,7 +40,7 @@ describe('Shopify API', () => {
     sinon.assert.calledWith(logSpy, sinon.match.has('shopifyRequest'))
     sinon.assert.calledWith(logSpy, sinon.match.hasNested('shopifyRequest.response'))
     sinon.assert.calledWith(logSpy, sinon.match.hasNested('shopifyRequest.request'))
-    sinon.assert.calledWith(logSpy, sinon.match({statusCode: httpCodeSuccess}))
+    sinon.assert.calledWith(logSpy, sinon.match({ statusCode: httpCodeSuccess }))
   })
 
   it('should create logs for all PUT requests', async () => {
@@ -54,7 +53,7 @@ describe('Shopify API', () => {
     sinon.assert.calledWith(logSpy, sinon.match.has('shopifyRequest'))
     sinon.assert.calledWith(logSpy, sinon.match.hasNested('shopifyRequest.response'))
     sinon.assert.calledWith(logSpy, sinon.match.hasNested('shopifyRequest.request'))
-    sinon.assert.calledWith(logSpy, sinon.match({statusCode: httpCodeSuccess}))
+    sinon.assert.calledWith(logSpy, sinon.match({ statusCode: httpCodeSuccess }))
   })
 
   it('should create logs for all DELETE requests', async () => {
@@ -67,6 +66,6 @@ describe('Shopify API', () => {
     sinon.assert.calledWith(logSpy, sinon.match.has('shopifyRequest'))
     sinon.assert.calledWith(logSpy, sinon.match.hasNested('shopifyRequest.response'))
     sinon.assert.calledWith(logSpy, sinon.match.hasNested('shopifyRequest.request'))
-    sinon.assert.calledWith(logSpy, sinon.match({statusCode: httpCodeSuccess}))
+    sinon.assert.calledWith(logSpy, sinon.match({ statusCode: httpCodeSuccess }))
   })
 })

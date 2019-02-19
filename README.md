@@ -1,15 +1,30 @@
-# Shopify Cart Extension For Shopgate Connect
+# Shopgate Connect - Shopify Cart Extension
 
-[![License](https://img.shields.io/badge/License-ISC-yellow.svg)](LICENSE.md)
+[![GitHub license](http://dmlc.github.io/img/apache2.svg)](LICENSE)
+[![Build Status](https://travis-ci.org/shopgate/ext-shopify-cart.svg?branch=master)](https://travis-ci.org/shopgate/ext-shopify-cart)
+[![Coverage Status](https://coveralls.io/repos/github/shopgate/ext-shopify-cart/badge.svg?branch=master)](https://coveralls.io/github/shopgate/ext-shopify-cart?branch=master)
 
-An extension for the Shopgate Connect platform that synchronizes shopping cart actions with a Shopify store.
+
+This Shopify extension will handle the synchronisation of cart data between Shopgate to Shopify.
 
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md) file for more information.
 
+## Contributing
+
+See [CONTRIBUTING.md](docs/CONTRIBUTING.md) file for more information.
+
+## About Shopgate
+
+Shopgate is the leading mobile commerce platform.
+
+Shopgate offers everything online retailers need to be successful in mobile. Our leading
+software-as-a-service (SaaS) enables online stores to easily create, maintain and optimize native
+apps and mobile websites for the iPhone, iPad, Android smartphones and tablets.
+
 ## License
 
-The Shopgate Cart Integration SDK is available under the Apache License, Version 2.0.
+This extension is available under the Apache License, Version 2.0.
 
-See the [LICENSE.md](LICENSE.md) file for more information.
+See the [LICENSE](./LICENSE) file for more information.

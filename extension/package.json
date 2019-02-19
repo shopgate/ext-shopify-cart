@@ -3,8 +3,9 @@
   "version": "2.1.0",
   "description": "",
   "scripts": {
+    "lint": "./node_modules/.bin/eslint --fix --ignore-path ../.gitignore --ext .js --ext .jsx .",
     "test": "./node_modules/.bin/_mocha --use_strict --recursive ./test/unit",
-    "cover": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --recursive",
+    "cover": "./node_modules/.bin/nyc npm test && ./node_modules/.bin/nyc report --reporter=text-lcov | coveralls",
     "newman": "./node_modules/.bin/newman run ./test/newman/collection.json --color on --environment ./test/newman/environment.json --globals ./test/newman/globals.json",
     "init-newman": "node ./test/newman/setup.js"
   },
@@ -24,16 +25,18 @@
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "chai-subset": "^1.6.0",
-    "eslint": "^5.4.0",
-    "eslint-config-standard": "^12.0.0-alpha.0",
+    "coveralls": "^3.0.2",
+    "eslint": "^5.13.0",
+    "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-node": "^7.0.1",
-    "eslint-plugin-promise": "^4.0.0",
-    "eslint-plugin-standard": "^3.1.0",
-    "expect": "^22.4.3",
+    "eslint-plugin-node": "^8.0.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "expect": "^24.1.0",
     "mocha": "^5.2.0",
-    "newman": "^4.2.2",
+    "newman": "^4.3.1",
     "nock": "^9.4.4",
+    "nyc": "^13.3.0",
     "rewire": "^2.5.2",
     "sinon": "^5.1.1",
     "sinon-stub-promise": "^4.0.0"
@@ -42,5 +45,24 @@
     "env": {
       "mocha": true
     }
+  },
+  "nyc": {
+    "include": [
+      "**/*.js"
+    ],
+    "exclude": [
+      "build",
+      "docs",
+      "coverage",
+      "models",
+      "resources",
+      "test"
+    ],
+    "reporter": [
+      "lcov",
+      "text-summary"
+    ],
+    "all": true,
+    "report-dir": "build"
   }
 }
