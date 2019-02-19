@@ -18,7 +18,7 @@ describe('dropCheckoutToken', () => {
         device: storage
       }
     }
-    sandbox = sinon.sandbox.create()
+    sandbox = sinon.createSandbox()
   })
 
   afterEach(() => {

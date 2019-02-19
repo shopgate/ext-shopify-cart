@@ -13,8 +13,7 @@
     "type": "git",
     "url": "https://github.com/shopgate/ext-shopify-cart"
   },
-  "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "dependencies": {
     "json-bigint": "^0.3.0",
     "request": "2.87.0",
