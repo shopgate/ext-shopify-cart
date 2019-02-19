@@ -4,8 +4,10 @@ const getShopifyCartProducts = require('../../../cart/getShopifyCartProducts')
 
 describe('getShopifyCartProducts', () => {
   const context = {}
-  const input = {
-    shopifyCartData: {
+  const input = {}
+
+  beforeEach(() => {
+    input.shopifyCartData = {
       checkout: {
         line_items: [
           {
@@ -18,11 +20,7 @@ describe('getShopifyCartProducts', () => {
           }
         ]
       }
-    },
-    shopifyRequestErr: null
-  }
-
-  beforeEach(() => {
+    }
     input.shopifyRequestErr = null
   })
 

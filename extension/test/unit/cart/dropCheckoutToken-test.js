@@ -2,24 +2,22 @@ const sinon = require('sinon')
 const dropCheckoutToken = require('../../../cart/dropCheckoutToken')
 
 describe('dropCheckoutToken', () => {
+  let context
   let sandbox
   const storage = {
     set: async () => {}
   }
-  const context = {
-    meta: {
-      userId: null
-    },
-    storage: {
-      user: storage,
-      device: storage
-    }
-  }
 
   beforeEach(() => {
-    context.meta.userId = null
-    context.storage.user = storage
-    context.storage.device = storage
+    context = {
+      meta: {
+        userId: null
+      },
+      storage: {
+        user: storage,
+        device: storage
+      }
+    }
     sandbox = sinon.sandbox.create()
   })
 
