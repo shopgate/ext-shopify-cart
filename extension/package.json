@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "ssh://git@stash.localdev.cc:7999/sgx/shopify-cart.git"
+    "url": "https://github.com/shopgate/ext-shopify-cart.git"
   },
   "author": "",
   "license": "ISC",
