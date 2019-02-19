@@ -2,7 +2,7 @@
 
 [![GitHub license](http://dmlc.github.io/img/apache2.svg)](LICENSE)
 [![Build Status](https://travis-ci.org/shopgate/ext-shopify-cart.svg?branch=master)](https://travis-ci.org/shopgate/ext-shopify-cart)
-[![Coverage Status](https://coveralls.io/repos/github/shopgate/ext-shopify-cart/badge.svg)](https://coveralls.io/github/shopgate/ext-shopify-cart)
+[![Coverage Status](https://coveralls.io/repos/github/shopgate/ext-shopify-cart/badge.svg?branch=master)](https://coveralls.io/github/shopgate/ext-shopify-cart?branch=master)
 
 This Shopify extension will handle the synchronisation of cart data between Shopgate to Shopify.
 
