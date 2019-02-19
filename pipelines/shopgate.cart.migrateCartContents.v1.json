@@ -12,7 +12,7 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/migrateCartContents_v1.js",
+        "path": "@shopgate/shopify-cart/cart/migrateCartContents.js",
         "input": [
           {"key": "sourceCart", "id": "1"},
           {"key": "targetCart", "id": "2"}

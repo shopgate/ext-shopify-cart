@@ -35,7 +35,7 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/deleteProductsFromCart_v1.js",
+        "path": "@shopgate/shopify-cart/cart/deleteProductsFromCart.js",
         "input": [
           {"key": "importedProductsInCart", "id": "103", "optional": true},
           {"key": "cartItems", "id": "1060"},

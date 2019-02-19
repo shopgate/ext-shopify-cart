@@ -27,18 +27,18 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/recreateShopifyCheckoutOnCompletion_v1.js",
+        "path": "@shopgate/shopify-cart/cart/recreateShopifyCheckoutOnCompletion.js",
         "input": [
           {"key": "checkout", "id": "100"}
         ],
         "output": [
-          {"key": "checkout", "id": "100", "optional": true}
+          {"key": "checkout", "id": "100"}
         ]
       },
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/remapCheckoutToShopifyCartData_v1.js",
+        "path": "@shopgate/shopify-cart/cart/remapCheckoutToShopifyCartData.js",
         "input": [
           {"key": "checkout", "id": "100"}
         ],
@@ -49,7 +49,7 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/getShopifyCartProducts_v1.js",
+        "path": "@shopgate/shopify-cart/cart/getShopifyCartProducts.js",
         "input": [
           {"key": "shopifyCartData", "id": "106"}
         ],
@@ -60,7 +60,7 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/products/getProducts_v1.js",
+        "path": "@shopgate/shopify-cart/products/getProducts.js",
         "input": [
           {"key": "products", "id": "102"}
         ],
@@ -90,7 +90,7 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/products/getChildProducts_v1.js",
+        "path": "@shopgate/shopify-cart/products/getChildProducts.js",
         "input": [
           {"key": "products", "id": "102"}
         ],
@@ -120,7 +120,7 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/products/getShopifyProducts_v1.js",
+        "path": "@shopgate/shopify-cart/products/getShopifyProducts.js",
         "input": [
           {"key": "products", "id": "102"}
         ],
@@ -131,7 +131,7 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/getCart_v1.js",
+        "path": "@shopgate/shopify-cart/cart/getCart.js",
         "input": [
           {"key": "shopifyCartData", "id": "106"},
           {"key": "importedProductsInCart", "id": "103", "optional": true},

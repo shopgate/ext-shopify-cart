@@ -1,57 +1,48 @@
+const ShopifyApiRequest = require('../lib/shopify.api.js')
 const UnknownError = require('../models/Errors/UnknownError')
 
-const Tools = require('../lib/tools')
-
 /**
- * @param {SDKContext} context
+ * @param {Object} context
  * @param {Object} input
  */
-module.exports = async function (context, input) {
-  const Shopify = require('../lib/shopify.api.js')(context.config, context.log)
+module.exports = async (context, input) => {
+  const shopifyApiRequest = new ShopifyApiRequest(context.config, context.log)
+  const { checkout, isNew } = await fetchCheckout(shopifyApiRequest, Boolean(input.createNew), context)
+  if (isNew) {
+    try {
+      await saveCheckoutToken(checkout.checkout.token, context)
+    } catch (err) {
+      context.log.error('Failed to save Shopify checkout token. Error: ' + JSON.stringify(err))
 
-  return await fetchCheckout(Shopify, Boolean(input.createNew), context)
+      throw new UnknownError()
+    }
+  }
+
+  return checkout
 }
 
 /**
  * Creates a new checkout on request or creates/loads a checkout, based on a checkout token being available, or not
  *
- * @param {Object} Shopify
- * @param {boolean} createNew
- * @param {SDKContext} context
+ * @param {Object} shopifyApiRequest
+ * @param {Boolean} createNew
+ * @param {Object} context
+ * @returns {Object}
  */
-async function fetchCheckout (Shopify, createNew, context) {
+async function fetchCheckout (shopifyApiRequest, createNew, context) {
   const checkoutToken = await loadCheckoutToken(context)
-
-  // load checkout, if available, create otherwise
-  if (!createNew && !Tools.isEmpty(checkoutToken)) {
-    try {
-      return await new Promise((resolve, reject) => {
-        Shopify.getCheckout(checkoutToken, (shopifyErr, result) => {
-          if (!Tools.isEmpty(shopifyErr)) return reject(shopifyErr)
-
-          resolve(result)
-        })
-      })
-    } catch (err) {
-      // just log it as a new checkout needs to be created
-      context.log.error(`Failed to load shopify checkout ${checkoutToken}. Error: ${JSON.stringify(err)}`)
-    }
-  }
-
+  let checkout
   try {
-    const result = await new Promise((resolve, reject) => {
-      Shopify.createCheckout((shopifyErr, result) => {
-        if (!Tools.isEmpty(shopifyErr)) return reject(shopifyErr)
+    if (!createNew && checkoutToken) {
+      checkout = await shopifyApiRequest.getCheckout(checkoutToken)
+    } else {
+      checkout = await shopifyApiRequest.createCheckout()
+    }
 
-        resolve(result)
-      })
-    })
-
-    await saveCheckoutToken(result.checkout.token, context)
-
-    return result
+    return ({ isNew: createNew, checkout })
   } catch (err) {
-    context.log.error(`Failed to create a new checkout (cart) at Shopify. Error: ${JSON.stringify(err)}`)
+    context.log.error('Failed to create / load a new checkout (cart) at Shopify. Error: ' + JSON.stringify(err))
+
     throw new UnknownError()
   }
 }
@@ -59,15 +50,12 @@ async function fetchCheckout (Shopify, createNew, context) {
 /**
  * Loads the current checkout token from internal storage (user or device)
  *
- * @param {SDKContext} context
- * @return {string}
+ * @param {Object} context
+ * @returns {string}
  */
 async function loadCheckoutToken (context) {
   // select storage to use: device or user, if logged in
-  let storage = context.storage.device
-  if (context.meta.userId) {
-    storage = context.storage.user
-  }
+  const storage = context.meta.userId ? context.storage.user : context.storage.device
 
   return storage.get('checkoutToken')
 }
@@ -76,14 +64,12 @@ async function loadCheckoutToken (context) {
  * Saves the current checkout token into internal storage (user or device)
  *
  * @param {string} checkoutToken
- * @param {SDKContext} context
+ * @param {Object} context
+ * @returns {string}
  */
 async function saveCheckoutToken (checkoutToken, context) {
   // select storage to use: device or user, if logged in
-  let storage = context.storage.device
-  if (context.meta.userId) {
-    storage = context.storage.user
-  }
+  const storage = context.meta.userId ? context.storage.user : context.storage.device
 
   return storage.set('checkoutToken', checkoutToken)
 }
