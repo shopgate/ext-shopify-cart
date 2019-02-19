@@ -52,7 +52,6 @@
     "exclude": [
       "build",
       "docs",
-      "coverage",
       "models",
       "resources",
       "test"
