@@ -19,28 +19,25 @@ describe('fetchShopifyCheckout', () => {
       shopifyShopAlias: 'shopgate'
     },
     log: {
-      debug: () => {
-      },
-      error: () => {
-      }
+      debug: () => {},
+      error: () => {}
     },
     meta: {
       userId: 1
     }
   }
 
-  before(() => {
-
-  })
-
   it('should load the checkout by token', async () => {
     sinon.stub(ShopifyApiRequest.prototype, 'getCheckout').returns({ checkout: { } })
 
+    const saveCheckoutTokenSpy = sinon.spy(fetchShopifyCheckout.__get__('saveCheckoutToken'))
+    fetchShopifyCheckout.__set__('saveCheckoutToken', saveCheckoutTokenSpy)
     const loadCheckoutTokenSpy = sinon.spy(fetchShopifyCheckout.__get__('loadCheckoutToken'))
     fetchShopifyCheckout.__set__('loadCheckoutToken', loadCheckoutTokenSpy)
 
     await fetchShopifyCheckout(context, { createNew: false })
     assert(loadCheckoutTokenSpy.calledOnce, 'loadCheckoutToken should be called once')
+    assert(saveCheckoutTokenSpy.notCalled, 'saveCheckoutTokenSpy should NOT be called')
   })
 
   it('should create a new checkout', async () => {
