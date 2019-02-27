@@ -8,6 +8,7 @@ const UnknownError = require('../models/Errors/UnknownError')
 module.exports = async (context, input) => {
   const shopifyApiRequest = new ShopifyApiRequest(context.config, context.log)
   const { checkout, isNew } = await fetchCheckout(shopifyApiRequest, Boolean(input.createNew), context)
+
   if (isNew) {
     try {
       await saveCheckoutToken(checkout.checkout.token, context)
@@ -32,14 +33,17 @@ module.exports = async (context, input) => {
 async function fetchCheckout (shopifyApiRequest, createNew, context) {
   const checkoutToken = await loadCheckoutToken(context)
   let checkout
+  let isNew
   try {
     if (!createNew && checkoutToken) {
       checkout = await shopifyApiRequest.getCheckout(checkoutToken)
+      isNew = false
     } else {
       checkout = await shopifyApiRequest.createCheckout()
+      isNew = true
     }
 
-    return ({ isNew: createNew, checkout })
+    return ({ isNew, checkout })
   } catch (err) {
     context.log.error('Failed to create / load a new checkout (cart) at Shopify. Error: ' + JSON.stringify(err))
 
