@@ -43,7 +43,7 @@ async function fetchCheckout (shopifyApiRequest, createNew, context) {
       isNew = true
     }
 
-    return ({ isNew, checkout })
+    return { isNew, checkout }
   } catch (err) {
     context.log.error('Failed to create / load a new checkout (cart) at Shopify. Error: ' + JSON.stringify(err))
 
