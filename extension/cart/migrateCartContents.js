@@ -12,7 +12,7 @@ let { updateCart, clearCart } = require('./../helper/cart')
  * @param {Object} input
  */
 module.exports = async (context, input) => {
-  migrateCartContents(
+  await migrateCartContents(
     context,
     input.sourceCart.token,
     input.sourceCart.line_items,
