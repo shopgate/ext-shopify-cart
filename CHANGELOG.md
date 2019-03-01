@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Fixed
 - empty cart after registering a new customer
+- quantities for products that changed at Shopify
 
 ## [2.1.0] - 2019-02-18
 ### Removed
