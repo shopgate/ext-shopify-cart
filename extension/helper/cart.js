@@ -67,9 +67,9 @@ const handleCartError = async (err, checkoutCartItems, cartId, context) => {
     return errorMessages
   }
 
-  const itemsToDelete = getOutOfStockLineItemIds(err.errors.line_items).sort((a, b) => b - a)
-  if (itemsToDelete.length > 0) {
-    await fixCheckoutQuantities(checkoutCartItems, itemsToDelete, err, cartId, context)
+  const itemsToUpdate = getLineItemIdsWithQuantityErrors(err.errors.line_items).sort((a, b) => b - a)
+  if (itemsToUpdate.length > 0) {
+    await fixCheckoutQuantities(checkoutCartItems, itemsToUpdate, err, cartId, context)
 
     return renderErrorItems(err)
   }
@@ -82,38 +82,49 @@ const handleCartError = async (err, checkoutCartItems, cartId, context) => {
  * @param {Object} lineItems
  * @returns {Array}
  */
-function getOutOfStockLineItemIds (lineItems) {
-  const itemsToDelete = []
+function getLineItemIdsWithQuantityErrors (lineItems) {
+  const itemsToUpdate = []
 
   for (let itemId in lineItems) {
     Object.entries(lineItems[itemId]).forEach(([errorType, errors]) => {
-      if (errors.find(error => error.code === 'not_enough_in_stock' &&
+      const quantityError = errors.find(error => error.code === 'not_enough_in_stock' &&
         error.options &&
-        error.options.remaining === 0
-      )) {
-        itemsToDelete.push(parseInt(itemId))
+        error.options.hasOwnProperty('remaining')
+      )
+      if (quantityError) {
+        itemsToUpdate.push({ id: parseInt(itemId), availableQuantity: quantityError.options.remaining })
       }
     })
   }
 
-  return itemsToDelete
+  return itemsToUpdate
 }
 
 /**
  * @param {Array} checkoutCartItems
- * @param {Array} itemsToDelete
+ * @param {Array} itemsToUpdate
  * @param {Error} error
  * @param {Object} error.errors
  * @param {Object} error.errors.line_items
  * @param {number} cartId
  * @param {SDKContext} context
  */
-async function fixCheckoutQuantities (checkoutCartItems, itemsToDelete, error, cartId, context) {
+async function fixCheckoutQuantities (checkoutCartItems, itemsToUpdate, error, cartId, context) {
   const shopifyApiRequest = new ShopifyApiRequest(context.config, context.log)
 
-  for (let itemId of itemsToDelete) {
-    checkoutCartItems.splice(itemId, 1)
-    delete error.errors.line_items[itemId]
+  // fix quantities first, to not mess with index
+  for (let item of itemsToUpdate) {
+    if (item.availableQuantity > 0) {
+      checkoutCartItems[item.id].quantity = item.availableQuantity
+      delete error.errors.line_items[item.id]
+    }
+  }
+  // remove not available
+  for (let item of itemsToUpdate) {
+    if (item.availableQuantity <= 0) {
+      checkoutCartItems.splice(item.id, 1)
+      delete error.errors.line_items[item.id]
+    }
   }
 
   const productData = {
@@ -156,7 +167,7 @@ module.exports = {
   updateCart,
   extractVariantId,
   handleCartError,
-  getOutOfStockLineItemIds,
+  getLineItemIdsWithQuantityErrors,
   getCurrentCartId,
   setCurrentCartId
 }
