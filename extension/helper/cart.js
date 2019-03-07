@@ -89,7 +89,7 @@ function getLineItemIdsWithQuantityErrors (lineItems) {
     Object.entries(lineItems[itemId]).forEach(([errorType, errors]) => {
       const quantityError = errors.find(error => error.code === 'not_enough_in_stock' &&
         error.options &&
-        error.options.remaining >= 0
+        error.options.hasOwnProperty('remaining')
       )
       if (quantityError) {
         itemsToUpdate.push({ id: parseInt(itemId), availableQuantity: quantityError.options.remaining })
@@ -114,14 +114,14 @@ async function fixCheckoutQuantities (checkoutCartItems, itemsToUpdate, error, c
 
   // fix quantities first, to not mess with index
   for (let item of itemsToUpdate) {
-    if (item.availableQuantity !== 0) {
+    if (item.availableQuantity > 0) {
       checkoutCartItems[item.id].quantity = item.availableQuantity
       delete error.errors.line_items[item.id]
     }
   }
   // remove not available
   for (let item of itemsToUpdate) {
-    if (item.availableQuantity === 0) {
+    if (item.availableQuantity <= 0) {
       checkoutCartItems.splice(item.id, 1)
       delete error.errors.line_items[item.id]
     }

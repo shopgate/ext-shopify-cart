@@ -243,7 +243,7 @@ describe('Cart Helper', () => {
       )
     })
 
-    it('should return all ids of line items with error "not_enough_in_stock" and remaining quantity >= 0', () => {
+    it('should return all ids of line items with error "not_enough_in_stock"', () => {
       const lineItems = {
         0: {
           quantity: [
@@ -259,12 +259,17 @@ describe('Cart Helper', () => {
           quantity: [
             { code: 'not_enough_in_stock', message: 'some message', options: { remaining: 2 } }
           ]
+        },
+        3: {
+          quantity: [
+            { code: 'not_enough_in_stock', message: 'some message', options: { remaining: -2 } }
+          ]
         }
       }
 
       assert.deepStrictEqual(
         getLineItemIdsWithQuantityErrors(lineItems),
-        [{ 'availableQuantity': 0, 'id': 0 }, { 'availableQuantity': 2, 'id': 2 }]
+        [{ 'availableQuantity': 0, 'id': 0 }, { 'availableQuantity': 2, 'id': 2 }, { 'availableQuantity': -2, 'id': 3 }]
       )
     })
   })
