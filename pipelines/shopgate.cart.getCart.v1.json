@@ -47,6 +47,16 @@
         ]
       },
       {
+        "id": "afterShopifyCartDataCreation",
+        "type": "hook",
+        "input": [
+          {"key": "shopifyCartData", "id": "106"}
+        ],
+        "output": [
+          {"key": "shopifyCartData", "id": "106"}
+        ]
+      },
+      {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/getShopifyCartProducts.js",

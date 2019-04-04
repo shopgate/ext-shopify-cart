@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed
 - empty cart after registering a new customer
 - quantities for products that changed at Shopify
+### Added
+- added afterShopifyCartDataCreation pipeline hook to getCart pipeline
 
 ## [2.1.0] - 2019-02-18
 ### Removed
