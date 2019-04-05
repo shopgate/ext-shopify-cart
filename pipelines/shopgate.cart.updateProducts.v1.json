@@ -33,6 +33,18 @@
         ]
       },
       {
+        "id": "beforeUpdateProductsInCart",
+        "type": "hook",
+        "input": [
+          {"key": "collection", "id": "103"},
+          {"key": "cartItems", "id": "1060"}
+        ],
+        "output": [
+          {"key": "collection", "id": "103"},
+          {"key": "cartItems", "id": "1060"}
+        ]
+      },
+      {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/updateProductsInCart.js",
