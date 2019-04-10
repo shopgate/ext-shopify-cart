@@ -6,6 +6,7 @@ window.SGPipelineScript.PAGE_REGISTER = '/account/register'
 window.SGPipelineScript.PAGE_ACCOUNT = '/account'
 window.SGPipelineScript.PAGE_CHALLENGE = '/challenge'
 window.SGPipelineScript.PAGE_CHECKOUTS = '/[0-9]+/checkouts/[0-9a-f]+'
+window.SGPipelineScript.PAGE_CART = '/cart'
 
 /**
  * Definition af a few global storage keys.
@@ -57,6 +58,11 @@ window.SGPipelineScript.__init = function () {
       const history = JSON.parse(window.localStorage.getItem(window.SGPipelineScript.STORAGE_KEY_PAGE_HISTORY))
       history.push('challenge')
       window.localStorage.setItem(window.SGPipelineScript.STORAGE_KEY_PAGE_HISTORY, JSON.stringify(history))
+      break
+    }
+    case this.PAGE_CART: {
+      // load page specific script
+      window.SGAppConnector.loadPipelineScript('cart')
       break
     }
     default: {
@@ -148,6 +154,9 @@ window.SGPipelineScript.getPage = function () {
   } else if (currentLocation.match(this.PAGE_CHECKOUTS.toLowerCase() + '/*$')) {
     // the checkouts/<hash> page
     return this.PAGE_CHECKOUTS
+  } else if (currentLocation.match(this.PAGE_CART.toLowerCase() + '/*$')) {
+    // the checkouts/<hash> page
+    return this.PAGE_CART
   }
 
   // parse the current location and return the last bit of it
