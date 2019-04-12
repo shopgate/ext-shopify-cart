@@ -37,11 +37,13 @@
         "type": "hook",
         "input": [
           {"key": "collection", "id": "103"},
-          {"key": "cartItems", "id": "1060"}
+          {"key": "existingCartItems", "id": "1060"},
+          {"key": "updateCartItems", "id": "1011"}
         ],
         "output": [
           {"key": "collection", "id": "103"},
-          {"key": "cartItems", "id": "1060"}
+          {"key": "existingCartItems", "id": "1060"},
+          {"key": "updateCartItems", "id": "1011"}
         ]
       },
       {
