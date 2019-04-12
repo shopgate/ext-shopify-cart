@@ -5,13 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- added beforeUpdateProductsInCart pipeline hook to updateProducts pipeline
+- added afterShopifyCartDataCreation pipeline hook to getCart pipeline
+
 ## [2.1.1] - 2019-04-10
 ### Fixed
 - empty cart after registering a new customer
 - quantities for products that changed at Shopify
-### Added
-- added beforeUpdateProductsInCart pipeline hook to updateProducts pipeline
-- added afterShopifyCartDataCreation pipeline hook to getCart pipeline
 
 ## [2.1.0] - 2019-02-18
 ### Removed
