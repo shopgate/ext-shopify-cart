@@ -1,0 +1,8 @@
+{
+  "812|newman>postman-collection>marked": {
+    "ignore": 1
+  },
+  "812|newman>postman-runtime>postman-collection>marked": {
+    "ignore": 1
+  }
+}
