@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- updateCartItems to beforeUpdateProductsInCart hook
+
 ## [2.1.1] - 2019-04-10
 ### Fixed
 - empty cart after registering a new customer
