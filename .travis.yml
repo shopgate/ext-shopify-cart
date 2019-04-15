@@ -15,7 +15,7 @@ matrix:
     - cd extension
     - npm run cover
     - npm run lint
-    - npm check-audit
+    - npm run checkVulnerabilities
 
 notifications:
   slack:
