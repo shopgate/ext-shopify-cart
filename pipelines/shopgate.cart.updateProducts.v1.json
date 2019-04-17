@@ -33,6 +33,20 @@
         ]
       },
       {
+        "id": "beforeUpdateProductsInCart",
+        "type": "hook",
+        "input": [
+          {"key": "collection", "id": "103"},
+          {"key": "existingCartItems", "id": "1060"},
+          {"key": "updateCartItems", "id": "1011"}
+        ],
+        "output": [
+          {"key": "collection", "id": "103"},
+          {"key": "existingCartItems", "id": "1060"},
+          {"key": "updateCartItems", "id": "1011"}
+        ]
+      },
+      {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/updateProductsInCart.js",
