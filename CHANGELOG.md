@@ -60,8 +60,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - logging request duration and other info when requesting the Shopify API
 
-[Unreleased]: https://github.com/shopgate/ext-magento-cart/compare/v2.2.0...HEAD
-[2.2.0]: https://github.com/shopgate/ext-magento-cart/compare/v2.1.1...v2.2.0
+[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/shopgate/ext-shopify-cart/compare/v2.1.1...v2.2.0
 [2.1.0]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/compare/commits?targetBranch=refs%2Ftags%2Fv2.0.0&sourceBranch=refs%2Ftags%2Fv2.1.0
 [2.0.0]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/compare/commits?targetBranch=refs%2Ftags%2Fv1.2.9&sourceBranch=refs%2Ftags%2Fv2.0.0
 [1.2.9]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/compare/commits?targetBranch=refs%2Ftags%2Fv1.2.8&sourceBranch=refs%2Ftags%2Fv1.2.9
