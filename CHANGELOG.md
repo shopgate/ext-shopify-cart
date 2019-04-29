@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - added beforeUpdateProductsInCart pipeline hook to updateProducts pipeline
 - added afterShopifyCartDataCreation pipeline hook to getCart pipeline
+- logs for create cart / checkout in case of success and error 
 
 ## [2.1.1] - 2019-04-10
 ### Fixed

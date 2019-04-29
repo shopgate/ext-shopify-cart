@@ -37,15 +37,16 @@ async function fetchCheckout (shopifyApiRequest, createNew, context) {
   try {
     if (!createNew && checkoutToken) {
       checkout = await shopifyApiRequest.getCheckout(checkoutToken)
+      context.log.info(`Cart loaded with token ${checkoutToken}`)
       isNew = false
     } else {
       checkout = await shopifyApiRequest.createCheckout()
+      context.log.info(`New cart created with token ${checkoutToken}`)
       isNew = true
     }
-
     return { isNew, checkout }
   } catch (err) {
-    context.log.error('Failed to create / load a new checkout (cart) at Shopify. Error: ' + JSON.stringify(err))
+    context.log.error(`Failed to ${createNew ? 'create' : 'load'} a checkout (cart) at Shopify. Error: ${JSON.stringify(err)} Token: ${checkoutToken}`)
 
     throw new UnknownError()
   }
