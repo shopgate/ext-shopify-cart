@@ -32,7 +32,7 @@ module.exports = async (context, input) => {
       }
       items[newCartItem.productId] += newCartItem.quantity
     })
-    const checkoutCartItems = Object.entries(items).map(([id, quantity]) => {
+    let checkoutCartItems = Object.entries(items).map(([id, quantity]) => {
       let variantId = extractVariantId(importedProductsAddedToCart.find(importedProductAddedToCart =>
         importedProductAddedToCart.id === id && importedProductAddedToCart.customData
       ))
@@ -46,28 +46,14 @@ module.exports = async (context, input) => {
 
       return { variant_id: variantId || id, quantity }
     })
-    const result = await updateCheckout(shopifyApiRequest, context, cartId, checkoutCartItems)
-    return result
+
+    try {
+      await shopifyApiRequest.put(`/admin/checkouts/${cartId}.json`, { checkout: { line_items: checkoutCartItems } })
+    } catch (err) {
+      return { messages: await handleCartError(err, checkoutCartItems, cartId, context) }
+    }
   } catch (err) {
     context.log.error({ newCartItems, existingCartItems, error: err }, 'Error while adding items to cart')
     throw new UnknownError()
-  }
-}
-
-async function updateCheckout (shopifyApiRequest, context, cartId, checkoutCartItems, retry = false) {
-  try {
-    await shopifyApiRequest.put(`/admin/checkouts/${cartId}.json`, { checkout: { line_items: checkoutCartItems } })
-  } catch (err) {
-    // check if the error contains items which are not valid anymore
-    if (!retry && err.errors && err.errors.line_items) {
-      context.log.warn({ checkoutCartItems, cartId, error: JSON.stringify(err) }, 'Some items in the checkout are invalid --> removing it and try it again')
-      for (const [index, lineItem] of Object.entries(err.errors.line_items)) {
-        if (lineItem.variant_id && lineItem.variant_id[0].code === 'invalid') delete checkoutCartItems[index]
-      }
-      // try it again
-      return updateCheckout(shopifyApiRequest, context, cartId, checkoutCartItems, true)
-    }
-    context.log.error({ checkoutCartItems, cartId, error: JSON.stringify(err) }, 'Error while adding products to cart')
-    return { messages: await handleCartError(err, checkoutCartItems, cartId, context) }
   }
 }

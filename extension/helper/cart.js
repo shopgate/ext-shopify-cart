@@ -94,6 +94,11 @@ function getLineItemIdsWithQuantityErrors (lineItems) {
       if (quantityError) {
         itemsToUpdate.push({ id: parseInt(itemId), availableQuantity: quantityError.options.remaining })
       }
+
+      const invalidError = errors.find(error => error.code === 'invalid')
+      if (invalidError) {
+        itemsToUpdate.push({ id: parseInt(itemId), availableQuantity: 0 })
+      }
     })
   }
 
