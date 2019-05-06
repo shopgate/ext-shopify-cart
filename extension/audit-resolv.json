@@ -6,6 +6,18 @@
     "ignore": 1
   },
   "755|nyc>istanbul-reports>handlebars": {
-    "remind": 1555487735795
+    "remind": 1556623746667
+  },
+  "782|newman>async>lodash": {
+    "remind": 1556623753506
+  },
+  "782|newman>postman-runtime>async>lodash": {
+    "remind": 1556623753506
+  },
+  "782|nock>lodash": {
+    "remind": 1556623753506
+  },
+  "780|sinon>nise>just-extend": {
+    "remind": 1556623756330
   }
 }

@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- logs for create cart / checkout in case of success and error 
 ### Fixed
 - remove products from the cart that are not available anymore at Shopify
 - create new cart if old one does not exist anymore at Shopify

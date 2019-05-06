@@ -20,7 +20,8 @@ describe('fetchShopifyCheckout', () => {
     },
     log: {
       debug: () => {},
-      error: () => {}
+      error: () => {},
+      info: () => {}
     },
     meta: {
       userId: 1

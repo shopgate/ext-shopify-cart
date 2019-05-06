@@ -45,12 +45,13 @@ async function fetchCheckout (shopifyApiRequest, createNew, context) {
   if (!createNew && checkoutToken) {
     try {
       checkout = await shopifyApiRequest.getCheckout(checkoutToken)
+      context.log.info(`Cart loaded with token ${checkoutToken}`)
       isNew = false
     } catch (err) {
       if (err.errors !== 'Not Found') throw err
 
       // create new checkout if old checkout is expired
-      context.log.warn({ checkoutToken }, 'Checkout is expired or was not found --> generating new one')
+      context.log.warn({ checkoutToken }, 'Checkout is expired or was not found --> generating new one. Error: ${JSON.stringify(err)}')
       checkout = await shopifyApiRequest.createCheckout()
       isNew = true
     }
