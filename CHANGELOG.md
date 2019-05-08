@@ -7,10 +7,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ## [2.2.2] - 2019-05-08
 ### Added
-- logs for create cart / checkout in case of success and error 
+- logs for creation of cart / checkout in case of success and error 
 ### Fixed
 - remove products from the cart that are not available anymore at Shopify
-- create new cart if old one does not exist anymore at Shopify
+- create new cart if the old one does not exist at Shopify anymore
 
 ## [2.2.0] - 2019-04-17
 ### Added
