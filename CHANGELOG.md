@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+## [2.2.2] - 2019-05-08
 ### Added
 - logs for create cart / checkout in case of success and error 
 ### Fixed
@@ -66,7 +67,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - logging request duration and other info when requesting the Shopify API
 
-[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.0...HEAD
+[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.2...HEAD
+[2.2.2]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.0...v2.2.2
 [2.2.0]: https://github.com/shopgate/ext-shopify-cart/compare/v2.1.1...v2.2.0
 [2.1.1]: https://github.com/shopgate/ext-shopify-cart/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/shopgate/ext-shopify-cart/compare/v2.0.0...v2.1.0
