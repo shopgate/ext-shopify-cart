@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+## [2.2.2] - 2019-05-08
+### Added
+- logs for creation of cart / checkout in case of success and error 
+### Fixed
+- remove products from the cart that are not available anymore at Shopify
+- create new cart if the old one does not exist at Shopify anymore
+
 ## [2.2.0] - 2019-04-17
 ### Added
 - added beforeUpdateProductsInCart pipeline hook to updateProducts pipeline
@@ -60,16 +67,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - logging request duration and other info when requesting the Shopify API
 
-[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.0...HEAD
+[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.2...HEAD
+[2.2.2]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.0...v2.2.2
 [2.2.0]: https://github.com/shopgate/ext-shopify-cart/compare/v2.1.1...v2.2.0
 [2.1.1]: https://github.com/shopgate/ext-shopify-cart/compare/v2.1.0...v2.1.1
-[2.1.0]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/compare/commits?targetBranch=refs%2Ftags%2Fv2.0.0&sourceBranch=refs%2Ftags%2Fv2.1.0
-[2.0.0]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/compare/commits?targetBranch=refs%2Ftags%2Fv1.2.9&sourceBranch=refs%2Ftags%2Fv2.0.0
-[1.2.9]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/compare/commits?targetBranch=refs%2Ftags%2Fv1.2.8&sourceBranch=refs%2Ftags%2Fv1.2.9
-[1.2.8]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/compare/commits?targetBranch=refs%2Ftags%2Fv1.2.7&sourceBranch=refs%2Ftags%2Fv1.2.8
-[1.2.7]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/compare/commits?targetBranch=refs%2Ftags%2Fv1.2.6&sourceBranch=refs%2Ftags%2Fv1.2.7
-[1.2.6]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/compare/commits?targetBranch=refs%2Ftags%2Fv1.2.5&sourceBranch=refs%2Ftags%2Fv1.2.6
-[1.2.5]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/compare/commits?targetBranch=refs%2Ftags%2Fv1.2.3&sourceBranch=refs%2Ftags%2Fv1.2.5
-[1.2.3]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/compare/commits?targetBranch=refs%2Ftags%2Fv1.2.2&sourceBranch=refs%2Ftags%2Fv1.2.3
-[1.2.2]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/compare/commits?targetBranch=refs%2Ftags%2Fv1.2.1&sourceBranch=refs%2Ftags%2Fv1.2.2
-[1.2.1]: https://stash.localdev.cc/projects/SGX/repos/shopify-cart/browse?at=refs%2Ftags%2Fv1.2.1
+[2.1.0]: https://github.com/shopgate/ext-shopify-cart/compare/v2.0.0...v2.1.0
+[2.0.0]: https://github.com/shopgate/ext-shopify-cart/compare/v1.2.9...v2.0.0
+[1.2.9]: https://github.com/shopgate/ext-shopify-cart/compare/v1.2.8...v1.2.9
+[1.2.8]: https://github.com/shopgate/ext-shopify-cart/compare/v1.2.7...v1.2.8
+[1.2.7]: https://github.com/shopgate/ext-shopify-cart/compare/v1.2.6...v1.2.7
+[1.2.6]: https://github.com/shopgate/ext-shopify-cart/compare/v1.2.5...v1.2.6
+[1.2.5]: https://github.com/shopgate/ext-shopify-cart/compare/v1.2.3...v1.2.5
+[1.2.3]: https://github.com/shopgate/ext-shopify-cart/compare/v1.2.2...v1.2.3
+[1.2.2]: https://github.com/shopgate/ext-shopify-cart/compare/v1.2.1...v1.2.2

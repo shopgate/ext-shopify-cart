@@ -264,12 +264,17 @@ describe('Cart Helper', () => {
           quantity: [
             { code: 'not_enough_in_stock', message: 'some message', options: { remaining: -2 } }
           ]
+        },
+        4: {
+          quantity: [
+            { code: 'invalid', message: 'is invalid', options: {} }
+          ]
         }
       }
 
       assert.deepStrictEqual(
         getLineItemIdsWithQuantityErrors(lineItems),
-        [{ 'availableQuantity': 0, 'id': 0 }, { 'availableQuantity': 2, 'id': 2 }, { 'availableQuantity': -2, 'id': 3 }]
+        [{ 'availableQuantity': 0, 'id': 0 }, { 'availableQuantity': 2, 'id': 2 }, { 'availableQuantity': -2, 'id': 3 }, { 'availableQuantity': 0, 'id': 4 }]
       )
     })
   })

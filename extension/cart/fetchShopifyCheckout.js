@@ -7,11 +7,18 @@ const UnknownError = require('../models/Errors/UnknownError')
  */
 module.exports = async (context, input) => {
   const shopifyApiRequest = new ShopifyApiRequest(context.config, context.log)
-  const { checkout, isNew } = await fetchCheckout(shopifyApiRequest, Boolean(input.createNew), context)
+  let result
+  try {
+    result = await fetchCheckout(shopifyApiRequest, Boolean(input.createNew), context)
+  } catch (err) {
+    context.log.error('Failed to create / load a new checkout (cart) at Shopify. Error: ' + JSON.stringify(err))
 
-  if (isNew) {
+    throw new UnknownError()
+  }
+
+  if (result.isNew) {
     try {
-      await saveCheckoutToken(checkout.checkout.token, context)
+      await saveCheckoutToken(result.checkout.checkout.token, context)
     } catch (err) {
       context.log.error('Failed to save Shopify checkout token. Error: ' + JSON.stringify(err))
 
@@ -19,7 +26,7 @@ module.exports = async (context, input) => {
     }
   }
 
-  return checkout
+  return result.checkout
 }
 
 /**
@@ -31,24 +38,29 @@ module.exports = async (context, input) => {
  * @returns {Object}
  */
 async function fetchCheckout (shopifyApiRequest, createNew, context) {
-  const checkoutToken = await loadCheckoutToken(context)
+  let checkoutToken = await loadCheckoutToken(context)
   let checkout
   let isNew
-  try {
-    if (!createNew && checkoutToken) {
+
+  if (!createNew && checkoutToken) {
+    try {
       checkout = await shopifyApiRequest.getCheckout(checkoutToken)
+      context.log.info(`Cart loaded with token ${checkoutToken}`)
       isNew = false
-    } else {
+    } catch (err) {
+      if (err.errors !== 'Not Found') throw err
+
+      // create new checkout if old checkout is expired
+      context.log.warn({ checkoutToken }, `Checkout is expired or was not found --> generating new one. Error: ${JSON.stringify(err)}`)
       checkout = await shopifyApiRequest.createCheckout()
       isNew = true
     }
-
-    return { isNew, checkout }
-  } catch (err) {
-    context.log.error('Failed to create / load a new checkout (cart) at Shopify. Error: ' + JSON.stringify(err))
-
-    throw new UnknownError()
+  } else {
+    checkout = await shopifyApiRequest.createCheckout()
+    isNew = true
   }
+
+  return { isNew, checkout }
 }
 
 /**
