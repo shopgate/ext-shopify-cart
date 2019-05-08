@@ -1,6 +1,7 @@
 const { extractVariantId, handleCartError, getCurrentCartId } = require('../helper/cart')
 const ShopifyApiRequest = require('../lib/shopify.api.js')
 const UnknownError = require('../models/Errors/UnknownError')
+const CartError = require('../models/Errors/CartError')
 
 /**
  * @param {SDKContext} context
@@ -32,7 +33,7 @@ module.exports = async (context, input) => {
       }
       items[newCartItem.productId] += newCartItem.quantity
     })
-    const checkoutCartItems = Object.entries(items).map(([id, quantity]) => {
+    let checkoutCartItems = Object.entries(items).map(([id, quantity]) => {
       let variantId = extractVariantId(importedProductsAddedToCart.find(importedProductAddedToCart =>
         importedProductAddedToCart.id === id && importedProductAddedToCart.customData
       ))
@@ -46,12 +47,25 @@ module.exports = async (context, input) => {
 
       return { variant_id: variantId || id, quantity }
     })
+
     try {
       await shopifyApiRequest.put(`/admin/checkouts/${cartId}.json`, { checkout: { line_items: checkoutCartItems } })
     } catch (err) {
+      if (err.errors && err.errors.line_items) {
+        for (const [index, lineItem] of Object.entries(err.errors.line_items)) {
+          if (lineItem.variant_id[0].code === 'invalid' && importedProductsAddedToCart.find(product => extractVariantId(product) === checkoutCartItems[index].variant_id)) {
+            const cartError = new CartError()
+            cartError.addProductNotFound(checkoutCartItems[index].variant_id)
+            throw cartError
+          }
+        }
+      }
+
       return { messages: await handleCartError(err, checkoutCartItems, cartId, context) }
     }
   } catch (err) {
+    context.log.error({ newCartItems, existingCartItems, error: err }, 'Error while adding items to cart')
+    if (err.code === 'ECART') throw err
     throw new UnknownError()
   }
 }
