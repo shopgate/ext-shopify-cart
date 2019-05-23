@@ -6,8 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 ### Fixed
-	- update query selector for submit field in login / register
-  
+- update query selector for submit field in login / register
+
 ## [1.2.9] - 2018-12-19
 ### Fixed
 - create new checkout if old one is not available at Shopify anymore
