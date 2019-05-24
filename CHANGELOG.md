@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- update query selector for submit field in login / register
+
 ## [2.2.2] - 2019-05-08
 ### Added
 - logs for creation of cart / checkout in case of success and error 
