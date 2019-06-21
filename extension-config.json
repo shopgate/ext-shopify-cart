@@ -1,5 +1,5 @@
 {
-  "version": "2.2.3",
+  "version": "2.2.4-beta.1",
   "id": "@shopgate/shopify-cart",
   "steps": [
   ],
@@ -13,6 +13,17 @@
         "service": "config",
         "path": "/v1/shop/%(shopId)s/checkout_web_checkout_shopify?parsed=true",
         "key": "value.frontend.alias"
+      }
+    },
+    "shopifyShopDomain": {
+      "type": "bigApi",
+      "destination" : "backend",
+      "default": null,
+      "params": {
+        "method":  "GET",
+        "service": "config",
+        "path": "/v1/shop/%(shopId)s/checkout_web_checkout_shopify?parsed=true",
+        "key": "value.frontend.domain"
       }
     },
     "shopifyAccessToken": {

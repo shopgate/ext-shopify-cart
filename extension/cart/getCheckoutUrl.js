@@ -1,4 +1,5 @@
 const Url = require('../models/url')
+const ConfigHelper = require('../helper/config')
 
 /**
  * @typedef {Object} context
@@ -6,6 +7,7 @@ const Url = require('../models/url')
  *
  * @typedef {Object} config
  * @property {String} shopifyShopAlias
+ * @property {String} shopifyShopDomain
  */
 /**
  *
@@ -19,8 +21,7 @@ module.exports = async (context, input) => {
   const expires = date.toISOString()
 
   // We need to replace the web_url from data.checkout with the shopify shop domain (using the alias from our config)
-  const shopDomain = 'https://' + context.config.shopifyShopAlias + '.myshopify.com'
-  const checkoutDomain = input.checkout.web_url.replace(/(https:\/\/checkout\.shopify\.com)/, shopDomain)
+  const checkoutDomain = input.checkout.web_url.replace(/(https:\/\/checkout\.shopify\.com)/, ConfigHelper.getBaseUrl(context.config))
 
   return new Url(checkoutDomain, expires)
 }

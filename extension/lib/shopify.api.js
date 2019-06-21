@@ -1,4 +1,5 @@
 const ShopifyRequest = require('./shopify.request')
+const ConfigHelper = require('../helper/config')
 
 class ShopifyApi {
   constructor (config, log) {
@@ -6,7 +7,7 @@ class ShopifyApi {
     this.log = log
     this.shopifyApiRequest = new ShopifyRequest(
       {
-        shop: config.shopifyShopAlias + '.myshopify.com',
+        shop: ConfigHelper.getHostName(this.config),
         shopify_api_key: null, // not required
         access_token: config.shopifyAccessToken, // not required
         verbose: false
@@ -16,7 +17,7 @@ class ShopifyApi {
   }
 
   getGraphQlUrl () {
-    return `https://${this.config.shopifyShopAlias}.myshopify.com/api/graphql`
+    return `${ConfigHelper.getBaseUrl(this.config)}/api/graphql`
   }
 
   async getStorefrontAccessToken () {
