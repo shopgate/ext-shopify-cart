@@ -7,7 +7,7 @@ class ShopifyApi {
     this.log = log
     this.shopifyApiRequest = new ShopifyRequest(
       {
-        shop: ConfigHelper.getHostName(this.config),
+        shop: config.shopifyShopAlias + '.myshopify.com',
         shopify_api_key: null, // not required
         access_token: config.shopifyAccessToken, // not required
         verbose: false
