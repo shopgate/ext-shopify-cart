@@ -21,7 +21,7 @@ module.exports = async (context, input) => {
   const expires = date.toISOString()
 
   // We need to replace the web_url from data.checkout with the shopify shop domain (using the alias from our config)
-  const checkoutDomain = input.checkout.web_url.replace(/(https:\/\/checkout\.shopify\.com)/, ConfigHelper.getBaseUrl(context.config))
+  const checkoutDomain = input.checkout.web_url.replace(context.config.shopifyShopAlias + '.myshopify.com', ConfigHelper.getHostName(context.config))
 
   return new Url(checkoutDomain, expires)
 }
