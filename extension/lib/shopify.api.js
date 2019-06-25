@@ -1,4 +1,5 @@
 const ShopifyRequest = require('./shopify.request')
+const ConfigHelper = require('../helper/config')
 
 class ShopifyApi {
   constructor (config, log) {
@@ -16,7 +17,7 @@ class ShopifyApi {
   }
 
   getGraphQlUrl () {
-    return `https://${this.config.shopifyShopAlias}.myshopify.com/api/graphql`
+    return `${ConfigHelper.getBaseUrl(this.config)}/api/graphql`
   }
 
   async getStorefrontAccessToken () {
