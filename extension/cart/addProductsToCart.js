@@ -56,6 +56,7 @@ module.exports = async (context, input) => {
           if (lineItem.variant_id[0].code === 'invalid' && importedProductsAddedToCart.find(product => extractVariantId(product) === checkoutCartItems[index].variant_id)) {
             const cartError = new CartError()
             cartError.addProductNotFound(checkoutCartItems[index].variant_id)
+            console.log('THROW IT AGAIN!!!')
             throw cartError
           }
         }
