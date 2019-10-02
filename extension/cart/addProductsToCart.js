@@ -53,10 +53,15 @@ module.exports = async (context, input) => {
     } catch (err) {
       if (err.errors && err.errors.line_items) {
         for (const [index, lineItem] of Object.entries(err.errors.line_items)) {
+          if (lineItem.hasOwnProperty('variant_id') !== true) {
+            console.log('CONTINUE')
+            continue
+          }
+
           if (lineItem.variant_id[0].code === 'invalid' && importedProductsAddedToCart.find(product => extractVariantId(product) === checkoutCartItems[index].variant_id)) {
             const cartError = new CartError()
             cartError.addProductNotFound(checkoutCartItems[index].variant_id)
-            console.log('THROW IT AGAIN!!!')
+
             throw cartError
           }
         }
