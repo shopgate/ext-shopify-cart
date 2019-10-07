@@ -54,7 +54,6 @@ module.exports = async (context, input) => {
       if (err.errors && err.errors.line_items) {
         for (const [index, lineItem] of Object.entries(err.errors.line_items)) {
           if (lineItem.hasOwnProperty('variant_id') !== true) {
-            console.log('CONTINUE')
             continue
           }
 
