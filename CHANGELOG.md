@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+## [2.2.5] - 2019-10-08
 ### Fixed
 - error on product page when adding out of stock products
 
@@ -80,8 +81,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - logging request duration and other info when requesting the Shopify API
 
-[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.4...HEAD
-[2.2.3]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.3...v2.2.4
+[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.5...HEAD
+[2.2.5]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.4...v2.2.5
+[2.2.4]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.3...v2.2.4
 [2.2.3]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.2...v2.2.3
 [2.2.2]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.0...v2.2.2
 [2.2.0]: https://github.com/shopgate/ext-shopify-cart/compare/v2.1.1...v2.2.0
