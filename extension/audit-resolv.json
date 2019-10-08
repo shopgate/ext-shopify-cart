@@ -19,5 +19,11 @@
   },
   "780|sinon>nise>just-extend": {
     "remind": 1556623756330
+  },
+  "1164|newman>postman-runtime>handlebars": {
+    "ignore": 1
+  },
+  "1171|newman>csv-parse": {
+    "ignore": 1
   }
 }

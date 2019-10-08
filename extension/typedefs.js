@@ -10,6 +10,7 @@
 /**
  * @typedef {Object} ExtensionConfig
  * @property {string} shopifyShopAlias
+ * @property {string} shopifyShopDomain
  * @property {string} shopifyAccessToken
  * @property {string} userRegistrationUrl
  * @property {string} userDataCacheTtl
