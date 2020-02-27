@@ -36,7 +36,8 @@ module.exports = async (context, input) => {
 
     return cart
   } catch (err) {
-    throw UnknownError()
+    context.log.error({ error: err.stack }, 'Error while getting the cart')
+    throw new UnknownError()
   }
 
   /**
