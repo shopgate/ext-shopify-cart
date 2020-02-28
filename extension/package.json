@@ -1,6 +1,6 @@
 {
   "name": "@shopgate/shopify-cart",
-  "version": "2.2.5",
+  "version": "2.2.6",
   "description": "",
   "scripts": {
     "lint": "./node_modules/.bin/eslint --fix --ignore-path ../.gitignore --ext .js --ext .jsx .",

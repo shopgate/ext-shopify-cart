@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
-## [2.2.6] - 2019-10-08
+## [2.2.6] - 2020-02-28
 ### Fixed
 - Fix bug in cart error handling which caused the error "Class constructor UnknownError cannot be invoked without new"
 
