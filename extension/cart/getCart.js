@@ -211,7 +211,7 @@ module.exports = async (context, input) => {
 
       /* property */
       // normal products do also have a variant and even an option1 and a value, so we check for the variant_title.
-      if (shopifyProductVariant !== null && item.variant_title !== '') {
+      if (shopifyProductVariant && item.variant_title !== '') {
         let property = new Property()
 
         // shopify can have up to three options (option1 through option3 are always returned by the API)
