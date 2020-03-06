@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
-## [2.2.7]
+## [2.2.7] - 2020-03-06
 ### Fixed
 - error on app start when unavailable variants are still in the cart
 
@@ -89,7 +89,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - logging request duration and other info when requesting the Shopify API
 
-[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.6...HEAD
+[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.7...HEAD
+[2.2.7]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.6...v2.2.7
 [2.2.6]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.5...v2.2.6
 [2.2.5]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.4...v2.2.5
 [2.2.4]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.3...v2.2.4
