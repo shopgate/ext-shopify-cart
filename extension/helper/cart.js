@@ -9,7 +9,7 @@ const clearCart = async (sourceCartId, context) => {
   const shopifyApiRequest = new ShopifyApiRequest(context.config, context.log)
   const clearData = { 'checkout': { 'line_items': [] } }
 
-  return shopifyApiRequest.put(`/admin/checkouts/${sourceCartId}.json`, clearData)
+  return shopifyApiRequest.put(`/admin/api/2022-07/checkouts/${sourceCartId}.json`, clearData)
 }
 
 /**
@@ -20,7 +20,7 @@ const clearCart = async (sourceCartId, context) => {
 const updateCart = async (updatedData, targetCartId, context) => {
   const shopifyApiRequest = new ShopifyApiRequest(context.config, context.log)
 
-  return shopifyApiRequest.put(`/admin/checkouts/${targetCartId}.json`, updatedData)
+  return shopifyApiRequest.put(`/admin/api/2022-07/checkouts/${targetCartId}.json`, updatedData)
 }
 
 /**
@@ -139,7 +139,7 @@ async function fixCheckoutQuantities (checkoutCartItems, itemsToUpdate, error, c
   }
 
   try {
-    await shopifyApiRequest.put(`/admin/checkouts/${cartId}.json`, productData)
+    await shopifyApiRequest.put(`/admin/api/2022-07/checkouts/${cartId}.json`, productData)
   } catch (err) {
     context.log.error(`Could not fix quantities for checkout ${cartId}`)
   }

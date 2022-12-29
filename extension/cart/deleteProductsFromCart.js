@@ -31,7 +31,7 @@ module.exports = async (context, input) => {
       return {}
     }
     try {
-      await shopifyApiRequest.put(`/admin/checkouts/${cartId}.json`, { checkout: { line_items: checkoutCartItems } })
+      await shopifyApiRequest.put(`/admin/api/2022-07/checkouts/${cartId}.json`, { checkout: { line_items: checkoutCartItems } })
     } catch (err) {
       return { messages: await handleCartError(err, checkoutCartItems, cartId, context) }
     }

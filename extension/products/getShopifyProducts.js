@@ -21,6 +21,6 @@ module.exports = async function (context, input) {
     ids: productIds.join(',')
   }
 
-  const data = await shopifyApiRequest.get('/admin/products.json', params)
+  const data = await shopifyApiRequest.get('/admin/api/2022-07/products.json', params)
   return { shopifyProducts: data.products }
 }

@@ -49,7 +49,7 @@ module.exports = async (context, input) => {
     })
 
     try {
-      await shopifyApiRequest.put(`/admin/checkouts/${cartId}.json`, { checkout: { line_items: checkoutCartItems } })
+      await shopifyApiRequest.put(`/admin/api/2022-07/checkouts/${cartId}.json`, { checkout: { line_items: checkoutCartItems } })
     } catch (err) {
       if (err.errors && err.errors.line_items) {
         for (const [index, lineItem] of Object.entries(err.errors.line_items)) {
