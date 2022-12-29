@@ -1,0 +1,47 @@
+{
+  "decisions": {
+    "812|newman>postman-collection>marked": {
+      "madeAt": 0,
+      "decision": "ignore"
+    },
+    "812|newman>postman-runtime>postman-collection>marked": {
+      "madeAt": 0,
+      "decision": "ignore"
+    },
+    "755|nyc>istanbul-reports>handlebars": {
+      "madeAt": 1556537346667,
+      "decision": "postpone"
+    },
+    "782|newman>async>lodash": {
+      "madeAt": 1556537353506,
+      "decision": "postpone"
+    },
+    "782|newman>postman-runtime>async>lodash": {
+      "madeAt": 1556537353506,
+      "decision": "postpone"
+    },
+    "782|nock>lodash": {
+      "madeAt": 1556537353506,
+      "decision": "postpone"
+    },
+    "780|sinon>nise>just-extend": {
+      "madeAt": 1556537356330,
+      "decision": "postpone"
+    },
+    "1164|newman>postman-runtime>handlebars": {
+      "madeAt": 0,
+      "decision": "ignore"
+    },
+    "1171|newman>csv-parse": {
+      "madeAt": 0,
+      "decision": "ignore"
+    },
+    "1085271|eslint-plugin-import>tsconfig-paths>json5": {
+      "decision": "ignore",
+      "madeAt": 1672330955498,
+      "expiresAt": 1672935750569
+    }
+  },
+  "rules": {},
+  "version": 1
+}
