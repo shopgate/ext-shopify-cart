@@ -53,7 +53,7 @@ module.exports = async (context, input) => {
     } catch (err) {
       if (err.errors && err.errors.line_items) {
         for (const [index, lineItem] of Object.entries(err.errors.line_items)) {
-          if (lineItem.hasOwnProperty('variant_id') !== true) {
+          if (Object.hasOwnProperty.call(lineItem,'variant_id') !== true) {
             continue
           }
 

@@ -84,14 +84,14 @@ async function updateAndAdjustCart (updatedData, targetCartId, context) {
     await (updateCart(updatedData, targetCartId, context))
     return true
   } catch (err) {
-    if (err && err.hasOwnProperty('code') && err.code !== 422) {
+    if (err && Object.hasOwnProperty.call(err, 'code') && err.code !== 422) {
       context.log.error(
         'Couldn\'t update checkout with id ' + targetCartId + ' failed with error: ' + JSON.stringify(err)
       )
       throw new UnknownError()
     }
 
-    if (err & err.hasOwnProperty('errors') && err.errors.hasOwnProperty('line_items')) {
+    if (err & Object.hasOwnProperty.call(err, 'errors') && Object.hasOwnProperty.call(err.errors, 'line_items')) {
       const errorLineItem = err.errors.line_items
       Object.keys(errorLineItem).map((errorKey) => {
         const errorContent = errorLineItem[errorKey]

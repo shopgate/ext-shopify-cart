@@ -89,7 +89,7 @@ function getLineItemIdsWithQuantityErrors (lineItems) {
     Object.entries(lineItems[itemId]).forEach(([errorType, errors]) => {
       const quantityError = errors.find(error => error.code === 'not_enough_in_stock' &&
         error.options &&
-        error.options.hasOwnProperty('remaining')
+        Object.hasOwnProperty.call(error.options, 'remaining')
       )
       if (quantityError) {
         itemsToUpdate.push({ id: parseInt(itemId), availableQuantity: quantityError.options.remaining })
