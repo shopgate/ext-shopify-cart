@@ -1,5 +1,5 @@
 const querystring = require('querystring')
-const BigJSON = require('json-bigint')
+const BigJSON = require('json-bigint-native')
 const https = require('https')
 const Logger = require('./logger')
 
