@@ -17,11 +17,11 @@ class ShopifyApi {
   }
 
   getGraphQlUrl () {
-    return `${ConfigHelper.getBaseUrl(this.config)}/api/2022-07/graphql`
+    return `${ConfigHelper.getBaseUrl(this.config)}/api/2022-10/graphql`
   }
 
   async getStorefrontAccessToken () {
-    const endpoint = '/admin/api/2022-07/storefront_access_tokens.json'
+    const endpoint = '/admin/api/2022-10/storefront_access_tokens.json'
     const response = await this.shopifyApiRequest.get(endpoint, {})
     const storefrontAccessTokenTitle = 'Web Checkout Storefront Access Token'
 
@@ -42,11 +42,11 @@ class ShopifyApi {
   }
 
   async createCheckout () {
-    return this.post('/admin/api/2022-07/checkouts.json', {})
+    return this.post('/admin/api/2022-10/checkouts.json', {})
   }
 
   async getCheckout (checkoutToken) {
-    return this.get(`/admin/api/2022-07/checkouts/${checkoutToken}.json`, {})
+    return this.get(`/admin/api/2022-10/checkouts/${checkoutToken}.json`, {})
   }
 
   async setCheckoutProducts (checkoutToken, productList) {
@@ -56,7 +56,7 @@ class ShopifyApi {
       }
     }
 
-    return this.put(`/admin/api/2022-07/checkouts/${checkoutToken}.json`, data)
+    return this.put(`/admin/api/2022-10/checkouts/${checkoutToken}.json`, data)
   }
 
   async setCheckoutDiscount (checkoutToken, discountCode) {
@@ -66,14 +66,14 @@ class ShopifyApi {
       }
     }
 
-    return this.put(`/admin/api/2022-07/checkouts/${checkoutToken}.json`, data)
+    return this.put(`/admin/api/2022-10/checkouts/${checkoutToken}.json`, data)
   }
 
   /**
    * @param {string} customersId
    */
   async getCustomerById (customersId) {
-    const userData = await this.get(`/admin/api/2022-07/customers/${customersId}.json`, {})
+    const userData = await this.get(`/admin/api/2022-10/customers/${customersId}.json`, {})
     if (!userData.customer) throw new Error('Customer not found')
 
     return userData.customer
@@ -83,7 +83,7 @@ class ShopifyApi {
    * @param {string} email
    */
   async findUserByEmail (email) {
-    const userData = await this.get(`/admin/api/2022-07/customers/search.json?query=${email}`, {})
+    const userData = await this.get(`/admin/api/2022-10/customers/search.json?query=${email}`, {})
     if (!userData.customers) throw new Error('No customers not found')
 
     return userData.customers
