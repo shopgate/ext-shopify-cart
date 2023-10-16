@@ -5,13 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [2.2.11] - 2023-06-30
+### Changed
+- uses Shopify API version 2022-10 on all endpoints
+
+## [2.2.10] - 2022-01-06
+### Fixed
+- errors when adding something into the cart or checking out due to how the Shopify returns data in newer API versions
+
+## [2.2.9] - 2022-12-29
+### Fixed
+- errors when logging in due to wrong usage of updated dependencies from 2.6.1
+
+## [2.2.8] - 2022-12-29
+###  Changed
+- uses Shopify API version 2022-07 on all endpoints
+- updated vulnerable dependencies
+
 ## [2.2.7] - 2020-03-06
 ### Fixed
 - error on app start when unavailable variants are still in the cart
 
 ## [2.2.6] - 2020-02-28
 ### Fixed
-- Fix bug in cart error handling which caused the error "Class constructor UnknownError cannot be invoked without new"
+- fix bug in cart error handling which caused the error "Class constructor UnknownError cannot be invoked without new"
 
 ## [2.2.5] - 2019-10-08
 ### Fixed
@@ -89,7 +107,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - logging request duration and other info when requesting the Shopify API
 
-[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.7...HEAD
+[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.11...HEAD
+[2.2.11]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.10...v2.2.11
+[2.2.10]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.9...v2.2.10
+[2.2.9]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.8...v2.2.9
+[2.2.8]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.7...v2.2.8
 [2.2.7]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.6...v2.2.7
 [2.2.6]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.5...v2.2.6
 [2.2.5]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.4...v2.2.5
