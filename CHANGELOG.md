@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [2.2.12] - 2023-10-30
 ### Changed
 - uses Shopify API version 2023-10 on all endpoints
 
@@ -109,7 +111,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - logging request duration and other info when requesting the Shopify API
 
-[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.11...HEAD
+[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.12...HEAD
+[2.2.12]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.11...v2.2.12
 [2.2.11]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.10...v2.2.11
 [2.2.10]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.9...v2.2.10
 [2.2.9]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.8...v2.2.9
