@@ -21,7 +21,7 @@ class ShopifyStorefrontApi {
   async createCartForCustomer (customerStorefrontApiAccessToken) {
     const createCartResult = await this._request(
       'mutation cartCreate($buyerIdentity: CartBuyerIdentityInput) { cartCreate(input: { buyerIdentity: $buyerIdentity }) { cart { id } } }',
-      { buyerIdentity: customerStorefrontApiAccessToken }
+      { buyerIdentity: { customerAccessToken: customerStorefrontApiAccessToken } }
     )
 
     const cartId = ((((createCartResult || {}).data || {}).cartCreate || {}).cart || {}).id
