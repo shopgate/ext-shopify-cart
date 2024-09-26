@@ -16,13 +16,28 @@
     ],
     "steps": [
       {
+        "type": "pipeline",
+        "id": "shopgate.shopify-user.getStorefrontApiCustomerAccessToken.v1",
+        "trusted": true,
+        "input": [],
+        "output": [{"key":  "storefrontApiCustomerAccessToken", "id": "2000", "optional": true}]
+      },
+      {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/initShopifyCart.js",
+        "input": [{"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true}],
+        "output": [{"key": "shopifyCartId", "id": "2010"}]
+      },
+      {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/fetchShopifyCheckout.js",
-        "input": [],
-        "output": [
-          {"key": "checkout", "id": "100"}
-        ]
+        "input": [
+          {"key":  "storefrontApiCustomerAccessToken", "id": "2000", "optional": true},
+          {"key":  "cartId", "id": "2010"}
+        ],
+        "output": [{"key": "checkout", "id": "100"}]
       },
       {
         "type": "extension",

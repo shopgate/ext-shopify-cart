@@ -16,10 +16,6 @@ class ShopifyApi {
     )
   }
 
-  getGraphQlUrl () {
-    return `${ConfigHelper.getBaseUrl(this.config)}/api/2023-10/graphql`
-  }
-
   async getStorefrontAccessToken () {
     const endpoint = '/admin/api/2023-10/storefront_access_tokens.json'
     const response = await this.shopifyApiRequest.get(endpoint, {})
