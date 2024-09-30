@@ -63,3 +63,60 @@
  * @property {Function} error
  * @property {Function} fatal
  */
+
+/**
+ * @typedef ShopifyCart
+ * @property {string} id
+ * @property {string} checkoutUrl
+ * @property {ShopifyCartCost} cost
+ * @property {{ edges: { node: ShopifyCartLine }[] }} lines
+ */
+
+/**
+ * @typedef ShopifyCartCost
+ * @property {ShopifyCartAmount} totalAmount
+ * @property {ShopifyCartAmount} subtotalAmount
+ * @property {ShopifyCartAmount} totalTaxAmount
+ */
+
+/**
+ * @typedef ShopifyCartAmount
+ * @property {number} amount
+ * @property {string?} currencyCode
+ */
+
+/**
+ * @typedef ShopifyCartLine
+ * @property {string} id
+ * @property {number} quantity
+ * @property {ShopifyCartLineCost} cost
+ * @property {ShopifyCartLineProductVariant} merchandise
+ */
+
+/**
+ * @typedef ShopifyCartLineCost
+ * @property {ShopifyCartAmount} totalAmount
+ * @property {ShopifyCartAmount} amountPerQuantity
+ * @property {ShopifyCartAmount} compareAtAmountPerQuantity
+ */
+
+/**
+ * @typedef ShopifyCartLineProductVariant
+ * @property {string} id
+ * @property {string} sku
+ * @property {{ id: string, title: string, vendor: string }} product
+ * @property {{ url: string }} image
+ * @property {{ type: string, label: string, value: string }[]} selectedOptions
+ */
+
+/**
+ * @typedef ShopgateCart
+ * @property {boolean} isOrderable
+ * @property {boolean|null} isTaxIncluded
+ * @property {string|null} currency
+ * @property {{ code: string, message: string, type: string }[]} messages
+ * @property {string} text
+ * @property {object[]} cartItems
+ * @property {{ label: string, amount: number, type: string}[]} totals
+ * @property {{ orderable: boolean }} flags
+ */

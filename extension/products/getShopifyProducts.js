@@ -1,9 +1,9 @@
+// todo delete when done, not needed anymore
 const ShopifyApiRequest = require('../lib/shopify.api.js')
 
 /**
- * @param {Object} context
- * @param {Object} input - Properties depend on the pipeline this is used for
- * @param {Object} [input.products]
+ * @param {SDKContext} context
+ * @param {{ shopifyCart: ShopifyCart }} input
  */
 module.exports = async function (context, input) {
   const shopifyApiRequest = new ShopifyApiRequest(context.config, context.log)

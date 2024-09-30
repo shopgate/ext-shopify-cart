@@ -12,7 +12,7 @@ module.exports = async (context, input) => {
   if (shopifyCartId) return { shopifyCartId }
 
   // no cart present, create a new one
-  const storefrontApi = await ApiFactory.buildStorefrontApi(context)
+  const storefrontApi = ApiFactory.buildStorefrontApi(context)
 
   if (input.storefrontApiCustomerAccessToken) {
     shopifyCartId = await storefrontApi.createCartForCustomer(input.storefrontApiCustomerAccessToken.accessToken)

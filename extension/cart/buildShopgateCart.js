@@ -20,10 +20,85 @@ const UnknownError = require('../models/Errors/UnknownError')
  */
 /**
  * @param {SDKContext} context
- * @param {getCartInput} input
- * @return {Promise<Cart>}
+ * @param {{ shopifyCart: ShopifyCart }} input
+ * @return {Promise<ShopgateCart>}
  */
 module.exports = async (context, input) => {
+  const shopifyCart = input.shopifyCart
+
+  const isOrderable = shopifyCart.lines.length > 0 && shopifyCart.checkoutUrl
+
+  return {
+    isOrderable,
+    isTaxIncluded: null,
+    currency: shopifyCart.cost.totalAmount.currencyCode || null, // not set when no items in the cart
+    messages: [],
+    text: '',
+    cartItems: shopifyCart.lines.edges.map(edge => {
+      const line = edge.node
+
+      // prices
+      let defaultPrice = line.cost.totalAmount.amount
+      let specialPrice = null
+      if ((line.cost.compareAtAmountPerQuantity || {}).amount > line.cost.totalAmount.amount) {
+        specialPrice = defaultPrice
+        defaultPrice = line.cost.compareAtAmountPerQuantity.amount
+      }
+
+      return {
+        id: line.id,
+        type: 'product',
+        quantity: line.quantity,
+        product: {
+          id: line.merchandise.product.id,
+          name: line.merchandise.product.title,
+          featuredImageUrl: line.merchandise.image.url, // todo use our image or use scaling/cropping via API
+          price: {
+            unit: line.cost.amountPerQuantity.amount,
+            default: defaultPrice,
+            special: specialPrice
+          },
+          properties: (line.merchandise.selectedOptions || []).length > 1 // only 1 option => product without selection
+            ? line.merchandise.selectedOptions.map(option => ({
+              type: 'option',
+              label: option.name,
+              value: option.value
+            }))
+            : [],
+          additionalInfo: [
+            {
+              label: 'sku',
+              value: line.merchandise.sku
+            },
+            {
+              label: 'vendor',
+              value: line.merchandise.product.vendor
+            }
+          ]
+        }
+      }
+    }),
+    totals: [
+      {
+        label: '',
+        amount: shopifyCart.cost.subtotalAmount.amount || 0,
+        type: 'subTotal'
+      },
+      {
+        label: '',
+        amount: shopifyCart.cost.totalAmount.amount || 0,
+        type: 'grandTotal'
+      },
+      {
+        label: '',
+        amount: (shopifyCart.cost.totalTaxAmount || {}).amount || 0,
+        type: 'tax'
+      }
+    ],
+    flags: { orderable: isOrderable }
+  }
+
+  // todo old stuff, delete when done
   const shopifyCartData = input.shopifyCartData
   const importedProductsInCart = input.importedProductsInCart
   const importedChildProductsInCart = input.importedChildProductsInCart
@@ -66,37 +141,37 @@ module.exports = async (context, input) => {
     const checkout = data.checkout
 
     /* global */
-    cart.flags.taxIncluded = cart.isTaxIncluded = checkout.taxes_included
-    cart.currency = data.checkout.currency
-    cart.id = data.checkout.token
+    cart.flags.taxIncluded = cart.isTaxIncluded = checkout.taxes_included // todo no equivalent on Storefront API, might need to fetch store settings via Admin API
+    cart.currency = checkout.currency // done
+    cart.id = checkout.id // done
 
-    // Deactivate checkout if there are no cart items available (line items in Shopify)
+    // disable checkout if there are no cart items available (line items in Shopify)
     if (_.isEmpty(checkout.line_items)) {
-      cart.isOrderable = false
+      cart.isOrderable = false // done
     }
 
-    // Disallow checkout if there was no checkout url set by Shopify
-    cart.flags.orderable = cart.isOrderable = !!data.checkout.web_url
+    // disallow checkout if there was no checkout url set by Shopify
+    cart.flags.orderable = cart.isOrderable = !!checkout.web_url // done
 
     /* totals */
-    const subtotalPrice = new Total()
+    const subtotalPrice = new Total() // done
     subtotalPrice.label = ''
-    subtotalPrice.amount = checkout.subtotal_price
+    subtotalPrice.amount = checkout.cost.subTotalAmount.amount
     subtotalPrice.type = subtotalPrice.TYPE_SUBTOTAL
     cart.addTotal(subtotalPrice.toJson())
 
-    const grandTotal = new Total()
+    const grandTotal = new Total() // done
     grandTotal.label = ''
     grandTotal.amount = checkout.total_price
     grandTotal.type = grandTotal.TYPE_GRANDTOTAL
     cart.addTotal(grandTotal.toJson())
 
-    const tax = new Total()
+    const tax = new Total() // done
     tax.label = ''
     tax.amount = checkout.total_tax
     tax.type = tax.TYPE_TAX
 
-    if (checkout.tax_lines) {
+    if (checkout.tax_lines) { // not in Cart API
       checkout.tax_lines.forEach(function (subTaxItem) {
         let subTotal = new SubTotal()
         subTotal.label = subTaxItem.title
@@ -108,7 +183,7 @@ module.exports = async (context, input) => {
     }
     cart.addTotal(tax.toJson())
 
-    if (checkout.shipping_line) {
+    if (checkout.shipping_line) { // not in Cart API
       const shipping = new Total()
       shipping.label = checkout.shipping_line.title
       shipping.amount = checkout.shipping_line.price
@@ -158,9 +233,9 @@ module.exports = async (context, input) => {
       })
 
       /* global */
-      cartItem.id = item.id
-      cartItem.type = cartItem.TYPE_PRODUCT
-      cartItem.quantity = item.quantity
+      cartItem.id = item.id // done
+      cartItem.type = cartItem.TYPE_PRODUCT // done
+      cartItem.quantity = item.quantity // done
 
       // take featured image (based on product type) try for child only if child products given
       let featuredImageUrl = null
@@ -187,31 +262,31 @@ module.exports = async (context, input) => {
 
       /* product */
       const product = new Product()
-      product.id = productId.toString()
-      product.name = item.title
-      product.featuredImageUrl = featuredImageUrl
+      product.id = productId.toString() // done
+      product.name = item.title // done
+      product.featuredImageUrl = featuredImageUrl // todo
 
       /* price */
       const price = new Price()
-      price.unit = item.price
-      price.default = item.price * item.quantity
-      price.special = null
+      price.unit = item.price // done
+      price.default = item.price * item.quantity // done
+      price.special = null // done
 
       /**
        * Compare at price is same as MSRP,
        * so use that as a higher price if present
        */
       if (item.compare_at_price > item.price) {
-        price.special = price.default
-        price.default = item.compare_at_price * item.quantity
+        price.special = price.default // done
+        price.default = item.compare_at_price * item.quantity // done
       }
 
       /* add price to product */
-      product.price = price.toJson()
+      product.price = price.toJson() // done
 
       /* property */
       // normal products do also have a variant and even an option1 and a value, so we check for the variant_title.
-      if (shopifyProductVariant && item.variant_title !== '') {
+      if (shopifyProductVariant && item.variant_title !== '') { // done
         let property = new Property()
 
         // shopify can have up to three options (option1 through option3 are always returned by the API)
@@ -228,7 +303,7 @@ module.exports = async (context, input) => {
       }
 
       /* additionalInfo */
-      const additionalInfoSku = new AdditionalInfo()
+      const additionalInfoSku = new AdditionalInfo() // done
       additionalInfoSku.label = 'sku'
       additionalInfoSku.value = item.sku
 
@@ -236,7 +311,7 @@ module.exports = async (context, input) => {
       product.addAdditionalInfo(additionalInfoSku)
 
       /* additionalInfo */
-      const additionalInfoVendor = new AdditionalInfo()
+      const additionalInfoVendor = new AdditionalInfo() // done
       additionalInfoVendor.label = 'vendor'
       additionalInfoVendor.value = item.vendor
 
@@ -251,7 +326,7 @@ module.exports = async (context, input) => {
     })
 
     // merge line items that are the same product before returning
-    cart.cartItems = Object.values(cart.cartItems.reduce((itemsByProductId, current) => {
+    cart.cartItems = Object.values(cart.cartItems.reduce((itemsByProductId, current) => { // not a thing in Cart API?
       if (!itemsByProductId[current.product.id]) {
         itemsByProductId[current.product.id] = current
         return itemsByProductId
@@ -263,7 +338,7 @@ module.exports = async (context, input) => {
     }, {}))
 
     // Check if coupons are enabled to be shown in cart
-    cart.flags.coupons = context.config.enableCartCoupons
+    cart.flags.coupons = context.config.enableCartCoupons // todo, also this probably never worked so far
     if (cart.enableCoupons) {
       if (checkout.applied_discount) {
         if (checkout.applied_discount.applicable) {

@@ -1,5 +1,7 @@
 const request = require('request-promise-native')
 
+const { createCartForCustomer, createCart, getCart } = require('./queries/')
+
 class ShopifyStorefrontApi {
   /**
    * @param {string} shopUrl
@@ -20,7 +22,7 @@ class ShopifyStorefrontApi {
    */
   async createCartForCustomer (customerStorefrontApiAccessToken) {
     const createCartResult = await this._request(
-      'mutation cartCreate($buyerIdentity: CartBuyerIdentityInput) { cartCreate(input: { buyerIdentity: $buyerIdentity }) { cart { id } } }',
+      createCartForCustomer,
       { buyerIdentity: { customerAccessToken: customerStorefrontApiAccessToken } }
     )
 
@@ -37,7 +39,7 @@ class ShopifyStorefrontApi {
   async createCart () {
     let createCartResult
     try {
-      createCartResult = await this._request('mutation cartCreate { cartCreate { cart { id } } }')
+      createCartResult = await this._request(createCart)
     } catch (err) {
       this.logger.error({ errorMessage: err.message, statusCode: err.statusCode, code: err.code }, 'Error creating an anonymous cart.')
       throw new Error('Error loading cart')
@@ -48,6 +50,20 @@ class ShopifyStorefrontApi {
 
     this.logger.error({ response: JSON.stringify(createCartResult) }, 'Error creating an anonymous cart.')
     throw new Error('Error loading cart')
+  }
+
+  /**
+   * @param {string} cartId
+   * @returns {Promise<ShopifyCart>}
+   */
+  async getCart (cartId) {
+    const shopifyCartResult = await this._request(getCart, { cartId })
+
+    const shopifyCart = ((shopifyCartResult || {}).data || {}).cart
+    if (shopifyCart) return shopifyCart
+
+    this.logger.error({ response: JSON.stringify(shopifyCartResult) }, 'Error fetching Shopify cart')
+    throw new Error('Error loading cart contents')
   }
 
   /**

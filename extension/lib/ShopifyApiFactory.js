@@ -22,9 +22,9 @@ class ShopifyApiFactory {
    * @param {SDKContext} context
    * @param {ShopifyApiTokenManager?} tokenManager
    * @param {ShopifyAdminApi?} adminApi
-   * @returns {Promise<ShopifyStorefrontApi>}
+   * @returns {ShopifyStorefrontApi}
    */
-  static async buildStorefrontApi (context, tokenManager = null, adminApi = null) {
+  static buildStorefrontApi (context, tokenManager = null, adminApi = null) {
     if (storefrontApi) return storefrontApi
 
     if (!tokenManager) tokenManager = this.buildShopifyApiTokenManager(context, adminApi)
