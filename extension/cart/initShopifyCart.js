@@ -6,14 +6,26 @@ const ApiFactory = require('../lib/ShopifyApiFactory')
  * @returns {Promise<{ shopifyCartId: string }>}
  */
 module.exports = async (context, input) => {
+  const storefrontApi = ApiFactory.buildStorefrontApi(context)
   const storage = context.meta.userId ? context.storage.user : context.storage.device
   let shopifyCartId = await storage.get('shopifyCartId')
+
+  if (await storage.get('cartMayBeInvalid')) {
+    const shopifyCart = await storefrontApi.getCart(shopifyCartId)
+
+    // if the cart is invalid, set ID to null so a new one will be created
+    if (shopifyCart === null) {
+      await storage.del('shopifyCartId')
+      shopifyCartId = null
+    }
+
+    // checked it out, setting not needed anymore
+    await storage.del('cartMayBeInvalid')
+  }
 
   if (shopifyCartId) return { shopifyCartId }
 
   // no cart present, create a new one
-  const storefrontApi = ApiFactory.buildStorefrontApi(context)
-
   if (input.storefrontApiCustomerAccessToken) {
     shopifyCartId = await storefrontApi.createCartForCustomer(input.storefrontApiCustomerAccessToken.accessToken)
   } else {

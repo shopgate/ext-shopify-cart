@@ -61,12 +61,16 @@ class ShopifyStorefrontApi {
 
   /**
    * @param {string} cartId
-   * @returns {Promise<ShopifyCart>}
+   * @returns {Promise<ShopifyCart|null>} null if the cart was not found
    */
   async getCart (cartId) {
     const shopifyCartResult = await this._request(getCart, { cartId })
 
     const shopifyCart = ((shopifyCartResult || {}).data || {}).cart
+
+    // not found, expected after checkout
+    if (shopifyCart === null) return null
+
     if (!shopifyCart) {
       this.logger.error({response: JSON.stringify(shopifyCartResult)}, 'Error fetching Shopify cart')
       throw new Error('Error loading cart contents')
