@@ -5,6 +5,7 @@ const {
   createCart,
   getCart,
   addCartLines,
+  updateCartLines,
   deleteCartLines
 } = require('./queries/')
 
@@ -97,6 +98,10 @@ class ShopifyStorefrontApi {
 
   async addCartLines (cartId, lines) {
     return this._request(addCartLines, { cartId, lines })
+  }
+
+  async updateCartLines (cartId, lines) {
+    return this._request(updateCartLines, { cartId, lines })
   }
 
   async deleteCartLines (cartId, lineIds){
