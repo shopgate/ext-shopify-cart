@@ -11,11 +11,25 @@
     ],
     "steps": [
       {
+        "type": "pipeline",
+        "id": "shopgate.shopify-user.getStorefrontApiCustomerAccessToken.v1",
+        "trusted": true,
+        "input": [],
+        "output": [{"key":  "storefrontApiCustomerAccessToken", "id": "2000", "optional": true}]
+      },
+      {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/initShopifyCart.js",
+        "input": [{"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true}],
+        "output": [{"key": "shopifyCartId", "id": "2010"}]
+      },
+      {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/products/getProducts.js",
         "input": [
-          {"key": "products", "id": "1080"}
+          {"key": "productIdSets", "id": "1080"}
         ],
         "output": [
           {"key": "service", "id": "10"},
@@ -41,24 +55,13 @@
         ]
       },
       {
-        "type": "pipeline",
-        "id": "shopgate.cart.prepareShopifyCart.v1",
-        "trusted": false,
-        "input": [],
-        "output": [
-          {"key": "collection", "id": "103"},
-          {"key": "cartItems", "id": "1060"}
-        ]
-      },
-      {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/addProductsToCart.js",
         "input": [
           {"key": "importedProductsAddedToCart", "id": "100"},
-          {"key": "importedProductsInCart", "id": "103", "optional": true},
-          {"key": "cartItems", "id": "1060"},
-          {"key": "products", "id": "1080"}
+          {"key": "productsAddedToCart", "id": "1080"},
+          {"key": "shopifyCartId", "id": "2010"}
         ],
         "output": [
           {"key": "messages", "id": "1100", "optional": true}

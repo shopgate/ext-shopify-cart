@@ -116,7 +116,23 @@
  * @property {string|null} currency
  * @property {{ code: string, message: string, type: string }[]} messages
  * @property {string} text
- * @property {object[]} cartItems
+ * @property {ShopgateCartItem[]} cartItems
  * @property {{ label: string, amount: number, type: string}[]} totals
  * @property {{ orderable: boolean }} flags
+ */
+
+/**
+ * @typedef ShopgateCartItem
+ * @property {string} id
+ * @property {string} name
+ * @property {number} quantity
+ * @property {ShopgateCartItemProduct} product
+ */
+
+/**
+ * @typedef ShopgateCartItemProduct
+ * @property {string} featuredImageUrl
+ * @property {{ unit: number, default: number, special: number? }} price
+ * @property {{ type: string, label: string, value: any }} properties
+ * @property {{ label: string, value: any }} additionalInfo
  */

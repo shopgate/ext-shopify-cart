@@ -6,10 +6,7 @@ module.exports = async function (context, { productIdSets }) {
   const shopNumber = context.meta.appId.split('_')[1]
   const query = {
     images: true,
-    productNumbers: productIdSets.map(productIdSet => {
-      // cut off the gid://shopify/Product/ part from the ID
-      return productIdSet.productId.substring(22)
-    })
+    productNumbers: productIdSets.map(productIdSet => productIdSet.productId)
   }
 
   if (query.productNumbers.length > 100) throw new Error('the limit of product numbers is 100')

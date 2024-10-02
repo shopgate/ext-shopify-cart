@@ -1,6 +1,11 @@
 const request = require('request-promise-native')
 
-const { createCartForCustomer, createCart, getCart } = require('./queries/')
+const {
+  createCartForCustomer,
+  createCart,
+  getCart,
+  addCartLines
+} = require('./queries/')
 
 class ShopifyStorefrontApi {
   /**
@@ -64,6 +69,10 @@ class ShopifyStorefrontApi {
 
     this.logger.error({ response: JSON.stringify(shopifyCartResult) }, 'Error fetching Shopify cart')
     throw new Error('Error loading cart contents')
+  }
+
+  async addCartLines (cartId, lines) {
+    return this._request(addCartLines, { cartId, lines })
   }
 
   /**
