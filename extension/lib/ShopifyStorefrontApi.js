@@ -65,10 +65,33 @@ class ShopifyStorefrontApi {
     const shopifyCartResult = await this._request(getCart, { cartId })
 
     const shopifyCart = ((shopifyCartResult || {}).data || {}).cart
-    if (shopifyCart) return shopifyCart
+    if (!shopifyCart) {
+      this.logger.error({response: JSON.stringify(shopifyCartResult)}, 'Error fetching Shopify cart')
+      throw new Error('Error loading cart contents')
+    }
 
-    this.logger.error({ response: JSON.stringify(shopifyCartResult) }, 'Error fetching Shopify cart')
-    throw new Error('Error loading cart contents')
+    // All "amount" fields are of type "Decimal", which are "numeric strings". Converting to "number" to pass frontend validations.
+    shopifyCart.cost = Object.entries(shopifyCart.cost).reduce((cost, [priceType, moneyObject]) => {
+      if (!moneyObject) return cost
+
+      return {
+        ...cost,
+        [priceType]: { ...moneyObject, amount: parseFloat(moneyObject.amount) }
+      }
+    }, {})
+
+    shopifyCart.lines.edges = shopifyCart.lines.edges.map(line => ({
+      node: {
+        ...line.node,
+        cost: Object.entries(line.node.cost).reduce((cost, [priceType, moneyObject]) => {
+          if (!moneyObject) return cost
+
+          return { ...cost, [priceType]: { ...moneyObject, amount: parseFloat(moneyObject.amount) } }
+        }, {})
+      },
+    }))
+
+    return shopifyCart
   }
 
   async addCartLines (cartId, lines) {

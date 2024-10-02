@@ -26,7 +26,7 @@ const UnknownError = require('../models/Errors/UnknownError')
 module.exports = async (context, input) => {
   const shopifyCart = input.shopifyCart
 
-  const isOrderable = shopifyCart.lines.length > 0 && shopifyCart.checkoutUrl
+  const isOrderable = shopifyCart.lines.edges.length > 0 && shopifyCart.checkoutUrl
 
   return {
     isOrderable,
@@ -48,10 +48,11 @@ module.exports = async (context, input) => {
       return {
         id: line.id,
         type: 'product',
+        name: line.merchandise.product.title,
         quantity: line.quantity,
+        messages: [],
         product: {
           id: line.merchandise.product.id,
-          name: line.merchandise.product.title,
           featuredImageUrl: line.merchandise.image.url, // todo use our image or use scaling/cropping via API
           price: {
             unit: line.cost.amountPerQuantity.amount,
@@ -95,7 +96,7 @@ module.exports = async (context, input) => {
         type: 'tax'
       }
     ],
-    flags: { orderable: isOrderable }
+    flags: { orderable: isOrderable },
   }
 
   // todo old stuff, delete when done
