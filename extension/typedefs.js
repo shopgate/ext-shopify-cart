@@ -125,7 +125,6 @@
  * @typedef ShopgateCartItem
  * @property {string} id
  * @property {string} type
- * @property {string} name
  * @property {number} quantity
  * @property {ShopgateCartItemProduct} product
  */
@@ -133,6 +132,7 @@
 /**
  * @typedef ShopgateCartItemProduct
  * @property {string} id
+ * @property {string} name
  * @property {string} featuredImageUrl
  * @property {{ unit: number, default: number, special: number|null }} price
  * @property {{ type: string, label: string, value: any }[]} properties

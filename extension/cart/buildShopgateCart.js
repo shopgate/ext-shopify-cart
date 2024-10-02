@@ -48,12 +48,12 @@ module.exports = async (context, input) => {
       return {
         id: line.id,
         type: 'product',
-        name: line.merchandise.product.title,
         quantity: line.quantity,
         messages: [],
         product: {
-          id: line.merchandise.product.id,
+          id: line.merchandise.product.id.substring(22),
           featuredImageUrl: line.merchandise.image.url, // todo use our image or use scaling/cropping via API
+          name: line.merchandise.product.title,
           price: {
             unit: line.cost.amountPerQuantity.amount,
             default: defaultPrice,
