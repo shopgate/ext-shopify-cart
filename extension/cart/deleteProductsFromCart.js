@@ -2,7 +2,26 @@ const { extractVariantId, handleCartError, getCurrentCartId } = require('../help
 const ShopifyApiRequest = require('../lib/shopify.api.js')
 const UnknownError = require('../models/Errors/UnknownError')
 
+const ApiFactory = require('../lib/ShopifyApiFactory')
+
+/**
+ * @param {SDKContext} context
+ * @param {object} input
+ * @param {string[]} input.deleteCartItemIds
+ * @param {string} input.shopifyCartId
+ * @returns {Promise<{}|{ messages: { code: string, message: string, type: string }[] }>}
+ */
 module.exports = async (context, input) => {
+  const storefrontApi = ApiFactory.buildStorefrontApi(context)
+
+  await storefrontApi.deleteCartLines(input.shopifyCartId, input.deleteCartItemIds)
+
+  // todo error handling
+
+  return {}
+
+  // todo old stuff for reference, delete when done
+
   const shopifyApiRequest = new ShopifyApiRequest(context.config, context.log)
   const existingCartItems = input.cartItems
   const itemsIdsToDelete = input.cartItemIds

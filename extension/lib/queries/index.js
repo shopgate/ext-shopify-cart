@@ -3,4 +3,5 @@ module.exports = {
   createCartForCustomer: require('./createCartForCustomer'),
   getCart: require('./getCart'),
   addCartLines: require('./addCartLines'),
+  deleteCartLines: require('./deleteCartLines'),
 }
