@@ -2,7 +2,7 @@ const ApiFactory = require('../lib/ShopifyApiFactory')
 
 /**
  * @param {SDKContext} context
- * @param {{ storefrontApiCustomerAccessToken: string?, shopifyCartId: string }} input
+ * @param {{ shopifyCartId: string }} input
  * @returns {Promise<{ shopifyCart: ShopifyCart }>}
  */
 module.exports = async (context, { shopifyCartId }) => {

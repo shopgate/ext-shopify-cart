@@ -1,17 +1,43 @@
 const _ = require('underscore')
-const UnknownError = require('../models/Errors/UnknownError')
 let { updateCart, clearCart } = require('./../helper/cart')
+const UnknownError = require('../models/Errors/UnknownError')
+const ApiFactory = require('../lib/ShopifyApiFactory')
 
 /**
- *
- * @typedef {Object} input
- * @property {Object} sourceCart
- * @property {Object} targetCart
- *
- * @param {Object} context
- * @param {Object} input
+ * @param {SDKContext} context
  */
-module.exports = async (context, input) => {
+module.exports = async (context) => {
+  const deviceCartId = await context.storage.device.get('shopifyCartId')
+
+  const storefrontApi = ApiFactory.buildStorefrontApi(context)
+
+  let deviceCart
+  try {
+    deviceCart = await storefrontApi.getCart(deviceCartId)
+  } catch (err) {
+    context.log.error({ errorMessage: err.message, statusCode: err.statusCode, code: err.code }, 'Error fetching device or user cart')
+    throw new UnknownError()
+  }
+
+  const deleteCartLines = []
+  const addProducts = []
+  for (const line of deviceCart.lines.edges) {
+    deleteCartLines.push(line.node.id)
+    addProducts.push({ merchandiseId: line.node.merchandise.id, quantity: line.node.quantity })
+  }
+
+  try {
+    // sequential so we don't clear the guest cart if merging failed
+    if (addProducts.length > 0) await storefrontApi.addCartLines(userCartId, addProducts)
+    if (deleteCartLines.length > 0) await storefrontApi.deleteCartLines(userCartId, deleteCartLines)
+  } catch (err) {
+    context.log.error({ errorMessage: err.message, statusCode: err.statusCode, code: err.code }, 'Error merging carts upon log-in')
+    throw new UnknownError()
+  }
+
+  return
+
+  // todo old stuff, delete when done
   await migrateCartContents(
     context,
     input.sourceCart.token,

@@ -26,10 +26,7 @@
         "type": "extension",
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/fetchShopifyCart.js",
-        "input": [
-          {"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true},
-          {"key": "shopifyCartId", "id": "2010"}
-        ],
+        "input": [{"key": "shopifyCartId", "id": "2010"}],
         "output": [{"key": "shopifyCart", "id": "2020"}]
       },
       {
