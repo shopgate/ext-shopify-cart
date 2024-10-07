@@ -8,6 +8,7 @@ const ApiFactory = require('../lib/ShopifyApiFactory')
  */
 module.exports = async (context) => {
   const deviceCartId = await context.storage.device.get('shopifyCartId')
+  const userCartId = await context.storage.user.get('shopifyCartId')
 
   const storefrontApi = ApiFactory.buildStorefrontApi(context)
 
