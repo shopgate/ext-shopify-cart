@@ -40,9 +40,9 @@ module.exports = async (context, input) => {
       // prices
       let defaultPrice = line.cost.totalAmount.amount
       let specialPrice = null
-      if ((line.cost.compareAtAmountPerQuantity || {}).amount > line.cost.totalAmount.amount) {
+      if ((line.cost.compareAtAmountPerQuantity || {}).amount > line.cost.amountPerQuantity.amount) {
         specialPrice = defaultPrice
-        defaultPrice = line.cost.compareAtAmountPerQuantity.amount
+        defaultPrice = line.cost.compareAtAmountPerQuantity.amount * line.quantity
       }
 
       return {
