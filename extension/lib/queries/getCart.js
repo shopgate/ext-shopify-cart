@@ -61,6 +61,7 @@ query getCart($cartId: ID!) {
                 id
                 title
                 vendor
+                options { id name optionValues { id name } }
               }
             }
           }

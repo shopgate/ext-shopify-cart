@@ -45,6 +45,12 @@ module.exports = async (context, input) => {
         defaultPrice = line.cost.compareAtAmountPerQuantity.amount * line.quantity
       }
 
+      // every product has at least one option with one variant but if a product has at least one option with more than
+      // one value it's a product with variants
+      const isVariantProduct = line.merchandise.product.options.reduce((isVariantProduct, productOption) => {
+        return isVariantProduct || productOption.optionValues.length > 1
+      }, false)
+
       return {
         id: line.id,
         type: 'product',
@@ -59,7 +65,7 @@ module.exports = async (context, input) => {
             default: defaultPrice,
             special: specialPrice
           },
-          properties: (line.merchandise.selectedOptions || []).length > 1 // only 1 option => product without selection
+          properties: isVariantProduct
             ? line.merchandise.selectedOptions.map(option => ({
               type: 'option',
               label: option.name,
