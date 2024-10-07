@@ -20,7 +20,11 @@ module.exports = async (context, input) => {
   }, {})
 
   const cartLines = input.productsAddedToCart.map(product => {
-    const variantId = (shopgateProductsById[product.productId] || {}).customData.variant_id
+    const importedProduct = shopgateProductsById[product.productId] || {}
+    console.log(importedProduct)
+    const variantId = importedProduct.baseProductId
+      ? product.productId
+      : (importedProduct.customData || {}).variant_id
 
     if (!variantId) return null
 

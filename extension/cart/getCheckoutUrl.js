@@ -10,5 +10,5 @@ module.exports = async (context, input) => {
   const storage = context.meta.userId ? context.storage.user : context.storage.device
   await storage.set('cartMayBeInvalid', true)
 
-  return { url: input.shopifyCart.checkoutUrl }
+  return { url: `${input.shopifyCart.checkoutUrl}&logged_in=true` }
 }
