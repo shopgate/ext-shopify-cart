@@ -8,6 +8,7 @@ const {
   updateCartLines,
   deleteCartLines
 } = require('./queries/')
+const CartError = require("../models/Errors/CartError");
 
 class ShopifyStorefrontApi {
   /**
@@ -101,15 +102,27 @@ class ShopifyStorefrontApi {
   }
 
   async addCartLines (cartId, lines) {
-    return this._request(addCartLines, { cartId, lines })
+    const response = await this._request(addCartLines, {cartId, lines})
+
+    this._handleCartUserErrors(response, 'cartLinesAdd', lines)
+
+    return response
   }
 
   async updateCartLines (cartId, lines) {
-    return this._request(updateCartLines, { cartId, lines })
+    const response = await this._request(updateCartLines, { cartId, lines })
+
+    this._handleCartUserErrors(response, 'cartLinesUpdate', lines)
+
+    return response
   }
 
   async deleteCartLines (cartId, lineIds){
-    return this._request(deleteCartLines, { cartId, lineIds })
+    const response = await this._request(deleteCartLines, { cartId, lineIds })
+
+    this._handleCartUserErrors(response, 'cartLinesRemove', lineIds)
+
+    return response
   }
 
   /**
@@ -128,8 +141,8 @@ class ShopifyStorefrontApi {
       return await request({
         method: 'post',
         uri: this.apiUrl,
-        headers: {'x-shopify-storefront-access-token': this.storefrontApiAccessToken},
-        body: {query, variables},
+        headers: { 'x-shopify-storefront-access-token': this.storefrontApiAccessToken },
+        body: { query, variables },
         json: true
       })
     } catch (err) {
@@ -141,6 +154,33 @@ class ShopifyStorefrontApi {
 
       throw err
     }
+  }
+
+  /**
+   * @param {object} response
+   * @param {string} queryName
+   * @param {array} referencedContents
+   * @throws CartError
+   * @private
+   */
+  _handleCartUserErrors (response, queryName, referencedContents) {
+    const userErrors = (((response || {}).data || {})[queryName] || {}).userErrors || []
+    if (userErrors.length === 0) return
+
+    const error = new CartError()
+    for (const userError of userErrors) {
+      const fieldIndex = (userError.field || {})[1]
+      const entityId = fieldIndex || fieldIndex === 0
+        ? (referencedContents[userError.field[1]] || {}).merchandiseId
+        : undefined
+
+      error.errors.push({
+        message: userError.message,
+        entityId
+      })
+    }
+
+    if (error.errors.length > 0) throw error
   }
 }
 

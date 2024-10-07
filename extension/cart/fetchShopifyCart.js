@@ -1,4 +1,5 @@
 const ApiFactory = require('../lib/ShopifyApiFactory')
+const UnknownError = require('../models/errors/UnknownError')
 
 /**
  * @param {SDKContext} context
@@ -8,5 +9,12 @@ const ApiFactory = require('../lib/ShopifyApiFactory')
 module.exports = async (context, { shopifyCartId }) => {
   const storefrontApi = ApiFactory.buildStorefrontApi(context)
 
-  return { shopifyCart: await storefrontApi.getCart(shopifyCartId) }
+  const shopifyCart = await storefrontApi.getCart(shopifyCartId)
+
+  if (shopifyCart === null) {
+    context.log.error('Shopify API returned null instead of a cart.')
+    throw new UnknownError()
+  }
+
+  return { shopifyCart }
 }
