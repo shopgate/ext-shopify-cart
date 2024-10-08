@@ -68,6 +68,18 @@ query getCart($cartId: ID!) {
         }
       }
     }
+    deliveryGroups(first:250) {
+      edges {
+        node {
+          selectedDeliveryOption {
+            title
+            estimatedCost {
+              amount
+            }
+          }
+        }
+      }
+    }
   }
 }
 `

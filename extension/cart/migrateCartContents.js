@@ -30,12 +30,14 @@ module.exports = async (context) => {
     addProducts.push({ merchandiseId: line.node.merchandise.id, quantity: line.node.quantity })
   }
 
+  console.log({ addProducts, deleteCartLines }, '#######################################')
+
   try {
     // sequential so we don't clear the guest cart if merging failed
     if (addProducts.length > 0) await storefrontApi.addCartLines(userCartId, addProducts)
-    if (deleteCartLines.length > 0) await storefrontApi.deleteCartLines(userCartId, deleteCartLines)
+    if (deleteCartLines.length > 0) await storefrontApi.deleteCartLines(deviceCartId, deleteCartLines)
   } catch (err) {
-    context.log.error({ errorMessage: err.message, statusCode: err.statusCode, code: err.code }, 'Error merging carts upon log-in')
+    context.log.error({ errorMessage: err.message, cartErrors: err.errors, statusCode: err.statusCode, code: err.code }, 'Error merging carts upon log-in')
     throw new UnknownError()
   }
 }

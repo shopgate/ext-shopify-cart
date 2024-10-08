@@ -1,13 +1,6 @@
 const request = require('request-promise-native')
 
-const {
-  createCartForCustomer,
-  createCart,
-  getCart,
-  addCartLines,
-  updateCartLines,
-  deleteCartLines
-} = require('./queries/')
+const queries = require('./queries/index')
 const CartError = require("../models/Errors/CartError");
 
 class ShopifyStorefrontApi {
@@ -30,7 +23,7 @@ class ShopifyStorefrontApi {
    */
   async createCartForCustomer (customerStorefrontApiAccessToken) {
     const createCartResult = await this._request(
-      createCartForCustomer,
+      queries.createCartForCustomer,
       { buyerIdentity: { customerAccessToken: customerStorefrontApiAccessToken } }
     )
 
@@ -47,7 +40,7 @@ class ShopifyStorefrontApi {
   async createCart () {
     let createCartResult
     try {
-      createCartResult = await this._request(createCart)
+      createCartResult = await this._request(queries.createCart)
     } catch (err) {
       this.logger.error({ errorMessage: err.message, statusCode: err.statusCode, code: err.code }, 'Error creating an anonymous cart.')
       throw new Error('Error loading cart')
@@ -65,7 +58,7 @@ class ShopifyStorefrontApi {
    * @returns {Promise<ShopifyCart|null>} null if the cart was not found
    */
   async getCart (cartId) {
-    const shopifyCartResult = await this._request(getCart, { cartId })
+    const shopifyCartResult = await this._request(queries.getCart, { cartId })
 
     const shopifyCart = ((shopifyCartResult || {}).data || {}).cart
 
@@ -87,10 +80,10 @@ class ShopifyStorefrontApi {
       }
     }, {})
 
-    shopifyCart.lines.edges = shopifyCart.lines.edges.map(line => ({
+    shopifyCart.lines.edges = shopifyCart.lines.edges.map(edge => ({
       node: {
-        ...line.node,
-        cost: Object.entries(line.node.cost).reduce((cost, [priceType, moneyObject]) => {
+        ...edge.node,
+        cost: Object.entries(edge.node.cost).reduce((cost, [priceType, moneyObject]) => {
           if (!moneyObject) return cost
 
           return { ...cost, [priceType]: { ...moneyObject, amount: parseFloat(moneyObject.amount) } }
@@ -98,11 +91,24 @@ class ShopifyStorefrontApi {
       },
     }))
 
+    shopifyCart.deliveryGroups.edges = shopifyCart.deliveryGroups.edges.map(edge => ({
+      node: {
+        ...edge.node,
+        selectedDeliveryOption: {
+          ...edge.node.selectedDeliveryOption,
+          estimatedCost: {
+            ...edge.node.selectedDeliveryOption.estimatedCost,
+            amount: parseFloat(edge.node.selectedDeliveryOption.estimatedCost.amount) || 0
+          },
+        }
+      }
+    }))
+
     return shopifyCart
   }
 
   async addCartLines (cartId, lines) {
-    const response = await this._request(addCartLines, {cartId, lines})
+    const response = await this._request(queries.addCartLines, {cartId, lines})
 
     this._handleCartUserErrors(response, 'cartLinesAdd', lines)
 
@@ -110,7 +116,7 @@ class ShopifyStorefrontApi {
   }
 
   async updateCartLines (cartId, lines) {
-    const response = await this._request(updateCartLines, { cartId, lines })
+    const response = await this._request(queries.updateCartLines, { cartId, lines })
 
     this._handleCartUserErrors(response, 'cartLinesUpdate', lines)
 
@@ -118,7 +124,7 @@ class ShopifyStorefrontApi {
   }
 
   async deleteCartLines (cartId, lineIds){
-    const response = await this._request(deleteCartLines, { cartId, lineIds })
+    const response = await this._request(queries.deleteCartLines, { cartId, lineIds })
 
     this._handleCartUserErrors(response, 'cartLinesRemove', lineIds)
 

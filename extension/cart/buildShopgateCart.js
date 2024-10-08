@@ -58,7 +58,7 @@ module.exports = async (context, input) => {
         messages: [],
         product: {
           id: line.merchandise.product.id.substring(22),
-          featuredImageUrl: line.merchandise.image.url, // todo use our image or use scaling/cropping via API
+          featuredImageUrl: line.merchandise.image.url,
           name: line.merchandise.product.title,
           price: {
             unit: line.cost.amountPerQuantity.amount,
@@ -97,10 +97,21 @@ module.exports = async (context, input) => {
         type: 'grandTotal'
       },
       {
-        label: '',
+        label: 'Tax',
         amount: (shopifyCart.cost.totalTaxAmount || {}).amount || 0,
         type: 'tax'
-      }
+      },
+      ...shopifyCart.deliveryGroups.edges.map(edge => {
+        const deliveryOption = edge.node.selectedDeliveryOption
+
+        console.log(deliveryOption)
+
+        return {
+          label: deliveryOption.title,
+          amount: deliveryOption.estimatedCost.amount || 0,
+          type: 'shipping'
+        }
+      })
     ],
     flags: { orderable: isOrderable },
   }
@@ -271,8 +282,7 @@ module.exports = async (context, input) => {
       const product = new Product()
       product.id = productId.toString() // done
       product.name = item.title // done
-      product.featuredImageUrl = featuredImageUrl // todo
-
+      product.featuredImageUrl = featuredImageUrl // done, is automatically running through thumbor/imagor/whatever we're using rn
       /* price */
       const price = new Price()
       price.unit = item.price // done
@@ -345,7 +355,7 @@ module.exports = async (context, input) => {
     }, {}))
 
     // Check if coupons are enabled to be shown in cart
-    cart.flags.coupons = context.config.enableCartCoupons // todo, also this probably never worked so far
+    cart.flags.coupons = context.config.enableCartCoupons // confirmed this didn't work; might add later
     if (cart.enableCoupons) {
       if (checkout.applied_discount) {
         if (checkout.applied_discount.applicable) {

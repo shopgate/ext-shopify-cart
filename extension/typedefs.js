@@ -70,6 +70,7 @@
  * @property {string} checkoutUrl
  * @property {ShopifyCartCost} cost
  * @property {{ edges: { node: ShopifyCartLine }[] }} lines
+ * @property {{ edges: { node: ShopifyDeliveryGroup }[] }} deliveryGroups
  */
 
 /**
@@ -104,9 +105,29 @@
  * @typedef ShopifyCartLineProductVariant
  * @property {string} id
  * @property {string} sku
- * @property {{ id: string, title: string, vendor: string }} product
+ * @property {ShopifyCartLineProduct} product
  * @property {{ url: string }} image
  * @property {{ type: string, label: string, value: string }[]} selectedOptions
+ */
+
+/**
+ * @typedef ShopifyCartLineProduct
+ * @property {string} id
+ * @property {string} title
+ * @property {string} vendor
+ * @property {ShopifyCartLineProductOption[]} options
+ */
+
+/**
+ * @typedef ShopifyCartLineProductOption
+ * @property {string} id
+ * @property {string} name
+ * @property {{ id: string, name: string }[]} optionValues
+ */
+
+/**
+ * @typedef ShopifyDeliveryGroup
+ * @property {{ title: string, estimatedCost: ShopifyCartAmount }} selectedDeliveryOption
  */
 
 /**
