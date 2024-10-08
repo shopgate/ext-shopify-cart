@@ -47,6 +47,9 @@ query getCart($cartId: ID!) {
               amount
             }
           }
+          discountAllocations {
+            discountedAmount { amount }
+          }
           merchandise {
             ... on ProductVariant {
               id
@@ -68,6 +71,13 @@ query getCart($cartId: ID!) {
           }
         }
       }
+    }
+    discountAllocations {
+      discountedAmount { amount }
+    }
+    discountCodes {
+      applicable
+      code
     }
     deliveryGroups(first:250) {
       edges {

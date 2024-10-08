@@ -1,5 +1,5 @@
 /**
- * @typedef {Object} SDKContext
+ * @typedef SDKContext
  * @property {ExtensionConfig} config
  * @property {SDKContextMeta} meta
  * @property {SDKContextStorage} storage
@@ -8,7 +8,7 @@
  */
 
 /**
- * @typedef {Object} ExtensionConfig
+ * @typedef ExtensionConfig
  * @property {string} shopifyShopAlias
  * @property {string} shopifyShopDomain
  * @property {string} shopifyAccessToken
@@ -26,7 +26,7 @@
  */
 
 /**
- * @typedef {Object} SDKContextMeta
+ * @typedef SDKContextMeta
  * @property {string} deviceId
  * @property {string} appId
  * @property {string} userId
@@ -34,14 +34,14 @@
  */
 
 /**
- * @typedef {Object} SDKContextStorage
+ * @typedef SDKContextStorage
  * @property {SDKContextEntityStorage} extension
  * @property {SDKContextEntityStorage} device
  * @property {SDKContextEntityStorage} user
  */
 
 /**
- * @typedef {Object} SDKContextEntityStorage
+ * @typedef SDKContextEntityStorage
  * @property {Function} get - (string key, Function cb)
  * @property {Function} set - (string key, mixed value, Function cb)
  * @property {Function} del - (string key, Function cb)
@@ -55,7 +55,7 @@
  */
 
 /**
- * @typedef {Object} SDKContextLog
+ * @typedef SDKContextLog
  * @property {Function} trace
  * @property {Function} debug
  * @property {Function} info
@@ -70,6 +70,8 @@
  * @property {string} checkoutUrl
  * @property {ShopifyCartCost} cost
  * @property {{ edges: { node: ShopifyCartLine }[] }} lines
+ * @property {{ discountedAmount: { amount: number } }[]} discountAllocations
+ * @property {{ applicable: boolean, code: string }[]} discountCodes
  * @property {{ edges: { node: ShopifyDeliveryGroup }[] }} deliveryGroups
  */
 
@@ -91,6 +93,7 @@
  * @property {string} id
  * @property {number} quantity
  * @property {ShopifyCartLineCost} cost
+ * @property {{ discountedAmount: { amount: number } }[]} discountAllocations
  * @property {ShopifyCartLineProductVariant} merchandise
  */
 
@@ -105,6 +108,7 @@
  * @typedef ShopifyCartLineProductVariant
  * @property {string} id
  * @property {string} sku
+ * @property {number} compareAtPrice
  * @property {ShopifyCartLineProduct} product
  * @property {{ url: string }} image
  * @property {{ type: string, label: string, value: string }[]} selectedOptions
@@ -155,7 +159,6 @@
  * @property {string} id
  * @property {string} name
  * @property {string} featuredImageUrl
- * @property {number} compareAtPrice
  * @property {{ unit: number, default: number, special: number|null }} price
  * @property {{ type: string, label: string, value: any }[]} properties
  * @property {{ label: string, value: any }[]} additionalInfo

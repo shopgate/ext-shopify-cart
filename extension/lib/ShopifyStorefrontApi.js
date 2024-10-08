@@ -70,47 +70,7 @@ class ShopifyStorefrontApi {
       throw new Error('Error loading cart contents')
     }
 
-    // All "amount" fields are of type "Decimal", which are "numeric strings". Converting to "number" to pass frontend validations.
-    shopifyCart.cost = Object.entries(shopifyCart.cost).reduce((cost, [priceType, moneyObject]) => {
-      if (!moneyObject) return cost
-
-      return {
-        ...cost,
-        [priceType]: { ...moneyObject, amount: parseFloat(moneyObject.amount) }
-      }
-    }, {})
-
-    shopifyCart.lines.edges = shopifyCart.lines.edges.map(edge => ({
-      node: {
-        ...edge.node,
-        cost: Object.entries(edge.node.cost).reduce((cost, [priceType, moneyObject]) => {
-          if (!moneyObject) return cost
-
-          return { ...cost, [priceType]: { ...moneyObject, amount: parseFloat(moneyObject.amount) } }
-        }, {}),
-        merchandise: {
-          ...edge.node.merchandise,
-          compareAtPrice: edge.node.merchandise.compareAtPrice === null
-            ? null
-            : { amount: parseFloat(edge.node.merchandise.compareAtPrice.amount) }
-        }
-      },
-    }))
-
-    shopifyCart.deliveryGroups.edges = shopifyCart.deliveryGroups.edges.map(edge => ({
-      node: {
-        ...edge.node,
-        selectedDeliveryOption: {
-          ...edge.node.selectedDeliveryOption,
-          estimatedCost: {
-            ...edge.node.selectedDeliveryOption.estimatedCost,
-            amount: parseFloat(edge.node.selectedDeliveryOption.estimatedCost.amount) || 0
-          },
-        }
-      }
-    }))
-
-    return shopifyCart
+    return this._convertShopifyAmountsToNumbers(shopifyCart)
   }
 
   async addCartLines (cartId, lines) {
@@ -193,6 +153,35 @@ class ShopifyStorefrontApi {
     }
 
     if (error.errors.length > 0) throw error
+  }
+
+  /**
+   * Recursively applies parseFloat on any property named "amount" in the object passed and returns the converted object.
+   *
+   * @param {object} obj
+   * @returns object
+   * @private
+   */
+  _convertShopifyAmountsToNumbers (obj) {
+    return Object.entries(obj).reduce((convertedObject, [key, value]) => {
+      if (key === 'amount' && typeof value === 'string') {
+        convertedObject[key] = parseFloat(value)
+        return convertedObject
+      }
+
+      if (Array.isArray(value)) {
+        convertedObject[key] = value.map(entry => {
+          // note: arrays in arrays not supported, haven't seen this in the API so far
+          return (typeof entry === 'object') ? this._convertShopifyAmountsToNumbers(entry) : entry
+        })
+      } else if (typeof value === 'object' && value !== null) {
+        convertedObject[key] = this._convertShopifyAmountsToNumbers(value)
+      } else {
+        convertedObject[key] = value
+      }
+
+      return convertedObject
+    }, {})
   }
 }
 
