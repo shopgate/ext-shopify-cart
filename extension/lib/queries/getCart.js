@@ -53,6 +53,7 @@ query getCart($cartId: ID!) {
               sku
               title
               image { url }
+              compareAtPrice { amount }
               selectedOptions {
                 name
                 value

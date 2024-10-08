@@ -87,7 +87,13 @@ class ShopifyStorefrontApi {
           if (!moneyObject) return cost
 
           return { ...cost, [priceType]: { ...moneyObject, amount: parseFloat(moneyObject.amount) } }
-        }, {})
+        }, {}),
+        merchandise: {
+          ...edge.node.merchandise,
+          compareAtPrice: edge.node.merchandise.compareAtPrice === null
+            ? null
+            : { amount: parseFloat(edge.node.merchandise.compareAtPrice.amount) }
+        }
       },
     }))
 

@@ -40,9 +40,15 @@ module.exports = async (context, input) => {
       // prices
       let defaultPrice = line.cost.totalAmount.amount
       let specialPrice = null
-      if ((line.cost.compareAtAmountPerQuantity || {}).amount > line.cost.amountPerQuantity.amount) {
+
+      let compareAtAmount = (line.cost.compareAtAmountPerQuantity || {}).amount
+
+      // compareAtAmount isn't always set (e.g. after aborting checkout); look up at product lvl instead in that case
+      if (compareAtAmount === undefined) compareAtAmount = (line.merchandise.compareAtPrice || {}).amount
+
+      if (compareAtAmount > line.cost.amountPerQuantity.amount) {
         specialPrice = defaultPrice
-        defaultPrice = line.cost.compareAtAmountPerQuantity.amount * line.quantity
+        defaultPrice = compareAtAmount * line.quantity
       }
 
       // every product has at least one option with one variant but if a product has at least one option with more than
@@ -103,8 +109,6 @@ module.exports = async (context, input) => {
       },
       ...shopifyCart.deliveryGroups.edges.map(edge => {
         const deliveryOption = edge.node.selectedDeliveryOption
-
-        console.log(deliveryOption)
 
         return {
           label: deliveryOption.title,

@@ -155,6 +155,7 @@
  * @property {string} id
  * @property {string} name
  * @property {string} featuredImageUrl
+ * @property {number} compareAtPrice
  * @property {{ unit: number, default: number, special: number|null }} price
  * @property {{ type: string, label: string, value: any }[]} properties
  * @property {{ label: string, value: any }[]} additionalInfo
