@@ -1,5 +1,5 @@
 const ApiFactory = require('../lib/ShopifyApiFactory')
-const UnknownError = require('../models/errors/UnknownError')
+const UnknownError = require('../models/Errors/UnknownError')
 
 /**
  * @param {SDKContext} context
