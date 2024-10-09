@@ -30,8 +30,6 @@ module.exports = async (context) => {
     addProducts.push({ merchandiseId: line.node.merchandise.id, quantity: line.node.quantity })
   }
 
-  console.log({ addProducts, deleteCartLines }, '#######################################')
-
   try {
     // sequential so we don't clear the guest cart if merging failed
     if (addProducts.length > 0) await storefrontApi.addCartLines(userCartId, addProducts)

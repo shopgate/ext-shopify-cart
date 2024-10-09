@@ -129,9 +129,9 @@ class ShopifyStorefrontApi {
   }
 
   /**
-   * @param {object} response
+   * @param {{ data: { [queryName: string]: { userErrors: { field: string[], message: string }[] } } }} response
    * @param {string} queryName
-   * @param {array} referencedContents
+   * @param {{ merchandiseId: string }[]} referencedContents
    * @throws CartError
    * @private
    */
@@ -146,10 +146,7 @@ class ShopifyStorefrontApi {
         ? (referencedContents[userError.field[1]] || {}).merchandiseId
         : undefined
 
-      error.errors.push({
-        message: userError.message,
-        entityId
-      })
+      error.errors.push({ message: userError.message, entityId })
     }
 
     if (error.errors.length > 0) throw error

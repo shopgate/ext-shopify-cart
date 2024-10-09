@@ -110,6 +110,7 @@ module.exports = async (context, input) => {
     flags: { orderable: isOrderable }
   }
 
+  // add discount / coupon total
   if (productDiscount !== 0 || shopifyCart.discountAllocations.length > 0) {
     const label = shopifyCart.discountCodes
       .filter(code => code.applicable)

@@ -1,5 +1,4 @@
 /**
- *
  * @param {SDKContext} context
  * @param {{ shopifyCart: ShopifyCart }} input
  */

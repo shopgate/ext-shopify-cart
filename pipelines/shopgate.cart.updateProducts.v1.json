@@ -7,9 +7,7 @@
       {"key": "CartItem", "id": "1010", "optional": true},
       {"key": "cartItems", "id": "1011", "optional": true}
     ],
-    "output": [
-      {"key": "messages", "id": "1100", "optional": true}
-    ],
+    "output": [],
     "steps": [
       {
         "type": "conditional",
@@ -117,9 +115,7 @@
           {"key": "updateCartItems", "id": "1011"},
           {"key": "shopifyCartId", "id": "2010"}
         ],
-        "output": [
-          {"key": "messages", "id": "1100", "optional": true}
-        ]
+        "output": []
       }
     ]
   }
