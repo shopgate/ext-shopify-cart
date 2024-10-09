@@ -1,5 +1,3 @@
-const UnauthorizedError = require('../models/Errors/UnauthorizedError')
-
 module.exports = class ShopifyApiTokenManager {
   /**
    * @param {SDKContextEntityStorage} extensionStorage
