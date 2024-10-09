@@ -12,6 +12,7 @@ module.exports = async (context, input) => {
   let productDiscount = 0
 
   const shopgateCart = {
+    flags: { orderable: isOrderable, coupons: false },
     isOrderable,
     isTaxIncluded: null,
     currency: shopifyCart.cost.totalAmount.currencyCode || null, // not set when no items in the cart
@@ -106,8 +107,7 @@ module.exports = async (context, input) => {
           type: 'shipping'
         }
       })
-    ],
-    flags: { orderable: isOrderable }
+    ]
   }
 
   // add discount / coupon total
