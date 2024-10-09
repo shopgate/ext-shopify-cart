@@ -3,6 +3,7 @@
  * @property {ExtensionConfig} config
  * @property {SDKContextMeta} meta
  * @property {SDKContextStorage} storage
+ * @property {{ getInfo: function }} device
  * @property {SDKContextLog} log
  * @property {Function} tracedRequest
  */
@@ -72,6 +73,7 @@
  * @property {{ edges: { node: ShopifyCartLine }[] }} lines
  * @property {{ discountedAmount: { amount: number } }[]} discountAllocations
  * @property {{ applicable: boolean, code: string }[]} discountCodes
+ * @property {{ lastCharacters: string, presentmentAmountUsed: ShopifyCartAmount }[]} appliedGiftCards
  * @property {{ edges: { node: ShopifyDeliveryGroup }[] }} deliveryGroups
  */
 

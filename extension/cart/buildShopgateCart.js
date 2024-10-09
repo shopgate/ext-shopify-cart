@@ -8,8 +8,9 @@ module.exports = async (context, input) => {
 
   const isOrderable = shopifyCart.lines.edges.length > 0 && shopifyCart.checkoutUrl
 
+  // todo use when displaying per line item is properly implemented (frontend portal?)
   // filled during line items iteration below
-  let productDiscount = 0
+  // let productDiscount = 0
 
   const shopgateCart = {
     flags: { orderable: isOrderable, coupons: false },
@@ -21,12 +22,13 @@ module.exports = async (context, input) => {
     cartItems: shopifyCart.lines.edges.map(edge => {
       const line = edge.node
 
+      // todo use when displaying per line item is properly implemented (frontend portal?)
       // add up discounts
-      productDiscount += line.discountAllocations.reduce((total, discount) => {
-        total += discount.discountedAmount.amount
-
-        return total
-      }, 0)
+      // productDiscount += line.discountAllocations.reduce((total, discount) => {
+      //   total += discount.discountedAmount.amount
+      //
+      //   return total
+      // }, 0)
 
       // prices
       let defaultPrice = line.cost.totalAmount.amount
@@ -111,18 +113,27 @@ module.exports = async (context, input) => {
   }
 
   // add discount / coupon total
-  if (productDiscount !== 0 || shopifyCart.discountAllocations.length > 0) {
+  if (shopifyCart.discountAllocations.length > 0) {
     const label = shopifyCart.discountCodes
       .filter(code => code.applicable)
       .map(code => code.code)
       .join(', ')
 
-    const amount = productDiscount += shopifyCart.discountAllocations.reduce((total, discountAllocation) => {
+    const amount = shopifyCart.discountAllocations.reduce((total, discountAllocation) => {
       total += discountAllocation.discountedAmount.amount
 
       return total
     }, 0)
     shopgateCart.totals.push({ label, amount, type: 'discount' })
+  }
+
+  // todo probably require frontend portal to properly display this
+  for (const giftCard of shopifyCart.appliedGiftCards) {
+    shopgateCart.totals.push({
+      label: `...${giftCard.lastCharacters}`,
+      amount: giftCard.presentmentAmountUsed.amount *-1,
+      type: 'custom'
+    })
   }
 
   return shopgateCart

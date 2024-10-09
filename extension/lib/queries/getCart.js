@@ -79,6 +79,12 @@ query getCart($cartId: ID!) {
       applicable
       code
     }
+    appliedGiftCards {
+      lastCharacters
+      presentmentAmountUsed {
+        amount
+      }
+    }
     deliveryGroups(first:250) {
       edges {
         node {
