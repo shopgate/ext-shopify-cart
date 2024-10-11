@@ -7,9 +7,7 @@
       {"key": "CartItem", "id": "1010", "optional": true},
       {"key": "cartItems", "id": "1011", "optional": true}
     ],
-    "output": [
-      {"key": "messages", "id": "1100", "optional": true}
-    ],
+    "output": [],
     "steps": [
       {
         "type": "conditional",
@@ -24,11 +22,75 @@
       },
       {
         "type": "pipeline",
-        "id": "shopgate.cart.prepareShopifyCart.v1",
-        "trusted": false,
+        "id": "shopgate.shopify-user.getStorefrontApiCustomerAccessToken.v1",
+        "trusted": true,
         "input": [],
+        "output": [{"key":  "storefrontApiCustomerAccessToken", "id": "2000", "optional": true}]
+      },
+      {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/initShopifyCart.js",
+        "input": [{"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true}],
+        "output": [{"key": "shopifyCartId", "id": "2010"}]
+      },
+      {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/fetchShopifyCart.js",
+        "input": [{"key": "shopifyCartId", "id": "2010"}],
+        "output": [{"key": "shopifyCart", "id": "2020"}]
+      },
+      {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/extractShopifyCartProductIds.js",
+        "input": [
+          {"key": "shopifyCart", "id": "2020"}
+        ],
         "output": [
-          {"key": "collection", "id": "103"},
+          {"key": "productIdSets",  "id": "102"}
+        ]
+      },
+      {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/products/getProducts.js",
+        "input": [
+          {"key": "productIdSets", "id": "102"}
+        ],
+        "output": [
+          {"key": "service", "id": "10"},
+          {"key": "version", "id": "11"},
+          {"key": "path", "id": "12"},
+          {"key": "method", "id": "13"},
+          {"key": "query", "id": "14"}
+        ]
+      },
+      {
+        "type": "extension",
+        "id": "@shopgate/bigapi",
+        "path": "@shopgate/bigapi/big-api/getBigApiResult.js",
+        "input": [
+          {"key": "service", "id": "10"},
+          {"key": "version", "id": "11"},
+          {"key": "path", "id": "12"},
+          {"key": "method", "id": "13"},
+          {"key": "query", "id": "14"}
+        ],
+        "output": [
+          {"key": "collection", "id": "103"}
+        ]
+      },
+      {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/buildShopgateCart.js",
+        "input": [
+          {"key": "shopifyCart", "id": "2020"},
+          {"key": "importedProductsInCart", "id": "103", "optional": true}
+        ],
+        "output": [
           {"key": "cartItems", "id": "1060"}
         ]
       },
@@ -36,12 +98,10 @@
         "id": "beforeUpdateProductsInCart",
         "type": "hook",
         "input": [
-          {"key": "collection", "id": "103"},
           {"key": "existingCartItems", "id": "1060"},
           {"key": "updateCartItems", "id": "1011"}
         ],
         "output": [
-          {"key": "collection", "id": "103"},
           {"key": "existingCartItems", "id": "1060"},
           {"key": "updateCartItems", "id": "1011"}
         ]
@@ -51,13 +111,11 @@
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/updateProductsInCart.js",
         "input": [
-          {"key": "importedProductsInCart", "id": "103", "optional": true},
           {"key": "existingCartItems", "id": "1060"},
-          {"key": "updateCartItems", "id": "1011"}
+          {"key": "updateCartItems", "id": "1011"},
+          {"key": "shopifyCartId", "id": "2010"}
         ],
-        "output": [
-          {"key": "messages", "id": "1100", "optional": true}
-        ]
+        "output": []
       }
     ]
   }

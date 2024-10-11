@@ -1,0 +1,26 @@
+{
+  "name": "@shopgate/shopify-cart",
+  "version": "3.0.0-alpha.1",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shopgate/ext-shopify-user"
+  },
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint --ignore-path ../.gitignore --ext .js --ext .jsx ."
+  },
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@shopgate/engage": "6.19.8",
+    "@shopgate/eslint-config": "6.19.8",
+    "eslint": "^7.9.0"
+  },
+  "peerDependencies": {
+    "@shopgate/engage": ">= 6.19.8"
+  },
+  "dependencies": {
+    "@shopgate/pwa-core": "^6.19.8",
+    "@shopgate/pwa-webcheckout-shopify": "^6.19.8",
+    "react": "^16.8.2"
+  }
+}
