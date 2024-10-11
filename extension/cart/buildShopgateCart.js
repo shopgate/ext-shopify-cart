@@ -95,8 +95,8 @@ module.exports = async (context, input) => {
         type: 'grandTotal'
       },
       {
-        label: 'Tax',
-        amount: (shopifyCart.cost.totalTaxAmount || {}).amount || 0,
+        label: 'cart.tax',
+        amount: (shopifyCart.cost.totalTaxAmount || {}).amount || 20,
         type: 'tax'
       },
       ...shopifyCart.deliveryGroups.edges.map(edge => {

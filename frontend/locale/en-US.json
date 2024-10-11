@@ -1,5 +1,7 @@
 {
   "cart": {
-    "productDiscount": "incl. discount of"
+    "productDiscount": "incl. discount of",
+    "giftCard": "Gift card",
+    "tax": "Tax"
   }
 }
