@@ -44,5 +44,23 @@
         "value" : false
       }
     }
-  }
+  },
+  "components": [
+    {
+      "id": "ProductLevelDiscount",
+      "path": "frontend/portals/ProductLevelDiscount/index.jsx",
+      "target": "cart.item.properties.after",
+      "type": "portals"
+    },
+    {
+      "id": "locale/en-US",
+      "type": "translations",
+      "path": "frontend/locale/en-US.json"
+    },
+    {
+      "id": "locale/de-DE",
+      "type": "translations",
+      "path": "frontend/locale/de-DE.json"
+    }
+  ]
 }

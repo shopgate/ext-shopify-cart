@@ -8,9 +8,8 @@ module.exports = async (context, input) => {
 
   const isOrderable = shopifyCart.lines.edges.length > 0 && shopifyCart.checkoutUrl
 
-  // todo use when displaying per line item is properly implemented (frontend portal?)
   // filled during line items iteration below
-  // let productDiscount = 0
+  let productDiscount = 0
 
   const shopgateCart = {
     flags: { orderable: isOrderable, coupons: false },
@@ -22,13 +21,12 @@ module.exports = async (context, input) => {
     cartItems: shopifyCart.lines.edges.map(edge => {
       const line = edge.node
 
-      // todo use when displaying per line item is properly implemented (frontend portal?)
       // add up discounts
-      // productDiscount += line.discountAllocations.reduce((total, discount) => {
-      //   total += discount.discountedAmount.amount
-      //
-      //   return total
-      // }, 0)
+      productDiscount += line.discountAllocations.reduce((total, discount) => {
+        total += discount.discountedAmount.amount
+
+        return total
+      }, 0)
 
       // prices
       let defaultPrice = line.cost.totalAmount.amount
@@ -62,7 +60,8 @@ module.exports = async (context, input) => {
           price: {
             unit: line.cost.amountPerQuantity.amount,
             default: defaultPrice,
-            special: specialPrice
+            special: specialPrice,
+            discount: productDiscount
           },
           properties: isVariantProduct
             ? line.merchandise.selectedOptions.map(option => ({
