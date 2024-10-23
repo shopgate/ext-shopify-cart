@@ -4,7 +4,7 @@ import I18n from '@shopgate/pwa-common/components/I18n'
 
 import styles from './style'
 
-const ProductLevelDiscount = lineItem => {
+const CartItemProductLevelDiscount = lineItem => {
   if (!lineItem.currency || !lineItem.product.price.discount) return null
 
   return (
@@ -18,4 +18,4 @@ const ProductLevelDiscount = lineItem => {
   )
 }
 
-export default ProductLevelDiscount
+export default CartItemProductLevelDiscount

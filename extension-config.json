@@ -47,8 +47,8 @@
   },
   "components": [
     {
-      "id": "ProductLevelDiscount",
-      "path": "frontend/portals/ProductLevelDiscount/index.jsx",
+      "id": "CartItemProductLevelDiscount",
+      "path": "frontend/portals/CartItemProductLevelDiscount/index.jsx",
       "target": "cart.item.properties.after",
       "type": "portals"
     },
