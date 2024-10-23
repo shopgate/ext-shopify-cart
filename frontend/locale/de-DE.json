@@ -1,7 +1,7 @@
 {
   "cart": {
     "productDiscount": "inkl. Rabatt von",
-    "giftCard": "Geschenkgutschein",
+    "giftCard": "Geschenkgutschein {giftCardCode}",
     "tax": "MwSt."
   }
 }

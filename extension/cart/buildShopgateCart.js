@@ -6,7 +6,7 @@
 module.exports = async (context, input) => {
   const shopifyCart = input.shopifyCart
 
-  const isOrderable = shopifyCart.lines.edges.length > 0 && shopifyCart.checkoutUrl
+  const isOrderable = (shopifyCart.lines.edges.length > 0 && !!shopifyCart.checkoutUrl)
 
   // filled during line items iteration below
   let productDiscount = 0
@@ -126,12 +126,11 @@ module.exports = async (context, input) => {
     shopgateCart.totals.push({ label, amount, type: 'discount' })
   }
 
-  // todo probably require frontend portal to properly display this
   for (const giftCard of shopifyCart.appliedGiftCards) {
     shopgateCart.totals.push({
       label: `...${giftCard.lastCharacters}`,
       amount: giftCard.presentmentAmountUsed.amount *-1,
-      type: 'custom'
+      type: 'giftCard'
     })
   }
 

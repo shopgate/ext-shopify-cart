@@ -53,6 +53,12 @@
       "type": "portals"
     },
     {
+      "id": "CartSubTotalGiftCards",
+      "path": "frontend/portals/CartSubTotalGiftCards/index.jsx",
+      "target": "cart.payment-bar.totals.tax.after",
+      "type": "portals"
+    },
+    {
       "id": "locale/en-US",
       "type": "translations",
       "path": "frontend/locale/en-US.json"
