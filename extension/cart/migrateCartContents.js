@@ -19,8 +19,16 @@ module.exports = async (context) => {
   }
 
   if (deviceCart === null) {
-    context.log.error('Shopify API returned null instead of a cart.')
-    throw new UnknownError()
+    context.log.warn('Shopify API returned null when getting the device cart, creating a new one')
+    try {
+      const newDeviceCartId = await storefrontApi.createCart()
+      deviceCart = await storefrontApi.getCart(newDeviceCartId)
+      await context.storage.device.set('shopifyCartId', newDeviceCartId)
+    } catch (err) {
+      await context.storage.device.del('shopifyCartId')
+      this.log.error({ errorMessage: err.message, statusCode: err.statusCode, code: err.code }, 'Error creating new device cart')
+      throw new UnknownError()
+    }
   }
 
   const deleteCartLines = []
