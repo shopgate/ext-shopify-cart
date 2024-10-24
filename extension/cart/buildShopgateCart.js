@@ -8,9 +8,6 @@ module.exports = async (context, input) => {
 
   const isOrderable = (shopifyCart.lines.edges.length > 0 && !!shopifyCart.checkoutUrl)
 
-  // filled during line items iteration below
-  let productDiscount = 0
-
   const shopgateCart = {
     flags: { orderable: isOrderable, coupons: false },
     isOrderable,
@@ -22,7 +19,7 @@ module.exports = async (context, input) => {
       const line = edge.node
 
       // add up discounts
-      productDiscount += line.discountAllocations.reduce((total, discount) => {
+      const productDiscount = line.discountAllocations.reduce((total, discount) => {
         total += discount.discountedAmount.amount
 
         return total
