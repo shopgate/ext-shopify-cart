@@ -5,7 +5,7 @@ const ApiFactory = require('../lib/ShopifyApiFactory')
  * @param {SDKContext} context
  */
 module.exports = async (context) => {
-  const deviceCartId = await context.storage.device.get('shopifyCartId')
+  let deviceCartId = await context.storage.device.get('shopifyCartId')
   const userCartId = await context.storage.user.get('shopifyCartId')
 
   const storefrontApi = ApiFactory.buildStorefrontApi(context)
@@ -21,9 +21,9 @@ module.exports = async (context) => {
   if (deviceCart === null) {
     context.log.warn('Shopify API returned null when getting the device cart, creating a new one')
     try {
-      const newDeviceCartId = await storefrontApi.createCart()
-      deviceCart = await storefrontApi.getCart(newDeviceCartId)
-      await context.storage.device.set('shopifyCartId', newDeviceCartId)
+      deviceCartId = await storefrontApi.createCart()
+      deviceCart = await storefrontApi.getCart(deviceCartId)
+      await context.storage.device.set('shopifyCartId', deviceCartId)
     } catch (err) {
       await context.storage.device.del('shopifyCartId')
       this.log.error({ errorMessage: err.message, statusCode: err.statusCode, code: err.code }, 'Error creating new device cart')
