@@ -55,7 +55,7 @@
     {
       "id": "CartSubTotalGiftCards",
       "path": "frontend/portals/CartSubTotalGiftCards/index.jsx",
-      "target": "cart.payment-bar.totals.tax.after",
+      "target": "cart.payment-bar.totals.grand-total.before",
       "type": "portals"
     },
     {
