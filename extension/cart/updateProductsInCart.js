@@ -1,55 +1,25 @@
-const CartItem = require('../models/cart/cartItems/cartItem')
-const { extractVariantId, handleCartError, getCurrentCartId } = require('../helper/cart')
-const ShopifyApiRequest = require('../lib/shopify.api.js')
-const UnknownError = require('../models/Errors/UnknownError')
+const CartError = require('../models/Errors/CartError')
+const ApiFactory = require('../lib/ShopifyApiFactory')
 
 /**
  * @param {SDKContext} context
- * @param input
- * @param {Object[]} input.importedProductsInCart The list of items in the cart in Shopgate format
- * @param {Object[]} input.existingCartItems The list of items currently in the cart
- * @param {Object[]} input.updateCartItems
+ * @param {{ updateCartItems: { cartItemId: string, quantity: number }[] }} input
+ * @param {string} input.shopifyCartId
  */
 module.exports = async (context, input) => {
-  const shopifyApiRequest = new ShopifyApiRequest(context.config, context.log)
-  const existingCartItems = input.existingCartItems
-  const updateCartItems = input.updateCartItems
-  const importedProductsInCart = input.importedProductsInCart
-  const cartItem = new CartItem()
+  const storefrontApi = ApiFactory.buildStorefrontApi(context)
 
-  let checkoutCartItems = []
+  const updateCartLines = input.updateCartItems.map(item => ({
+    id: item.cartItemId,
+    quantity: item.quantity
+  }))
 
   try {
-    const cartId = await getCurrentCartId(context)
-    const existingCartItemProducts = existingCartItems.filter(item => item.type === cartItem.TYPE_PRODUCT)
-    let variantMap = {}
-
-    existingCartItemProducts.forEach(item => {
-      let variantId = extractVariantId(importedProductsInCart.find(importedProduct =>
-        importedProduct.id === item.product.id && importedProduct.customData
-      ))
-
-      variantMap[item.product.id] = variantId || item.product.id
-    })
-
-    existingCartItemProducts.forEach(item => {
-      // a note about "cartItemId vs. CartItemId" - this is a fix for documentation vs. reality mismatch
-      // cartItemId is according to documentation, Newman tests and PWA 6.x
-      // CartItemId is PWA 5.x reality
-      const updateItem = updateCartItems.find(updateItem => (updateItem.cartItemId || updateItem.CartItemId) === item.id)
-
-      checkoutCartItems.push({
-        variant_id: variantMap[item.product.id],
-        quantity: updateItem ? updateItem.quantity : item.quantity
-      })
-    })
-
-    try {
-      await shopifyApiRequest.put(`/admin/api/2023-10/checkouts/${cartId}.json`, { checkout: { line_items: checkoutCartItems } })
-    } catch (err) {
-      return { messages: await handleCartError(err, checkoutCartItems, cartId, context) }
-    }
+    await storefrontApi.updateCartLines(input.shopifyCartId, updateCartLines)
+    return { messages: [] }
   } catch (err) {
-    throw new UnknownError()
+    if (err instanceof CartError) throw err
+
+    context.log.error({ errorMessage: err.message, statusCode: err.statusCode, code: err.code }, 'Error updating products in cart')
   }
 }

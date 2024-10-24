@@ -6,15 +6,6 @@ function getBaseUrl(config) {
   return url.replace(/\/$/, '')
 }
 
-/**
- * @param {ExtensionConfig} config
- * @returns {string}
- */
-function getHostName(config) {
-  return getBaseUrl(config).replace(/(^\w+:|^)\/\//, '')
-}
-
 module.exports = {
-  getBaseUrl,
-  getHostName
+  getBaseUrl
 }

@@ -1,0 +1,33 @@
+{
+  "version": "1",
+  "pipeline": {
+    "id": "shopgate.cart.userLoggedIn.v1",
+    "public": true,
+    "input": [],
+    "output": [],
+    "steps": [
+      {
+        "type": "pipeline",
+        "id": "shopgate.shopify-user.getStorefrontApiCustomerAccessToken.v1",
+        "trusted": true,
+        "input": [],
+        "output": [{"key":  "storefrontApiCustomerAccessToken", "id": "2000"}]
+      },
+      {
+        "type": "extension",
+        "description": "Make sure a customer cart exists before migrating.",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/initShopifyCart.js",
+        "input": [{"key": "storefrontApiCustomerAccessToken", "id": "2000"}],
+        "output": []
+      },
+      {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/migrateCartContents.js",
+        "input": [],
+        "output": []
+      }
+    ]
+  }
+}
