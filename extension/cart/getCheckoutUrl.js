@@ -9,5 +9,8 @@ module.exports = async (context, input) => {
   const storage = context.meta.userId ? context.storage.user : context.storage.device
   await storage.set('cartMayBeInvalid', true)
 
-  return { url: `${input.shopifyCart.checkoutUrl}&logged_in=true` }
+  const checkoutUrl = new URL(input.shopifyCart.checkoutUrl)
+  checkoutUrl.searchParams.append('logged_in', 'true')
+
+  return { url: checkoutUrl.toString() }
 }
