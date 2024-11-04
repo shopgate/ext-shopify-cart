@@ -11,7 +11,7 @@ class ShopifyStorefrontApi {
    * @param {string?} apiVersion
    */
   constructor(shopUrl, tokenManager, logger, apiVersion = '2024-07') {
-    this.apiUrl = `${shopUrl.replace(/\/+$/, '')}/api/${apiVersion}/graphql.json`
+    this.apiUrl = new URL(`/api/${apiVersion}/graphql.json`, shopUrl).toString()
     this.tokenManager = tokenManager
     this.logger = logger
     this.storefrontApiAccessToken = null
