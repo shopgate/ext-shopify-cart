@@ -24,19 +24,9 @@ module.exports = class ShopifyApiTokenManager {
 
     if (!token) {
       token = await this.adminApi.getStoreFrontAccessToken(accessTokenTitle)
-      await this.setStorefrontApiAccessToken(token)
+      await this.extensionStorage.set('storefrontAccessToken', token)
     }
 
     return token
-  }
-
-  /**
-   * Saves the COMMON Storefront API access token for app access to the extension storage
-   *
-   * @param {string} storefrontAccessToken
-   * @returns {Promise<void>}
-   */
-  async setStorefrontApiAccessToken (storefrontAccessToken) {
-    await this.extensionStorage.set('storefrontAccessToken', storefrontAccessToken)
   }
 }
