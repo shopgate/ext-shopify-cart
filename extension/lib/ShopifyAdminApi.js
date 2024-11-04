@@ -1,4 +1,3 @@
-const jsonb = require('json-bigint-native')
 const request = require('request-promise-native')
 const UnknownError = require('../models/Errors/UnknownError')
 
@@ -67,7 +66,7 @@ class ShopifyAdminApi {
     }
 
     if (data && Object.keys(data).length) {
-      options.body = jsonb.stringify(data)
+      options.body = JSON.stringify(data)
     }
 
     if (this.accessToken) {
@@ -84,7 +83,7 @@ class ShopifyAdminApi {
 
     if (response.body.trim() === '') throw new Error('Empty response body.')
 
-    const body = jsonb.parse(response.body)
+    const body = JSON.parse(response.body)
 
     if (response.statusCode >= 400) {
       this.logger.error({ response: JSON.stringify(response.body), statusCode: response.statusCode }, 'HTTP >= 400 received')
