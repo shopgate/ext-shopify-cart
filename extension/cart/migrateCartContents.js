@@ -1,122 +1,49 @@
-const _ = require('underscore')
 const UnknownError = require('../models/Errors/UnknownError')
-let { updateCart, clearCart } = require('./../helper/cart')
+const ApiFactory = require('../lib/ShopifyApiFactory')
 
 /**
- *
- * @typedef {Object} input
- * @property {Object} sourceCart
- * @property {Object} targetCart
- *
- * @param {Object} context
- * @param {Object} input
+ * @param {SDKContext} context
  */
-module.exports = async (context, input) => {
-  await migrateCartContents(
-    context,
-    input.sourceCart.token,
-    input.sourceCart.line_items,
-    input.targetCart.token,
-    input.targetCart.line_items
-  )
-}
+module.exports = async (context) => {
+  let deviceCartId = await context.storage.device.get('shopifyCartId')
+  const userCartId = await context.storage.user.get('shopifyCartId')
 
-function mergeCheckoutCartItems (sourceCartLineItem, targetCartLineItem) {
-  if (targetCartLineItem) {
-    return {
-      variant_id: sourceCartLineItem.variant_id,
-      quantity: targetCartLineItem.quantity + sourceCartLineItem.quantity
-    }
-  }
+  const storefrontApi = ApiFactory.buildStorefrontApi(context)
 
-  return {
-    variant_id: sourceCartLineItem.variant_id,
-    quantity: sourceCartLineItem.quantity
-  }
-}
-
-async function migrateCartContents (context, sourceCartId, sourceCartLineItems, targetCartId, targetCartLineItems) {
-  // no merge is needed on identical carts or if no items present in the source cart
-  if (_.isEmpty(sourceCartLineItems) || sourceCartId === targetCartId) {
-    return true
-  }
-
-  const checkoutCartItems = []
-
-  // update quantity for existing items, add to the checkoutCartItems, otherwise
-  sourceCartLineItems.forEach(sourceCartLineItem => {
-    const targetCartLineItem = _.findWhere(targetCartLineItems, { variant_id: sourceCartLineItem.variant_id })
-    checkoutCartItems.push(mergeCheckoutCartItems(sourceCartLineItem, targetCartLineItem))
-  })
-
-  // re-attach the lineItems which were already in the user cart and check for duplicated items
-  targetCartLineItems.forEach(targetCartLineItem => {
-    if (!_.findWhere(checkoutCartItems, { variant_id: targetCartLineItem.variant_id })) {
-      checkoutCartItems.push(
-        {
-          variant_id: targetCartLineItem.variant_id,
-          quantity: targetCartLineItem.quantity
-        }
-      )
-    }
-  })
-
-  const updatedData = { 'checkout': { 'line_items': checkoutCartItems } }
-  // Clear the old guest cart
+  let deviceCart
   try {
-    await clearCart(sourceCartId, context)
-    await updateAndAdjustCart(updatedData, targetCartId, context)
+    deviceCart = await storefrontApi.getCart(deviceCartId)
   } catch (err) {
-    context.log.error(
-      'Couldn\'t clear checkout with id ' + sourceCartId + ' failed with error: ' + JSON.stringify(err)
-    )
+    context.log.error({ errorMessage: err.message, statusCode: err.statusCode, code: err.code }, 'Error fetching device or user cart')
     throw new UnknownError()
   }
-}
 
-/**
- * @param {Object} updatedData
- * @param {string|number} targetCartId
- * @param {Object} context
- */
-async function updateAndAdjustCart (updatedData, targetCartId, context) {
-  try {
-    await (updateCart(updatedData, targetCartId, context))
-    return true
-  } catch (err) {
-    if (err && Object.hasOwnProperty.call(err, 'code') && err.code !== 422) {
-      context.log.error(
-        'Couldn\'t update checkout with id ' + targetCartId + ' failed with error: ' + JSON.stringify(err)
-      )
+  if (deviceCart === null) {
+    context.log.warn('Shopify API returned null when getting the device cart, creating a new one')
+    try {
+      deviceCartId = await storefrontApi.createCart()
+      await context.storage.device.set('shopifyCartId', deviceCartId)
+      return
+    } catch (err) {
+      await context.storage.device.del('shopifyCartId')
+      this.log.error({ errorMessage: err.message, statusCode: err.statusCode, code: err.code }, 'Error creating new device cart')
       throw new UnknownError()
     }
+  }
 
-    if (err & Object.hasOwnProperty.call(err, 'errors') && Object.hasOwnProperty.call(err.errors, 'line_items')) {
-      const errorLineItem = err.errors.line_items
-      Object.keys(errorLineItem).map((errorKey) => {
-        const errorContent = errorLineItem[errorKey]
-        const currentLineItem = updatedData.checkout.line_items[errorKey]
-        if (currentLineItem) {
-          const quantity = errorContent.quantity
-          if (quantity.length) {
-            quantity.map((item) => {
-              if (item.code === 'not_enough_in_stock') {
-                currentLineItem.quantity = item.options.remaining
-              }
-            })
-          }
-        }
-        try {
-          updateCart(updatedData, targetCartId, context)
+  const deleteCartLines = []
+  const addProducts = []
+  for (const line of deviceCart.lines.edges) {
+    deleteCartLines.push(line.node.id)
+    addProducts.push({ merchandiseId: line.node.merchandise.id, quantity: line.node.quantity })
+  }
 
-          return true
-        } catch (err) {
-          context.log.error(
-            'Couldn\'t update checkout with id ' + targetCartId + ' failed with error: ' + JSON.stringify(err)
-          )
-          throw new UnknownError()
-        }
-      })
-    }
+  try {
+    // sequential so we don't clear the guest cart if merging failed
+    if (addProducts.length > 0) await storefrontApi.addCartLines(userCartId, addProducts)
+    if (deleteCartLines.length > 0) await storefrontApi.deleteCartLines(deviceCartId, deleteCartLines)
+  } catch (err) {
+    context.log.error({ errorMessage: err.message, cartErrors: err.errors, statusCode: err.statusCode, code: err.code }, 'Error merging carts upon log-in')
+    throw new UnknownError()
   }
 }

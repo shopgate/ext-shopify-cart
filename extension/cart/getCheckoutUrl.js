@@ -1,27 +1,16 @@
-const Url = require('../models/url')
-const ConfigHelper = require('../helper/config')
-
 /**
- * @typedef {Object} context
- * @property {Object} config
- *
- * @typedef {Object} config
- * @property {String} shopifyShopAlias
- * @property {String} shopifyShopDomain
- */
-/**
- *
- * @param {Object} context
- * @param {Object} input
+ * @param {SDKContext} context
+ * @param {{ shopifyCart: ShopifyCart }} input
  */
 module.exports = async (context, input) => {
-  // limit expiry time to two hours from "now", because we don't have any info about the real expiry time
-  const date = new Date()
-  date.setTime(date.getTime() + 1000 * 60 * 60 * 2)
-  const expires = date.toISOString()
+  // Once we left for the checkout there's no way of knowing whether the checkout has been completed (invalidating the
+  // cart ID) or aborted (keeping the cart ID valid). Setting a flag that will cause the initShopifyCart step to fetch
+  // the cart from Shopify Cart API to see if it is still valid.
+  const storage = context.meta.userId ? context.storage.user : context.storage.device
+  await storage.set('cartMayBeInvalid', true)
 
-  // We need to replace the web_url from data.checkout with the shopify shop domain (using the alias from our config)
-  const checkoutDomain = input.checkout.web_url.replace(context.config.shopifyShopAlias + '.myshopify.com', ConfigHelper.getHostName(context.config))
+  const checkoutUrl = new URL(input.shopifyCart.checkoutUrl)
+  checkoutUrl.searchParams.append('logged_in', 'true')
 
-  return new Url(checkoutDomain, expires)
+  return { url: checkoutUrl.toString() }
 }

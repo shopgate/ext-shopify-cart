@@ -16,55 +16,44 @@
     ],
     "steps": [
       {
-        "type": "extension",
-        "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/fetchShopifyCheckout.js",
+        "type": "pipeline",
+        "id": "shopgate.shopify-user.getStorefrontApiCustomerAccessToken.v1",
+        "trusted": true,
         "input": [],
-        "output": [
-          {"key": "checkout", "id": "100"}
-        ]
+        "output": [{"key":  "storefrontApiCustomerAccessToken", "id": "2000", "optional": true}]
       },
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/recreateShopifyCheckoutOnCompletion.js",
-        "input": [
-          {"key": "checkout", "id": "100"}
-        ],
-        "output": [
-          {"key": "checkout", "id": "100"}
-        ]
+        "path": "@shopgate/shopify-cart/cart/initShopifyCart.js",
+        "input": [{"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true}],
+        "output": [{"key": "shopifyCartId", "id": "2010"}]
       },
       {
-        "type": "extension",
-        "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/remapCheckoutToShopifyCartData.js",
-        "input": [
-          {"key": "checkout", "id": "100"}
-        ],
-        "output": [
-          {"key": "shopifyCartData", "id": "106"}
-        ]
-      },
-      {
-        "id": "afterShopifyCartDataCreation",
+        "id": "afterInitShopifyCart",
         "type": "hook",
         "input": [
-          {"key": "shopifyCartData", "id": "106"}
+          {"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true},
+          {"key": "shopifyCartId", "id": "2010"}
         ],
-        "output": [
-          {"key": "shopifyCartData", "id": "106"}
-        ]
+        "output": []
       },
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/getShopifyCartProducts.js",
+        "path": "@shopgate/shopify-cart/cart/fetchShopifyCart.js",
+        "input": [{"key": "shopifyCartId", "id": "2010"}],
+        "output": [{"key": "shopifyCart", "id": "2020"}]
+      },
+      {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/extractShopifyCartProductIds.js",
         "input": [
-          {"key": "shopifyCartData", "id": "106"}
+          {"key": "shopifyCart", "id": "2020"}
         ],
         "output": [
-          {"key": "products",  "id": "102"}
+          {"key": "productIdSets",  "id": "102"}
         ]
       },
       {
@@ -72,7 +61,7 @@
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/products/getProducts.js",
         "input": [
-          {"key": "products", "id": "102"}
+          {"key": "productIdSets", "id": "102"}
         ],
         "output": [
           {"key": "service", "id": "10"},
@@ -102,7 +91,7 @@
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/products/getChildProducts.js",
         "input": [
-          {"key": "products", "id": "102"}
+          {"key": "productIdSets", "id": "102"}
         ],
         "output": [
           {"key": "service", "id": "15"},
@@ -130,23 +119,11 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/products/getShopifyProducts.js",
+        "path": "@shopgate/shopify-cart/cart/buildShopgateCart.js",
         "input": [
-          {"key": "products", "id": "102"}
-        ],
-        "output": [
-          {"key": "shopifyProducts", "id": "105"}
-        ]
-      },
-      {
-        "type": "extension",
-        "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/getCart.js",
-        "input": [
-          {"key": "shopifyCartData", "id": "106"},
+          {"key": "shopifyCart", "id": "2020"},
           {"key": "importedProductsInCart", "id": "103", "optional": true},
-          {"key": "importedChildProductsInCart", "id": "104", "optional": true},
-          {"key": "shopifyProducts", "id": "105", "optional": true}
+          {"key": "importedChildProductsInCart", "id": "104", "optional": true}
         ],
         "output": [
           {"key": "isOrderable", "id": "1010"},

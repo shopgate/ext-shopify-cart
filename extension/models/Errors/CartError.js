@@ -6,18 +6,6 @@ class CartError extends Error {
     this.code = ECART
     this.errors = []
   }
-
-  /**
-   * @param {string} id - id of the missing product
-   */
-  addProductNotFound (id) {
-    this.errors.push({
-      code: 'ENOTFOUND',
-      message: 'This product is no longer available.',
-      entityId: id,
-      translated: false
-    })
-  }
 }
 
 module.exports = CartError

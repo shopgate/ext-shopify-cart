@@ -1,5 +1,5 @@
 {
-  "version": "2.2.12",
+  "version": "3.0.0-beta.15",
   "id": "@shopgate/shopify-cart",
   "steps": [
   ],
@@ -44,5 +44,29 @@
         "value" : false
       }
     }
-  }
+  },
+  "components": [
+    {
+      "id": "CartItemProductLevelDiscount",
+      "path": "frontend/portals/CartItemProductLevelDiscount/index.jsx",
+      "target": "cart.item.properties.after",
+      "type": "portals"
+    },
+    {
+      "id": "CartSubTotalGiftCards",
+      "path": "frontend/portals/CartSubTotalGiftCards/index.jsx",
+      "target": "cart.payment-bar.totals.grand-total.before",
+      "type": "portals"
+    },
+    {
+      "id": "locale/en-US",
+      "type": "translations",
+      "path": "frontend/locale/en-US.json"
+    },
+    {
+      "id": "locale/de-DE",
+      "type": "translations",
+      "path": "frontend/locale/de-DE.json"
+    }
+  ]
 }
