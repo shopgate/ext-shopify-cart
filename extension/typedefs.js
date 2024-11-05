@@ -69,12 +69,22 @@
  * @typedef ShopifyCart
  * @property {string} id
  * @property {string} checkoutUrl
+ * @property {{ customer: ShopifyCartCustomer }} buyerIdentity
  * @property {ShopifyCartCost} cost
  * @property {{ edges: { node: ShopifyCartLine }[] }} lines
  * @property {{ discountedAmount: { amount: number } }[]} discountAllocations
  * @property {{ applicable: boolean, code: string }[]} discountCodes
  * @property {{ lastCharacters: string, presentmentAmountUsed: ShopifyCartAmount }[]} appliedGiftCards
  * @property {{ edges: { node: ShopifyDeliveryGroup }[] }} deliveryGroups
+ */
+
+/**
+ * @typedef ShopifyCartCustomer
+ * @property {string} id
+ * @property {string?} firstName
+ * @property {string?} lastName
+ * @property {string} email
+ * @property {string} createdAt
  */
 
 /**
@@ -92,11 +102,11 @@
 
 /**
  * @typedef ShopifyCartLine
- * @property {string} id
+ * @property {string?} id
  * @property {number} quantity
- * @property {ShopifyCartLineCost} cost
- * @property {{ discountedAmount: { amount: number } }[]} discountAllocations
- * @property {ShopifyCartLineProductVariant} merchandise
+ * @property {ShopifyCartLineCost?} cost
+ * @property {{ discountedAmount: { amount: number } }[]?} discountAllocations
+ * @property {ShopifyCartLineProductVariant?} merchandise
  */
 
 /**
