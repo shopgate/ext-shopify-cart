@@ -93,7 +93,7 @@ module.exports = async (context, input) => {
       },
       {
         label: 'cart.tax',
-        amount: (shopifyCart.cost.totalTaxAmount || {}).amount || 20,
+        amount: (shopifyCart.cost.totalTaxAmount || {}).amount || 0,
         type: 'tax'
       },
       ...shopifyCart.deliveryGroups.edges.map(edge => {
