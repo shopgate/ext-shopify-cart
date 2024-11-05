@@ -30,21 +30,20 @@
         "output": [{"key": "shopifyCartId", "id": "2010"}]
       },
       {
+        "id": "afterInitShopifyCart",
+        "type": "hook",
+        "input": [
+          {"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true},
+          {"key": "shopifyCartId", "id": "2010"}
+        ],
+        "output": []
+      },
+      {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/fetchShopifyCart.js",
         "input": [{"key": "shopifyCartId", "id": "2010"}],
         "output": [{"key": "shopifyCart", "id": "2020"}]
-      },
-      {
-        "id": "afterFetchShopifyCart",
-        "type": "hook",
-        "input": [
-          {"key": "shopifyCart", "id": "2020"}
-        ],
-        "output": [
-          {"key": "shopifyCart", "id": "2020"}
-        ]
       },
       {
         "type": "extension",
