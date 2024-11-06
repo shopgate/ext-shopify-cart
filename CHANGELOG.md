@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [3.0.0] - 2024-11-06
+
+### Breaking Changes
+- requires `@shopgate/shopify-user` v2.2.0 or higher
+
+### Changed
+- uses Shopify API version 2024-07 on all endpoints
+
+### Added
+- uses the Shopify Storefront API
+
+### Removed
+- usage of the deprecated checkout endpoints from the Shopify Admin REST API
+
+### Fixed
+- cart immutable after aborting checkout
+
 ## [2.2.12] - 2023-10-30
 ### Changed
 - uses Shopify API version 2023-10 on all endpoints
@@ -111,7 +128,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - logging request duration and other info when requesting the Shopify API
 
-[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.12...HEAD
+[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.12...v3.0.0
 [2.2.12]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.11...v2.2.12
 [2.2.11]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.10...v2.2.11
 [2.2.10]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.9...v2.2.10
