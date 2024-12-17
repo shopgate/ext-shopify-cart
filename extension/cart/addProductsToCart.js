@@ -3,6 +3,7 @@ const ApiFactory = require('../lib/ShopifyApiFactory')
 /**
  * @param {SDKContext} context
  * @param {object} input
+ * @param {SgxsMeta} input.sgxsMeta
  * @param {{ productId: string, quantity: number }[]} input.productsAddedToCart
  * @param {{ id: string, customData: string }[]} input.importedProductsAddedToCart
  * @param {string} input.shopifyCartId
@@ -29,7 +30,7 @@ module.exports = async (context, input) => {
     }
   }).filter(cartLine => !!cartLine) // filter out products with no variant ID
 
-  const storefrontApi = ApiFactory.buildStorefrontApi(context)
+  const storefrontApi = ApiFactory.buildStorefrontApi(context, input.sgxsMeta)
 
   try {
     await storefrontApi.addCartLines(input.shopifyCartId, cartLines)

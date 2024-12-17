@@ -3,11 +3,11 @@ const UnknownError = require('../models/Errors/UnknownError')
 
 /**
  * @param {SDKContext} context
- * @param {{ shopifyCartId: string }} input
+ * @param {{ shopifyCartId: string, sgxsMeta: SgxsMeta }} input
  * @returns {Promise<{ shopifyCart: ShopifyCart }>}
  */
-module.exports = async (context, { shopifyCartId }) => {
-  const storefrontApi = ApiFactory.buildStorefrontApi(context)
+module.exports = async (context, { shopifyCartId, sgxsMeta }) => {
+  const storefrontApi = ApiFactory.buildStorefrontApi(context, sgxsMeta)
 
   let shopifyCart
   try {

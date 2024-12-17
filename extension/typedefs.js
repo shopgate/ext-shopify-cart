@@ -66,6 +66,12 @@
  */
 
 /**
+ * @typedef {Object} SgxsMeta
+ * @property {string} sessionId
+ * @property {string} deviceIp
+ */
+
+/**
  * @typedef ShopifyCart
  * @property {string} id
  * @property {string} checkoutUrl

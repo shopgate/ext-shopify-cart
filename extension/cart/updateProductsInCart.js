@@ -3,11 +3,11 @@ const ApiFactory = require('../lib/ShopifyApiFactory')
 
 /**
  * @param {SDKContext} context
- * @param {{ updateCartItems: { cartItemId: string, quantity: number }[] }} input
+ * @param {{ updateCartItems: { cartItemId: string, quantity: number }[], sgxsMeta: SgxsMeta }} input
  * @param {string} input.shopifyCartId
  */
 module.exports = async (context, input) => {
-  const storefrontApi = ApiFactory.buildStorefrontApi(context)
+  const storefrontApi = ApiFactory.buildStorefrontApi(context, input.sgxsMeta)
 
   const updateCartLines = input.updateCartItems.map(item => ({
     id: item.cartItemId,
