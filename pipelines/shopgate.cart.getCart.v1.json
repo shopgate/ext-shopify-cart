@@ -3,7 +3,9 @@
   "pipeline": {
     "id": "shopgate.cart.getCart.v1",
     "public": true,
-    "input": [],
+    "input": [
+      {"key": "sgxsMeta", "id": "100", "optional": true}
+    ],
     "output": [
       {"key": "isOrderable", "id": "1010"},
       {"key": "isTaxIncluded", "id": "1020"},
@@ -26,13 +28,17 @@
         "type": "extension",
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/initShopifyCart.js",
-        "input": [{"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true}],
+        "input": [
+          {"key": "sgxsMeta", "id": "100", "optional": true},
+          {"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true}
+        ],
         "output": [{"key": "shopifyCartId", "id": "2010"}]
       },
       {
         "id": "afterInitShopifyCart",
         "type": "hook",
         "input": [
+          {"key": "sgxsMeta", "id": "100", "optional": true},
           {"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true},
           {"key": "shopifyCartId", "id": "2010"}
         ],
@@ -42,7 +48,10 @@
         "type": "extension",
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/fetchShopifyCart.js",
-        "input": [{"key": "shopifyCartId", "id": "2010"}],
+        "input": [
+          {"key": "sgxsMeta", "id": "100", "optional": true},
+          {"key": "shopifyCartId", "id": "2010"}
+        ],
         "output": [{"key": "shopifyCart", "id": "2020"}]
       },
       {
@@ -53,7 +62,7 @@
           {"key": "shopifyCart", "id": "2020"}
         ],
         "output": [
-          {"key": "productIdSets",  "id": "102"}
+          {"key": "productIdSets", "id": "102"}
         ]
       },
       {

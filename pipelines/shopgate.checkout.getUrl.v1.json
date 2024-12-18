@@ -3,7 +3,9 @@
   "pipeline": {
     "id": "shopgate.checkout.getUrl.v1",
     "public": true,
-    "input": [],
+    "input": [
+      {"key": "sgxsMeta", "id": "100", "optional": true}
+    ],
     "output": [
       {"key": "url", "id": "1010"}
     ],
@@ -19,14 +21,20 @@
         "type": "extension",
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/initShopifyCart.js",
-        "input": [{"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true}],
+        "input": [
+          {"key": "sgxsMeta", "id": "100", "optional": true},
+          {"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true}
+        ],
         "output": [{"key": "shopifyCartId", "id": "2010"}]
       },
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/fetchShopifyCart.js",
-        "input": [{"key": "shopifyCartId", "id": "2010"}],
+        "input": [
+          {"key": "sgxsMeta", "id": "100", "optional": true},
+          {"key": "shopifyCartId", "id": "2010"}
+        ],
         "output": [{"key": "shopifyCart", "id": "2020"}]
       },
       {

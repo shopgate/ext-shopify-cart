@@ -20,16 +20,19 @@ class ShopifyApiFactory {
 
   /**
    * @param {SDKContext} context
+   * @param {SgxsMeta} sgxsMeta
    * @param {ShopifyApiTokenManager?} tokenManager
    * @param {ShopifyAdminApi?} adminApi
    * @returns {ShopifyStorefrontApi}
    */
-  static buildStorefrontApi (context, tokenManager = null, adminApi = null) {
+  static buildStorefrontApi (context, sgxsMeta, tokenManager = null, adminApi = null) {
+    const { deviceIp } = sgxsMeta || {}
+
     if (storefrontApi) return storefrontApi
 
     if (!tokenManager) tokenManager = this.buildShopifyApiTokenManager(context, adminApi)
 
-    return new ShopifyStorefrontApi(ConfigHelper.getBaseUrl(context.config), tokenManager, context.log)
+    return new ShopifyStorefrontApi(ConfigHelper.getBaseUrl(context.config), deviceIp, tokenManager, context.log)
   }
 
   /**

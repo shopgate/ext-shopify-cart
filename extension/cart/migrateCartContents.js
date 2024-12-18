@@ -3,12 +3,13 @@ const ApiFactory = require('../lib/ShopifyApiFactory')
 
 /**
  * @param {SDKContext} context
+ * @param {{ sgxsMeta: SgxsMeta }} input
  */
-module.exports = async (context) => {
+module.exports = async (context, { sgxsMeta }) => {
   let deviceCartId = await context.storage.device.get('shopifyCartId')
   const userCartId = await context.storage.user.get('shopifyCartId')
 
-  const storefrontApi = ApiFactory.buildStorefrontApi(context)
+  const storefrontApi = ApiFactory.buildStorefrontApi(context, sgxsMeta)
 
   let deviceCart
   try {

@@ -6,15 +6,19 @@ const CartError = require("../models/Errors/CartError");
 class ShopifyStorefrontApi {
   /**
    * @param {string} shopUrl
+   * @param {string} buyerIp
    * @param {ShopifyApiTokenManager} tokenManager
    * @param {SDKContextLog} logger A generic logger instance, e.g. current step context's .log property.
    * @param {string?} apiVersion
    */
-  constructor(shopUrl, tokenManager, logger, apiVersion = '2024-07') {
+  constructor(shopUrl, buyerIp, tokenManager, logger, apiVersion = '2024-07') {
     this.apiUrl = new URL(`/api/${apiVersion}/graphql.json`, shopUrl).toString()
+    this.buyerIp = buyerIp
     this.tokenManager = tokenManager
     this.logger = logger
     this.storefrontApiAccessToken = null
+
+    if (!buyerIp) logger.warn('No buyer IP passed')
   }
 
   /**
@@ -109,11 +113,14 @@ class ShopifyStorefrontApi {
       this.storefrontApiAccessToken = await this.tokenManager.getStorefrontApiAccessToken()
     }
 
+    const headers = { 'x-shopify-storefront-access-token': this.storefrontApiAccessToken }
+    if (this.buyerIp) headers['Shopify-Storefront-Buyer-IP'] = this.buyerIp
+
     try {
       return await request({
         method: 'post',
         uri: this.apiUrl,
-        headers: { 'x-shopify-storefront-access-token': this.storefrontApiAccessToken },
+        headers,
         body: { query, variables },
         json: true
       })
