@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [3.0.1] - 2024-12-18
 ### Added
 - sending the buyer IP along with Storefront API requests as per requirement by Shopify to maintain a consistent checkout experience
 
@@ -130,7 +132,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - logging request duration and other info when requesting the Shopify API
 
-[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v3.0.0...HEAD
+[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v3.0.1...HEAD
+[3.0.1]: https://github.com/shopgate/ext-shopify-cart/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.12...v3.0.0
 [2.2.12]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.11...v2.2.12
 [2.2.11]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.10...v2.2.11
