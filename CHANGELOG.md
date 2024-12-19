@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- when users logged out on the checkout page or their authentication expired they would stay logged out until completing checkout
 
 ## [3.0.2] - 2024-12-19
 ### Fixed

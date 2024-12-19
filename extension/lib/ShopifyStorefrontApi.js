@@ -102,6 +102,22 @@ class ShopifyStorefrontApi {
   }
 
   /**
+   * @param {string} cartId
+   * @param {StorefrontApiCustomerAccessToken} customerAccessToken
+   * @returns {Promise<Object>}
+   */
+  async updateCartBuyerIdentity (cartId, customerAccessToken) {
+    const response = await this._request(
+      queries.updateCartBuyerIdentity,
+      { cartId, buyerIdentity: { customerAccessToken: customerAccessToken.accessToken } }
+    )
+
+    this._handleCartUserErrors(response, 'cartBuyerIdentityUpdate')
+
+    return response
+  }
+
+  /**
    * @param {string} query
    * @param {object} variables
    * @param {number} retryCount
@@ -138,11 +154,11 @@ class ShopifyStorefrontApi {
   /**
    * @param {{ data: { [queryName: string]: { userErrors: { field: string[], message: string }[] } } }} response
    * @param {string} queryName
-   * @param {{ merchandiseId: string }[]} referencedContents
+   * @param {{ merchandiseId: string }[]?} referencedContents
    * @throws CartError
    * @private
    */
-  _handleCartUserErrors (response, queryName, referencedContents) {
+  _handleCartUserErrors (response, queryName, referencedContents = []) {
     const userErrors = (((response || {}).data || {})[queryName] || {}).userErrors || []
     if (userErrors.length === 0) return
 
