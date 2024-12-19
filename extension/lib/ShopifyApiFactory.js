@@ -3,8 +3,6 @@ const ShopifyApiTokenManager = require('./ShopifyApiTokenManager')
 const ShopifyAdminApi = require('./ShopifyAdminApi')
 const ShopifyStorefrontApi = require('./ShopifyStorefrontApi')
 
-let storefrontApi
-
 class ShopifyApiFactory {
   /**
    * @param {SDKContext} context The Shopgate Connect step context.
@@ -27,8 +25,6 @@ class ShopifyApiFactory {
    */
   static buildStorefrontApi (context, sgxsMeta, tokenManager = null, adminApi = null) {
     const { deviceIp } = sgxsMeta || {}
-
-    if (storefrontApi) return storefrontApi
 
     if (!tokenManager) tokenManager = this.buildShopifyApiTokenManager(context, adminApi)
 
