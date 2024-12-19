@@ -4,5 +4,6 @@ module.exports = {
   getCart: require('./getCart'),
   addCartLines: require('./addCartLines'),
   updateCartLines: require('./updateCartLines'),
-  deleteCartLines: require('./deleteCartLines')
+  deleteCartLines: require('./deleteCartLines'),
+  updateCartBuyerIdentity: require('./updateCartBuyerIdentity')
 }
