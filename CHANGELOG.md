@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [3.0.3] - 2024-12-20
 ### Fixed
 - when users logged out on the checkout page or their authentication expired they would stay logged out until completing checkout
 
@@ -138,7 +140,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - logging request duration and other info when requesting the Shopify API
 
-[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v3.0.2...HEAD
+[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v3.0.3...HEAD
+[3.0.3]: https://github.com/shopgate/ext-shopify-cart/compare/v3.0.2...v3.0.3
 [3.0.2]: https://github.com/shopgate/ext-shopify-cart/compare/v3.0.1...v3.0.2
 [3.0.1]: https://github.com/shopgate/ext-shopify-cart/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/shopgate/ext-shopify-cart/compare/v2.2.12...v3.0.0
