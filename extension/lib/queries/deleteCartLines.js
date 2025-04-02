@@ -5,6 +5,11 @@ mutation cartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
       field
       message
     }
+    warnings {
+      code
+      message
+      target
+    }
   }
 }
 `

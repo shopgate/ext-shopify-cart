@@ -5,6 +5,11 @@ mutation cartBuyerIdentityUpdate($cartId: ID!, $buyerIdentity: CartBuyerIdentity
             field
             message
         }
+        warnings {
+          code
+          message
+          target
+        }
     }
 }
 `

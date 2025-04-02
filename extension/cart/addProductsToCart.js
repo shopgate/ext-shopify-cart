@@ -1,4 +1,5 @@
 const ApiFactory = require('../lib/ShopifyApiFactory')
+const CartError = require('../models/Errors/CartError');
 
 /**
  * @param {SDKContext} context
@@ -35,6 +36,18 @@ module.exports = async (context, input) => {
   try {
     await storefrontApi.addCartLines(input.shopifyCartId, cartLines)
   } catch (err) {
+    if (err instanceof CartError) {
+      err.errors = err.errors.map(cartSubError => {
+        if (cartSubError.shopifyCode === 'MERCHANDISE_OUT_OF_STOCK' || cartSubError.shopifyCode === 'MERCHANDISE_NOT_ENOUGH_STOCK') {
+          cartSubError.message = 'The product could not be added to your cart due to availability.'
+        }
+
+        return cartSubError
+      })
+
+      throw err
+    }
+
     context.log.error({ errorMessage: err.message, statusCode: err.statusCode, code: err.code }, 'Error adding products to cart')
   }
 }
