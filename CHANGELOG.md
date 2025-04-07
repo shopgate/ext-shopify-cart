@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- uses Shopify Storefront API 2025-01
+- uses Shopify REST Admin API 2025-01
+
+### Fixed
+- when adding a product to the cart fails due to availability a proper error message is now shown to the customer
 
 ## [3.0.3] - 2024-12-20
 ### Fixed

@@ -11,7 +11,7 @@ class ShopifyStorefrontApi {
    * @param {SDKContextLog} logger A generic logger instance, e.g. current step context's .log property.
    * @param {string?} apiVersion
    */
-  constructor(shopUrl, buyerIp, tokenManager, logger, apiVersion = '2024-07') {
+  constructor(shopUrl, buyerIp, tokenManager, logger, apiVersion = '2025-01') {
     this.apiUrl = new URL(`/api/${apiVersion}/graphql.json`, shopUrl).toString()
     this.buyerIp = buyerIp
     this.tokenManager = tokenManager
@@ -80,7 +80,7 @@ class ShopifyStorefrontApi {
   async addCartLines (cartId, lines) {
     const response = await this._request(queries.addCartLines, {cartId, lines})
 
-    this._handleCartUserErrors(response, 'cartLinesAdd', lines)
+    await this._handleCartUserErrors(response, 'cartLinesAdd', lines, cartId)
 
     return response
   }
@@ -88,7 +88,7 @@ class ShopifyStorefrontApi {
   async updateCartLines (cartId, lines) {
     const response = await this._request(queries.updateCartLines, { cartId, lines })
 
-    this._handleCartUserErrors(response, 'cartLinesUpdate', lines)
+    await this._handleCartUserErrors(response, 'cartLinesUpdate', lines, cartId)
 
     return response
   }
@@ -96,7 +96,7 @@ class ShopifyStorefrontApi {
   async deleteCartLines (cartId, lineIds){
     const response = await this._request(queries.deleteCartLines, { cartId, lineIds })
 
-    this._handleCartUserErrors(response, 'cartLinesRemove', lineIds)
+    await this._handleCartUserErrors(response, 'cartLinesRemove', lineIds, cartId)
 
     return response
   }
@@ -112,7 +112,7 @@ class ShopifyStorefrontApi {
       { cartId, buyerIdentity: { customerAccessToken: customerAccessToken.accessToken } }
     )
 
-    this._handleCartUserErrors(response, 'cartBuyerIdentityUpdate')
+    await this._handleCartUserErrors(response, 'cartBuyerIdentityUpdate', [], cartId)
 
     return response
   }
@@ -152,15 +152,18 @@ class ShopifyStorefrontApi {
   }
 
   /**
-   * @param {{ data: { [queryName: string]: { userErrors: { field: string[], message: string }[] } } }} response
+   * @param {{ data: { [queryName: string]: ShopifyCartItemMutationResponseInternals } }} response
    * @param {string} queryName
-   * @param {{ merchandiseId: string }[]?} referencedContents
+   * @param {ShopifyCartLine[]} referencedContents
+   * @param {string} cartId
    * @throws CartError
    * @private
    */
-  _handleCartUserErrors (response, queryName, referencedContents = []) {
+  async _handleCartUserErrors (response, queryName, referencedContents, cartId) {
     const userErrors = (((response || {}).data || {})[queryName] || {}).userErrors || []
-    if (userErrors.length === 0) return
+    const warnings = (((response || {}).data || {})[queryName] || {}).warnings || []
+
+    if (userErrors.length === 0 && warnings.length === 0) return
 
     const error = new CartError()
     for (const userError of userErrors) {
@@ -169,10 +172,33 @@ class ShopifyStorefrontApi {
         ? (referencedContents[userError.field[1]] || {}).merchandiseId
         : undefined
 
-      error.errors.push({ message: userError.message, entityId })
+      error.errors.push({ shopifyCode: userError.code, message: userError.message, entityId })
     }
 
-    if (error.errors.length > 0) throw error
+    // load cart if warnings are present and referenced cart lines don't have IDs (e.g. when adding products)
+    let currentCartLines = []
+    if (warnings.length && referencedContents.filter(cl => !!cl.id).length === 0) {
+      currentCartLines = (((await this.getCart(cartId) || {}).lines || {}).edges || []).map(edge => edge.node)
+    }
+
+    for (const warning of warnings) {
+      const cartLineSource = currentCartLines.length ? currentCartLines : referencedContents
+      const cartLine = cartLineSource.find(lineItem => lineItem.id === warning.target)
+      if (!cartLine) {
+        this.logger.error(
+          { currentCart: currentCartLines, warning },
+          'Shopify API returned a warning for a cart line but the reference doesn\'t seem to exist in the cart; skipping'
+        )
+        continue
+      }
+
+      error.errors.push({ shopifyCode: warning.code, message: warning.message, entityId: cartLine.id })
+    }
+
+    if (error.errors.length > 0) {
+      this.logger.error(error)
+      throw error
+    }
   }
 
   /**

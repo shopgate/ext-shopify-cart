@@ -5,6 +5,11 @@ mutation cartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
       field
       message
     }
+    warnings {
+      code
+      message
+      target
+    }
   }
 }
 `

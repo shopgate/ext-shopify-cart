@@ -153,6 +153,25 @@
  */
 
 /**
+ * @typedef ShopifyCartItemMutationResponseInternals
+ * @property {ShopifyCartItemMutationResponseUserError}[] userErrors
+ * @property {ShopifyCartItemMutationResponseWarning}[] warnings
+ */
+
+/**
+ * @typedef ShopifyCartItemMutationResponseUserError
+ * @property {string[]} fields
+ * @property {string} message
+ */
+
+/**
+ * @typedef ShopifyCartItemMutationResponseWarning
+ * @property {string} code
+ * @property {string} target
+ * @property {string} message
+ */
+
+/**
  * @typedef ShopgateCart
  * @property {boolean} isOrderable
  * @property {boolean|null} isTaxIncluded
