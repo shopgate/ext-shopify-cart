@@ -23,12 +23,13 @@ class ShopifyStorefrontApi {
 
   /**
    * @param {string} customerStorefrontApiAccessToken
+   * @param {string?} companyLocationId
    * @returns {Promise<string>}
    */
-  async createCartForCustomer (customerStorefrontApiAccessToken) {
+  async createCartForCustomer (customerStorefrontApiAccessToken, companyLocationId) {
     const createCartResult = await this._request(
       queries.createCartForCustomer,
-      { buyerIdentity: { customerAccessToken: customerStorefrontApiAccessToken } }
+      { buyerIdentity: { customerAccessToken: customerStorefrontApiAccessToken, companyLocationId } }
     )
 
     const cartId = ((((createCartResult || {}).data || {}).cartCreate || {}).cart || {}).id

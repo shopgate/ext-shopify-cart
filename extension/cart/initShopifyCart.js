@@ -2,7 +2,11 @@ const ApiFactory = require('../lib/ShopifyApiFactory')
 
 /**
  * @param {Object} context
- * @param {{ storefrontApiCustomerAccessToken: StorefrontApiCustomerAccessToken, sgxsMeta: SgxsMeta }} input
+ * @param {{
+ *   storefrontApiCustomerAccessToken: StorefrontApiCustomerAccessToken,
+ *   sgxsMeta: SgxsMeta,
+ *   customAttributes?: ShopgateUserCustomAttributes
+ * }} input
  * @returns {Promise<{ shopifyCartId: string }>}
  */
 module.exports = async (context, input) => {
@@ -30,7 +34,14 @@ module.exports = async (context, input) => {
 
   // no cart present, create a new one
   if (input.storefrontApiCustomerAccessToken) {
-    shopifyCartId = await storefrontApi.createCartForCustomer(input.storefrontApiCustomerAccessToken.accessToken)
+    // extract the first company location ID if applicable to assign it to the cart, too
+    const companyContact = (input.customAttributes.shopifyCompanyContacts || [])[0] || {}
+    const companyLocationId = ((companyContact.locations || [])[0] || {}).id
+
+    shopifyCartId = await storefrontApi.createCartForCustomer(
+      input.storefrontApiCustomerAccessToken.accessToken,
+      companyLocationId
+    )
   } else {
     shopifyCartId = await storefrontApi.createCart()
   }

@@ -16,13 +16,21 @@
         "output": [{"key":  "storefrontApiCustomerAccessToken", "id": "2000"}]
       },
       {
+        "type": "pipeline",
+        "id": "shopgate.user.getUser.v1",
+        "trusted": true,
+        "input": [],
+        "output": [{"key":  "customAttributes", "id": "2001", "optional": true}]
+      },
+      {
         "type": "extension",
         "description": "Make sure a customer cart exists before migrating.",
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/initShopifyCart.js",
         "input": [
           {"key": "sgxsMeta", "id": "100", "optional": true},
-          {"key": "storefrontApiCustomerAccessToken", "id": "2000"}
+          {"key": "storefrontApiCustomerAccessToken", "id": "2000"},
+          {"key": "customAttributes", "id": "2001", "optional": true}
         ],
         "output": []
       },
