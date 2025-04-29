@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Added
 - support for B2B carts using the first company contact and location of a customer if set
-  (requires new customer accounts and @shopgate/shopify-user v2.3.0 or higher)
+  (requires Shopify "new customer accounts" and `@shopgate/shopify-user` v2.3.0 or higher)
 
 ## [3.0.4]
 ### Changed
