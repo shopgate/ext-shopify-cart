@@ -60,7 +60,8 @@
           {"key": "sgxsMeta", "id": "100", "optional": true},
           {"key": "shopifyCartId", "id": "2010"},
           {"key": "shopifyCart", "id": "2020"},
-          {"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true}
+          {"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true},
+          {"key": "customAttributes", "id": "2001", "optional": true}
         ],
         "output": [
           {"key": "url", "id": "1010"}

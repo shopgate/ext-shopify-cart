@@ -2,7 +2,13 @@ const ApiFactory = require('../lib/ShopifyApiFactory')
 
 /**
  * @param {SDKContext} context
- * @param {{ shopifyCartId: string, shopifyCart: ShopifyCart, storefrontApiCustomerAccessToken: StorefrontApiCustomerAccessToken, sgxsMeta: SgxsMeta }} input
+ * @param {{
+ *   shopifyCartId: string,
+ *   shopifyCart: ShopifyCart,
+ *   storefrontApiCustomerAccessToken: StorefrontApiCustomerAccessToken,
+ *   sgxsMeta: SgxsMeta,
+ *   customAttributes?: ShopgateUserCustomAttributes
+ *   }} input
  */
 module.exports = async (context, input) => {
   // It seems like on some shops the cart buyer identity gets cleared after a while. If user is logged in but no buyer
@@ -11,6 +17,11 @@ module.exports = async (context, input) => {
   if (context.meta.userId && !(input.shopifyCart.buyerIdentity || {}).customer) {
     context.log.debug('User is logged in but cart has no buyer identity, updating cart...')
     const storefrontApi = ApiFactory.buildStorefrontApi(context, input.sgxsMeta)
+
+    // extract the first company location ID if applicable to assign it to the cart, too
+    const companyContact = (input.customAttributes.shopifyCompanyContacts || [])[0] || {}
+    const companyLocationId = ((companyContact.locations || [])[0] || {}).id
+
 
     try {
       await storefrontApi.updateCartBuyerIdentity(input.shopifyCartId, input.storefrontApiCustomerAccessToken)

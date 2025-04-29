@@ -65,7 +65,9 @@
         "path": "@shopgate/shopify-cart/cart/fetchShopifyCart.js",
         "input": [
           {"key": "sgxsMeta", "id": "100", "optional": true},
-          {"key": "shopifyCartId", "id": "2010"}
+          {"key": "shopifyCartId", "id": "2010"},
+          {"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true},
+          {"key": "customAttributes", "id": "2001", "optional": true}
         ],
         "output": [{"key": "shopifyCart", "id": "2020"}]
       },

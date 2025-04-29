@@ -105,12 +105,13 @@ class ShopifyStorefrontApi {
   /**
    * @param {string} cartId
    * @param {StorefrontApiCustomerAccessToken} customerAccessToken
+   * @param {string?} companyLocationId
    * @returns {Promise<Object>}
    */
-  async updateCartBuyerIdentity (cartId, customerAccessToken) {
+  async updateCartBuyerIdentity (cartId, customerAccessToken, companyLocationId) {
     const response = await this._request(
       queries.updateCartBuyerIdentity,
-      { cartId, buyerIdentity: { customerAccessToken: customerAccessToken.accessToken } }
+      { cartId, buyerIdentity: { customerAccessToken: customerAccessToken.accessToken, companyLocationId } }
     )
 
     await this._handleCartUserErrors(response, 'cartBuyerIdentityUpdate', [], cartId)
