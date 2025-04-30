@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
-## [3.1.0]
+## [3.1.0] - 2025-04-30
 ### Added
 - support for B2B carts using the first company contact and location of a customer if set
   (requires Shopify "new customer accounts" and `@shopgate/shopify-user` v2.3.0 or higher)
@@ -14,7 +14,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - line items that are out of stock are not left in the cart with 0 amount anymore (introduced in 3.0.4 with the API
   upgrade)
 
-## [3.0.4]
+## [3.0.4] - 2025-04-02
 ### Changed
 - uses Shopify Storefront API 2025-01
 - uses Shopify REST Admin API 2025-01
