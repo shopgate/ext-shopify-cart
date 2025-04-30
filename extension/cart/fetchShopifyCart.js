@@ -3,10 +3,15 @@ const UnknownError = require('../models/Errors/UnknownError')
 
 /**
  * @param {SDKContext} context
- * @param {{ shopifyCartId: string, sgxsMeta: SgxsMeta }} input
+ * @param {{
+ *   shopifyCartId: string,
+ *   storefrontApiCustomerAccessToken: StorefrontApiCustomerAccessToken,
+ *   sgxsMeta: SgxsMeta,
+ *   customAttributes?: ShopgateUserCustomAttributes
+ * }} input
  * @returns {Promise<{ shopifyCart: ShopifyCart }>}
  */
-module.exports = async (context, { shopifyCartId, sgxsMeta }) => {
+module.exports = async (context, { shopifyCartId, sgxsMeta, storefrontApiCustomerAccessToken, customAttributes }) => {
   const storefrontApi = ApiFactory.buildStorefrontApi(context, sgxsMeta)
 
   let shopifyCart
@@ -22,7 +27,20 @@ module.exports = async (context, { shopifyCartId, sgxsMeta }) => {
     const storage = context.storage[cartType]
     context.log.warn(`Shopify API returned null when getting the ${cartType} cart, creating a new one`)
     try {
-      const newCartId = await storefrontApi.createCart()
+      let newCartId
+      if (storefrontApiCustomerAccessToken) {
+        // extract the first company location ID if applicable to assign it to the cart, too
+        const companyContact = (customAttributes.shopifyCompanyContacts || [])[0] || {}
+        const companyLocationId = ((companyContact.locations || [])[0] || {}).id
+
+        newCartId = await storefrontApi.createCartForCustomer(
+          storefrontApiCustomerAccessToken.accessToken,
+          companyLocationId
+        )
+      } else {
+        newCartId = await storefrontApi.createCart()
+      }
+
       shopifyCart = await storefrontApi.getCart(newCartId)
       await storage.set('shopifyCartId', newCartId)
     } catch (err) {

@@ -45,6 +45,13 @@ module.exports = async (context, input) => {
         return cartSubError
       })
 
+      // remove cart lines that are out of stock, those are not removed by Shopify anymore after they changed from errors to warnings
+      try {
+        await storefrontApi.deleteCartLines(input.shopifyCartId, err.errors.map(err => err.entityId))
+      } catch (deleteError) {
+        context.log.error(deleteError)
+      }
+
       throw err
     }
 

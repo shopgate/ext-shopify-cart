@@ -23,12 +23,13 @@ class ShopifyStorefrontApi {
 
   /**
    * @param {string} customerStorefrontApiAccessToken
+   * @param {string?} companyLocationId
    * @returns {Promise<string>}
    */
-  async createCartForCustomer (customerStorefrontApiAccessToken) {
+  async createCartForCustomer (customerStorefrontApiAccessToken, companyLocationId) {
     const createCartResult = await this._request(
       queries.createCartForCustomer,
-      { buyerIdentity: { customerAccessToken: customerStorefrontApiAccessToken } }
+      { buyerIdentity: { customerAccessToken: customerStorefrontApiAccessToken, companyLocationId } }
     )
 
     const cartId = ((((createCartResult || {}).data || {}).cartCreate || {}).cart || {}).id
@@ -70,7 +71,7 @@ class ShopifyStorefrontApi {
     if (shopifyCart === null) return null
 
     if (!shopifyCart) {
-      this.logger.error({response: JSON.stringify(shopifyCartResult)}, 'Error fetching Shopify cart')
+      this.logger.error({ response: JSON.stringify(shopifyCartResult) }, 'Error fetching Shopify cart')
       throw new Error('Error loading cart contents')
     }
 
@@ -103,13 +104,20 @@ class ShopifyStorefrontApi {
 
   /**
    * @param {string} cartId
-   * @param {StorefrontApiCustomerAccessToken} customerAccessToken
+   * @param {StorefrontApiCustomerAccessToken?} customerAccessToken pass null to remove a customer from the cart
+   * @param {string?} companyLocationId
    * @returns {Promise<Object>}
    */
-  async updateCartBuyerIdentity (cartId, customerAccessToken) {
+  async updateCartBuyerIdentity (cartId, customerAccessToken, companyLocationId) {
     const response = await this._request(
       queries.updateCartBuyerIdentity,
-      { cartId, buyerIdentity: { customerAccessToken: customerAccessToken.accessToken } }
+      {
+        cartId,
+        buyerIdentity: {
+          customerAccessToken: (customerAccessToken || {}).accessToken || null,
+          companyLocationId
+        }
+      }
     )
 
     await this._handleCartUserErrors(response, 'cartBuyerIdentityUpdate', [], cartId)
