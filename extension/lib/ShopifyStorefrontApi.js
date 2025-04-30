@@ -71,7 +71,7 @@ class ShopifyStorefrontApi {
     if (shopifyCart === null) return null
 
     if (!shopifyCart) {
-      this.logger.error({response: JSON.stringify(shopifyCartResult)}, 'Error fetching Shopify cart')
+      this.logger.error({ response: JSON.stringify(shopifyCartResult) }, 'Error fetching Shopify cart')
       throw new Error('Error loading cart contents')
     }
 
@@ -186,7 +186,7 @@ class ShopifyStorefrontApi {
     // load cart if warnings are present and referenced cart lines don't have IDs (e.g. when adding products)
     let currentCartLines = []
     if (warnings.length && referencedContents.filter(cl => !!cl.id).length === 0) {
-      currentCartLines = (((await this.getCart(cartId) || {}).lines || {}).edges || []).map(edge => edge.node)
+      currentCartLines = (((await this.getCart(cartId, false) || {}).lines || {}).edges || []).map(edge => edge.node)
     }
 
     for (const warning of warnings) {
