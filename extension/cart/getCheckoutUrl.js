@@ -22,9 +22,8 @@ module.exports = async (context, input) => {
     const companyContact = (input.customAttributes.shopifyCompanyContacts || [])[0] || {}
     const companyLocationId = ((companyContact.locations || [])[0] || {}).id
 
-
     try {
-      await storefrontApi.updateCartBuyerIdentity(input.shopifyCartId, input.storefrontApiCustomerAccessToken)
+      await storefrontApi.updateCartBuyerIdentity(input.shopifyCartId, input.storefrontApiCustomerAccessToken, companyLocationId)
 
       // new cart with new checkout URL must be fetched for the changes to reflect in the checkout
       input.shopifyCart = await storefrontApi.getCart(input.shopifyCartId)
