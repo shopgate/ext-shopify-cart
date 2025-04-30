@@ -75,7 +75,7 @@
  * @typedef ShopifyCart
  * @property {string} id
  * @property {string} checkoutUrl
- * @property {{ customer: ShopifyCartCustomer }} buyerIdentity
+ * @property {{ customer: ShopifyCartCustomer, purchasingCompany?: ShopifyCartPurchasingCompany }} buyerIdentity
  * @property {ShopifyCartCost} cost
  * @property {{ edges: { node: ShopifyCartLine }[] }} lines
  * @property {{ discountedAmount: { amount: number } }[]} discountAllocations
@@ -91,6 +91,11 @@
  * @property {string?} lastName
  * @property {string} email
  * @property {string} createdAt
+ */
+
+/**
+ * @typedef ShopifyCartPurchasingCompany
+ * @property {{ id: string }} location
  */
 
 /**

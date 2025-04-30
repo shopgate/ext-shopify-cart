@@ -104,14 +104,20 @@ class ShopifyStorefrontApi {
 
   /**
    * @param {string} cartId
-   * @param {StorefrontApiCustomerAccessToken} customerAccessToken
+   * @param {StorefrontApiCustomerAccessToken?} customerAccessToken pass null to remove a customer from the cart
    * @param {string?} companyLocationId
    * @returns {Promise<Object>}
    */
   async updateCartBuyerIdentity (cartId, customerAccessToken, companyLocationId) {
     const response = await this._request(
       queries.updateCartBuyerIdentity,
-      { cartId, buyerIdentity: { customerAccessToken: customerAccessToken.accessToken, companyLocationId } }
+      {
+        cartId,
+        buyerIdentity: {
+          customerAccessToken: (customerAccessToken || {}).accessToken || null,
+          companyLocationId
+        }
+      }
     )
 
     await this._handleCartUserErrors(response, 'cartBuyerIdentityUpdate', [], cartId)

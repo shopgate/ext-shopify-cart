@@ -29,6 +29,11 @@ query getCart($cartId: ID!) {
         email
         createdAt
       }
+      purchasingCompany {
+        location {
+          id
+        }
+      }
     }
 
     lines(first: 250) {

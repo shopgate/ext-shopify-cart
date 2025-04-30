@@ -10,6 +10,10 @@ const ApiFactory = require('../lib/ShopifyApiFactory')
  * @returns {Promise<{ shopifyCartId: string }>}
  */
 module.exports = async (context, input) => {
+  // extract the first company location ID if applicable to assign it to the cart, too
+  const companyContact = ((input.customAttributes || {}).shopifyCompanyContacts || [])[0] || {}
+  const companyLocationId = ((companyContact.locations || [])[0] || {}).id
+
   const storefrontApi = ApiFactory.buildStorefrontApi(context, input.sgxsMeta)
   const storage = context.meta.userId ? context.storage.user : context.storage.device
   let shopifyCartId = await storage.get('shopifyCartId')
@@ -30,14 +34,26 @@ module.exports = async (context, input) => {
     await storage.del('cartMayBeInvalid')
   }
 
+  // update company location
+  if (shopifyCartId && input.storefrontApiCustomerAccessToken) {
+    try {
+      await storefrontApi.updateCartBuyerIdentity(shopifyCartId, input.storefrontApiCustomerAccessToken, companyLocationId)
+    } catch (err) {
+      // only localized error messages, no code or anything from Shopify API -.-
+      const locationRelatedErrors = err.errors.filter(err => (
+        err.message === 'You can\'t purchase for this location' ||
+        err.message === 'Kein Kauf für diesen Standort möglich'
+      ))
+
+      // for location related errors, reset the cart ID so a new one is created
+      if (err.code === 'ECART' && locationRelatedErrors.length) shopifyCartId = null
+    }
+  }
+
   if (shopifyCartId) return { shopifyCartId }
 
   // no cart present, create a new one
   if (input.storefrontApiCustomerAccessToken) {
-    // extract the first company location ID if applicable to assign it to the cart, too
-    const companyContact = (input.customAttributes.shopifyCompanyContacts || [])[0] || {}
-    const companyLocationId = ((companyContact.locations || [])[0] || {}).id
-
     shopifyCartId = await storefrontApi.createCartForCustomer(
       input.storefrontApiCustomerAccessToken.accessToken,
       companyLocationId
