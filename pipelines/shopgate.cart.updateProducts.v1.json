@@ -77,32 +77,16 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/products/getProducts.js",
-        "input": [
-          {"key": "productIdSets", "id": "102"}
-        ],
-        "output": [
-          {"key": "service", "id": "10"},
-          {"key": "version", "id": "11"},
-          {"key": "path", "id": "12"},
-          {"key": "method", "id": "13"},
-          {"key": "query", "id": "14"}
-        ]
+        "path": "@shopgate/shopify-cart/products/extractProductIds.js",
+        "input": [{"key": "productIdSets", "id": "102"}],
+        "output": [{ "key": "productIds", "id": "3000" }]
       },
       {
-        "type": "extension",
-        "id": "@shopgate/bigapi",
-        "path": "@shopgate/bigapi/big-api/getBigApiResult.js",
-        "input": [
-          {"key": "service", "id": "10"},
-          {"key": "version", "id": "11"},
-          {"key": "path", "id": "12"},
-          {"key": "method", "id": "13"},
-          {"key": "query", "id": "14"}
-        ],
-        "output": [
-          {"key": "collection", "id": "103"}
-        ]
+        "type": "pipeline",
+        "id": "shopgate.catalog.getProductsByIds.v1",
+        "trusted": false,
+        "input": [{ "key": "productIds", "id": "3000" }],
+        "output": [{"key":  "products", "id": "103"}]
       },
       {
         "type": "extension",

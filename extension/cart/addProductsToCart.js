@@ -19,6 +19,22 @@ module.exports = async (context, input) => {
 
   const cartLines = input.productsAddedToCart.map(product => {
     const importedProduct = shopgateProductsById[product.productId] || {}
+    let shopifyVariantGidProperty
+    if (Array.isArray(importedProduct.properties)) {
+      shopifyVariantGidProperty = importedProduct.properties.find(prop => {
+        // Label is consistent with the pipeline definition, code can be present if source of products is the catalog
+        // service instead of the Shopgate BigAPI
+        return prop.label === 'Shopify variant gid' || prop.code === 'shopifyVariantGid'
+      })
+    }
+
+    if (shopifyVariantGidProperty) {
+      return {
+        merchandiseId: shopifyVariantGidProperty.value,
+        quantity: product.quantity
+      }
+    }
+
     const variantId = importedProduct.baseProductId
       ? product.productId
       : (importedProduct.customData || {}).variant_id
