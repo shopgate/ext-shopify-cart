@@ -52,7 +52,7 @@ module.exports = async (context, input) => {
         messages: [],
         product: {
           id: line.merchandise.product.id.substring(22),
-          featuredImageUrl: line.merchandise.image.url,
+          featuredImageUrl: ((line.merchandise || {}).image || {}).url,
           name: line.merchandise.product.title,
           price: {
             unit: line.cost.amountPerQuantity.amount,
