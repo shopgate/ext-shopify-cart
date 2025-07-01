@@ -42,7 +42,8 @@ class ShopifyApiFactory {
     return new ShopifyApiTokenManager(
       context.storage.extension,
       adminApi,
-      context.log
+      context.log,
+      context.config.shopifyHeadlessStorefrontAccessToken
     )
   }
 }
