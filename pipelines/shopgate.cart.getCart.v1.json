@@ -4,7 +4,7 @@
     "id": "shopgate.cart.getCart.v1",
     "public": true,
     "input": [
-      {"key": "sgxsMeta", "id": "100", "optional": true}
+      {"key": "sgxsMeta", "id": "750"}
     ],
     "output": [
       {"key": "isOrderable", "id": "1010"},
@@ -43,7 +43,7 @@
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/initShopifyCart.js",
         "input": [
-          {"key": "sgxsMeta", "id": "100", "optional": true},
+          {"key": "sgxsMeta", "id": "750"},
           {"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true},
           {"key": "customAttributes", "id": "2001", "optional": true}
         ],
@@ -53,7 +53,7 @@
         "id": "afterInitShopifyCart",
         "type": "hook",
         "input": [
-          {"key": "sgxsMeta", "id": "100", "optional": true},
+          {"key": "sgxsMeta", "id": "750"},
           {"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true},
           {"key": "shopifyCartId", "id": "2010"}
         ],
@@ -64,7 +64,7 @@
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/fetchShopifyCart.js",
         "input": [
-          {"key": "sgxsMeta", "id": "100", "optional": true},
+          {"key": "sgxsMeta", "id": "750"},
           {"key": "shopifyCartId", "id": "2010"},
           {"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true},
           {"key": "customAttributes", "id": "2001", "optional": true}
@@ -93,7 +93,7 @@
         "type": "pipeline",
         "id": "shopgate.catalog.getProductsByIds.v1",
         "trusted": false,
-        "input": [{ "key": "productIds", "id": "3000" }],
+        "input": [{ "key": "productIds", "id": "3000" },  {"key": "sgxsMeta", "id": "750"}],
         "output": [{"key":  "products", "id": "103"}]
       },
       {
@@ -107,7 +107,7 @@
         "type": "pipeline",
         "id": "shopgate.catalog.getProductsByIds.v1",
         "trusted": false,
-        "input": [{ "key": "productIds", "id": "3001" }],
+        "input": [{ "key": "productIds", "id": "3001" }, {"key": "sgxsMeta", "id": "750"}],
         "output": [{"key":  "products", "id": "104"}]
       },
       {
