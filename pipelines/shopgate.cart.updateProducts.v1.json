@@ -85,7 +85,10 @@
         "type": "pipeline",
         "id": "shopgate.catalog.getProductsByIds.v1",
         "trusted": false,
-        "input": [{ "key": "productIds", "id": "3000" }],
+        "input": [
+          { "key": "productIds", "id": "3000" },
+          { "key": "sgxsMeta", "id": "750" }
+        ],
         "output": [{"key":  "products", "id": "103"}]
       },
       {
