@@ -1,5 +1,5 @@
 {
-  "version": "3.1.0",
+  "version": "3.2.0-alpha.5",
   "id": "@shopgate/shopify-cart",
   "steps": [
   ],
@@ -37,12 +37,32 @@
         "key": "value.backend.shopifyAccessToken"
       }
     },
+    "shopifyHeadlessStorefrontAccessToken": {
+      "type": "bigApi",
+      "destination" : "backend",
+      "default": null,
+      "params": {
+        "method":  "GET",
+        "service": "config",
+        "path": "/v1/shop/%(shopId)s/checkout_web_checkout_shopify?parsed=true",
+        "key": "value.backend.shopifyHeadlessStorefrontAccessToken"
+      }
+    },
     "enableCartCoupons" : {
       "type" : "static",
       "destination" : "backend",
       "params" : {
         "value" : false
       }
+    },
+    "usesLiveProducts": {
+      "type": "admin",
+      "destination": "backend",
+      "params": {
+        "type": "checkbox",
+        "label": "Uses Shopgate Shopify Live Products"
+      },
+      "default": false
     }
   },
   "components": [

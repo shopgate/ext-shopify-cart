@@ -4,7 +4,7 @@
     "id": "shopgate.cart.addProducts.v1",
     "public": true,
     "input": [
-      {"key": "sgxsMeta", "id": "1", "optional": true},
+      {"key": "sgxsMeta", "id": "750"},
       {"key": "products", "id": "1080"}
     ],
     "output": [
@@ -37,7 +37,7 @@
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/initShopifyCart.js",
         "input": [
-          {"key": "sgxsMeta", "id": "1", "optional": true},
+          {"key": "sgxsMeta", "id": "750"},
           {"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true},
           {"key": "customAttributes", "id": "2001", "optional": true}
         ],
@@ -46,39 +46,26 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/products/getProducts.js",
-        "input": [
-          {"key": "productIdSets", "id": "1080"}
-        ],
-        "output": [
-          {"key": "service", "id": "10"},
-          {"key": "version", "id": "11"},
-          {"key": "path", "id": "12"},
-          {"key": "method", "id": "13"},
-          {"key": "query", "id": "14"}
-        ]
+        "path": "@shopgate/shopify-cart/products/extractProductIds.js",
+        "input": [{"key": "productIdSets", "id": "1080"}],
+        "output": [{ "key": "productIds", "id": "1081" }]
       },
       {
-        "type": "extension",
-        "id": "@shopgate/bigapi",
-        "path": "@shopgate/bigapi/big-api/getBigApiResult.js",
+        "type": "pipeline",
+        "id": "shopgate.catalog.getProductsByIds.v1",
+        "trusted": false,
         "input": [
-          {"key": "service", "id": "10"},
-          {"key": "version", "id": "11"},
-          {"key": "path", "id": "12"},
-          {"key": "method", "id": "13"},
-          {"key": "query", "id": "14"}
+          { "key": "productIds", "id": "1081" },
+          { "key": "sgxsMeta", "id": "750" }
         ],
-        "output": [
-          {"key": "collection", "id": "100"}
-        ]
+        "output": [{"key":  "products", "id": "100"}]
       },
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/addProductsToCart.js",
         "input": [
-          {"key": "sgxsMeta", "id": "1", "optional": true},
+          {"key": "sgxsMeta", "id": "750"},
           {"key": "importedProductsAddedToCart", "id": "100"},
           {"key": "productsAddedToCart", "id": "1080"},
           {"key": "shopifyCartId", "id": "2010"}

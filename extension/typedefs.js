@@ -13,6 +13,7 @@
  * @property {string} shopifyShopAlias
  * @property {string} shopifyShopDomain
  * @property {string} shopifyAccessToken
+ * @property {string} shopifyHeadlessStorefrontAccessToken
  * @property {string} userRegistrationUrl
  * @property {string} userDataCacheTtl
  * @property {string} stage
