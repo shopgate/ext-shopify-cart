@@ -63,6 +63,16 @@
         "label": "Uses Shopgate Shopify Live Products"
       },
       "default": false
+    },
+    "languageId": {
+      "type": "bigApi",
+      "destination": "backend",
+      "params": {
+        "method": "GET",
+        "service": "shop",
+        "path": "/v1/%(shopId)s",
+        "key": "languageId"
+      }
     }
   },
   "components": [
