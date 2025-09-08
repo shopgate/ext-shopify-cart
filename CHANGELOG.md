@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [3.3.0] - 2025-09-08
 ### Added
 - support for locale query in checkout url
 
@@ -163,7 +165,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - logging request duration and other info when requesting the Shopify API
 
-[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v3.2.0...HEAD
+[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v3.3.0...HEAD
+[3.3.0]: https://github.com/shopgate/ext-shopify-cart/compare/v3.2.0...v3.3.0
 [3.2.0]: https://github.com/shopgate/ext-shopify-cart/compare/v3.1.0...v3.2.0
 [3.1.0]: https://github.com/shopgate/ext-shopify-cart/compare/v3.0.4...v3.1.0
 [3.0.4]: https://github.com/shopgate/ext-shopify-cart/compare/v3.0.3...v3.0.4
