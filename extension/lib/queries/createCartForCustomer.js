@@ -4,6 +4,16 @@ mutation cartCreate($buyerIdentity: CartBuyerIdentityInput) {
     cart {
       id
     }
+    userErrors {
+      code
+      field
+      message
+    }
+    warnings {
+      code
+      message
+      target
+    }
   }
 }
 `
