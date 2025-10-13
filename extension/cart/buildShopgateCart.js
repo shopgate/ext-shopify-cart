@@ -49,6 +49,7 @@ module.exports = async (context, input) => {
         id: line.id,
         type: 'product',
         quantity: line.quantity,
+        subscriptionName: line.sellingPlanAllocation?.sellingPlan?.name || null,
         messages: [],
         product: {
           id: line.merchandise.product.id.substring(22),

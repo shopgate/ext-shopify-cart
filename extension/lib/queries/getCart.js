@@ -55,6 +55,12 @@ query getCart($cartId: ID!) {
           discountAllocations {
             discountedAmount { amount }
           }
+          sellingPlanAllocation {
+            sellingPlan {
+              id
+              name
+            }
+          }
           merchandise {
             ... on ProductVariant {
               id

@@ -119,6 +119,7 @@
  * @property {ShopifyCartLineCost?} cost
  * @property {{ discountedAmount: { amount: number } }[]?} discountAllocations
  * @property {ShopifyCartLineProductVariant?} merchandise
+ * @property {ShopifyCartLineSellingPlanAllocation?} sellingPlanAllocation
  */
 
 /**
@@ -151,6 +152,16 @@
  * @property {string} id
  * @property {string} name
  * @property {{ id: string, name: string }[]} optionValues
+ */
+
+/**
+ * @typedef ShopifyCartLineSellingPlanAllocation
+ * @property {ShopifyCartLineSellingPlan} sellingPlan
+
+ /**
+ * @typedef ShopifyCartLineSellingPlan
+ * @property {string} id
+ * @property {string} name
  */
 
 /**
@@ -194,6 +205,7 @@
  * @property {string} id
  * @property {string} type
  * @property {number} quantity
+ * @property {string} subscriptionName
  * @property {ShopgateCartItemProduct} product
  */
 

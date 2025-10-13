@@ -3,7 +3,7 @@ const ApiFactory = require('../lib/ShopifyApiFactory')
 
 /**
  * @param {SDKContext} context
- * @param {{ updateCartItems: { cartItemId: string, quantity: number }[], sgxsMeta: SgxsMeta }} input
+ * @param {{ updateCartItems: { cartItemId: string, quantity: number, subscriptionId?: string }[], sgxsMeta: SgxsMeta }} input
  * @param {string} input.shopifyCartId
  */
 module.exports = async (context, input) => {
@@ -11,7 +11,8 @@ module.exports = async (context, input) => {
 
   const updateCartLines = input.updateCartItems.map(item => ({
     id: item.cartItemId,
-    quantity: item.quantity
+    quantity: item.quantity,
+    sellingPlanId: item.subscriptionId
   }))
 
   try {

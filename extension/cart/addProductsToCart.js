@@ -5,7 +5,7 @@ const CartError = require('../models/Errors/CartError');
  * @param {SDKContext} context
  * @param {object} input
  * @param {SgxsMeta} input.sgxsMeta
- * @param {{ productId: string, quantity: number }[]} input.productsAddedToCart
+ * @param {{ productId: string, quantity: number, subscriptionId?: string }[]} input.productsAddedToCart
  * @param {{ id: string, customData: string }[]} input.importedProductsAddedToCart
  * @param {string} input.shopifyCartId
  */
@@ -31,7 +31,8 @@ module.exports = async (context, input) => {
     if (shopifyVariantGidProperty) {
       return {
         merchandiseId: shopifyVariantGidProperty.value,
-        quantity: product.quantity
+        quantity: product.quantity,
+        sellingPlanId: product.subscriptionId
       }
     }
 
@@ -43,7 +44,8 @@ module.exports = async (context, input) => {
 
     return {
       merchandiseId: `gid://shopify/ProductVariant/${variantId}`,
-      quantity: product.quantity
+      quantity: product.quantity,
+      sellingPlanId: product.subscriptionId
     }
   }).filter(cartLine => !!cartLine) // filter out products with no variant ID
 
