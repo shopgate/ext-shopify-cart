@@ -14,6 +14,7 @@
  * @property {string} shopifyShopDomain
  * @property {string} shopifyAccessToken
  * @property {string} shopifyHeadlessStorefrontAccessToken
+ * @property {string} shopifyMultipassToken
  * @property {string} userRegistrationUrl
  * @property {string} userDataCacheTtl
  * @property {string} stage
