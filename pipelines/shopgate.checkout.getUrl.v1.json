@@ -64,6 +64,18 @@
           {"key": "customAttributes", "id": "2001", "optional": true}
         ],
         "output": [
+          {"key": "rawUrl", "id": "2030"}
+        ]
+      },
+      {
+        "type": "pipeline",
+        "id": "shopgate.shopify-user.buildMultipassUrl.v1",
+        "trusted": true,
+        "input": [
+          {"key": "sgxsMeta", "id": "100", "optional":  true},
+          {"key": "target", "id":  "2030"}
+        ],
+        "output": [
           {"key": "url", "id": "1010"}
         ]
       }
