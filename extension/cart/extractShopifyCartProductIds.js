@@ -10,7 +10,7 @@ module.exports = async (context, input) => {
   return {
     productIdSets: input.shopifyCart.lines.edges.map(line => ({
       productId: (line.node.merchandise.product.id || '').substring(22),
-      variantId: (line.node.merchandise.id || '').substring(29),
+      variantId: (line.node.merchandise.id || '').substring(29)
     }))
   }
 }

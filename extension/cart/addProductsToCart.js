@@ -1,5 +1,5 @@
 const ApiFactory = require('../lib/ShopifyApiFactory')
-const CartError = require('../models/Errors/CartError');
+const CartError = require('../models/Errors/CartError')
 
 /**
  * @param {SDKContext} context

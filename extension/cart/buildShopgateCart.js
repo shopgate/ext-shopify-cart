@@ -127,7 +127,7 @@ module.exports = async (context, input) => {
   for (const giftCard of shopifyCart.appliedGiftCards) {
     shopgateCart.totals.push({
       label: `...${giftCard.lastCharacters}`,
-      amount: giftCard.presentmentAmountUsed.amount *-1,
+      amount: giftCard.presentmentAmountUsed.amount * -1,
       type: 'giftCard'
     })
   }
