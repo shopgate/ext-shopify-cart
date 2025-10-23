@@ -42,5 +42,5 @@ module.exports = async (context, input) => {
   checkoutUrl.searchParams.append('logged_in', 'true')
   if (context.config.languageId) checkoutUrl.searchParams.append('locale', context.config.languageId)
 
-  return { url: checkoutUrl.toString() }
+  return { rawUrl: checkoutUrl.toString() }
 }
