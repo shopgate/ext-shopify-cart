@@ -1,8 +1,12 @@
-import { createSelector } from 'reselect'
+import { createSelector } from 'reselect';
 
-const getCart = state => state.cart
-const getTotals = createSelector(getCart, cart => cart.totals)
-const getCurrency = createSelector(getCart, cart => cart.currency)
+/**
+ * @param {{ cart: Object }} state Application state
+ * @return {Object}
+ */
+const getCart = state => state.cart;
+const getTotals = createSelector(getCart, cart => cart.totals);
+const getCurrency = createSelector(getCart, cart => cart.currency);
 
 /**
  * @param {Object} state The current application state.
@@ -11,4 +15,4 @@ const getCurrency = createSelector(getCart, cart => cart.currency)
 export const getGiftCards = createSelector(
   [getTotals, getCurrency],
   (totals, currency) => totals.filter(total => total.type === 'giftCard').map(total => ({ ...total, currency }))
-)
+);
