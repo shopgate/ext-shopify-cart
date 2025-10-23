@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [3.4.0] - 2025-10-23
 ### Added
 - support for Shopify Multipass (requires `@shopgate/shopify-user` v3.1.0 or higher)
 
@@ -171,7 +173,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - logging request duration and other info when requesting the Shopify API
 
-[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v3.3.1...HEAD
+[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v3.4.0...HEAD
+[3.4.0]: https://github.com/shopgate/ext-shopify-cart/compare/v3.3.1...v3.4.0
 [3.3.1]: https://github.com/shopgate/ext-shopify-cart/compare/v3.3.0...v3.3.1
 [3.3.0]: https://github.com/shopgate/ext-shopify-cart/compare/v3.2.0...v3.3.0
 [3.2.0]: https://github.com/shopgate/ext-shopify-cart/compare/v3.1.0...v3.2.0
