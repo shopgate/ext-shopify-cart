@@ -1,14 +1,13 @@
 {
   "version": "1",
   "pipeline": {
-    "id": "shopgate.cart.addProducts.v1",
+    "id": "shopgate.shopify-cart.getShopifyCart.v1",
     "public": true,
     "input": [
-      {"key": "sgxsMeta", "id": "750"},
-      {"key": "products", "id": "1080"}
+      {"key": "sgxsMeta", "id": "750"}
     ],
     "output": [
-      {"key": "messages", "id": "1100", "optional": true}
+      {"key": "shopifyCart", "id": "2020"}
     ],
     "steps": [
       {
@@ -44,46 +43,26 @@
         "output": [{"key": "shopifyCartId", "id": "2010"}]
       },
       {
-        "type": "extension",
-        "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/products/extractProductIds.js",
-        "input": [{"key": "productIdSets", "id": "1080"}],
-        "output": [{ "key": "productIds", "id": "1081" }]
-      },
-      {
-        "type": "pipeline",
-        "id": "shopgate.catalog.getProductsByIds.v1",
-        "trusted": false,
-        "input": [
-          { "key": "productIds", "id": "1081" },
-          { "key": "sgxsMeta", "id": "750" }
-        ],
-        "output": [{"key":  "products", "id": "100"}]
-      },
-      {
+        "id": "afterInitShopifyCart",
         "type": "hook",
-        "id": "beforeAddProductsToCart",
-        "input": [
-          { "key": "productsAddedToCart", "id": "1080" },
-          { "key": "importedProductsAddedToCart", "id": "100" }
-        ],
-        "output": [
-          { "key": "productsAddedToCart", "id": "1080" }
-        ]
-      },
-      {
-        "type": "extension",
-        "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/addProductsToCart.js",
         "input": [
           {"key": "sgxsMeta", "id": "750"},
-          {"key": "importedProductsAddedToCart", "id": "100"},
-          {"key": "productsAddedToCart", "id": "1080"},
+          {"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true},
           {"key": "shopifyCartId", "id": "2010"}
         ],
-        "output": [
-          {"key": "messages", "id": "1100", "optional": true}
-        ]
+        "output": []
+      },
+      {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/fetchShopifyCart.js",
+        "input": [
+          {"key": "sgxsMeta", "id": "750"},
+          {"key": "shopifyCartId", "id": "2010"},
+          {"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true},
+          {"key": "customAttributes", "id": "2001", "optional": true}
+        ],
+        "output": [{"key": "shopifyCart", "id": "2020"}]
       }
     ]
   }

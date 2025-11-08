@@ -14,5 +14,8 @@ const getCurrency = createSelector(getCart, cart => cart.currency);
  */
 export const getGiftCards = createSelector(
   [getTotals, getCurrency],
-  (totals, currency) => totals.filter(total => total.type === 'giftCard').map(total => ({ ...total, currency }))
+  (totals, currency) => {
+    if (!totals) return []
+    return totals.filter(total => total.type === 'giftCard').map(total => ({ ...total, currency }))
+  }
 );

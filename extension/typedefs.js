@@ -206,7 +206,7 @@
  * @property {string} id
  * @property {string} type
  * @property {number} quantity
- * @property {string} subscriptionName
+ * @property {{ id: string, name: string }} subscription
  * @property {ShopgateCartItemProduct} product
  */
 
