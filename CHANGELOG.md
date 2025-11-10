@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- backend support for Shopify Selling Plans / Subscriptions
 
 ## [3.4.0] - 2025-10-23
 ### Added
