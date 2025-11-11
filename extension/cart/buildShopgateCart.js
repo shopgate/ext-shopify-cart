@@ -45,12 +45,14 @@ module.exports = async (context, input) => {
         return isVariantProduct || productOption.optionValues.length > 1
       }, false)
 
+      const sellingPlanId = ((line.sellingPlanAllocation || {}).sellingPlan || {}).id
+
       return {
         id: line.id,
         type: 'product',
         quantity: line.quantity,
-        subscription: (line.sellingPlanAllocation || {}).sellingPlan?.id
-          ? { id: line.sellingPlanAllocation?.sellingPlan?.id, name: line.sellingPlanAllocation?.sellingPlan?.name }
+        subscription: sellingPlanId
+          ? { id: sellingPlanId, name: line.sellingPlanAllocation.sellingPlan.name }
           : null,
         messages: [],
         product: {
