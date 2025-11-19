@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - backend support for Shopify Selling Plans / Subscriptions
 
+### Fixed
+- display of "pseudo" variant products (only one option and one value to choose from) in the cart
+
 ## [3.4.0] - 2025-10-23
 ### Added
 - support for Shopify Multipass (requires `@shopgate/shopify-user` v3.1.0 or higher)
