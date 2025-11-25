@@ -39,19 +39,32 @@ module.exports = async (context, input) => {
         defaultPrice = compareAtAmount * line.quantity
       }
 
-      // every product has at least one option with one variant but if a product has at least one option with more than
-      // one value it's a product with variants
+      // Every product at Shopify has at least one option with one option value.
+      // It's a variant product if there's more than one option value to choose from.
+      // It's highly likely to also be a variant product (with only one option value to choose) if the only option's
+      // name is NOT 'Default Title'.
       const isVariantProduct = line.merchandise.product.options.reduce((isVariantProduct, productOption) => {
-        return isVariantProduct || productOption.optionValues.length > 1
+        return isVariantProduct ||
+          (
+            productOption.optionValues.length > 1 ||
+            (productOption.optionValues.length === 1 && productOption.optionValues[0].name !== 'Default Title')
+          )
       }, false)
+
+      const sellingPlanId = ((line.sellingPlanAllocation || {}).sellingPlan || {}).id
 
       return {
         id: line.id,
         type: 'product',
         quantity: line.quantity,
+        subscription: sellingPlanId
+          ? { id: sellingPlanId, name: line.sellingPlanAllocation.sellingPlan.name }
+          : null,
         messages: [],
         product: {
-          id: line.merchandise.product.id.substring(22),
+          id: isVariantProduct
+            ? line.merchandise.product.id.substring(22) + '-' + line.merchandise.id.substring(29)
+            : line.merchandise.product.id.substring(22),
           featuredImageUrl: ((line.merchandise || {}).image || {}).url,
           name: line.merchandise.product.title,
           price: {
@@ -126,7 +139,7 @@ module.exports = async (context, input) => {
   for (const giftCard of shopifyCart.appliedGiftCards) {
     shopgateCart.totals.push({
       label: `...${giftCard.lastCharacters}`,
-      amount: giftCard.presentmentAmountUsed.amount *-1,
+      amount: giftCard.presentmentAmountUsed.amount * -1,
       type: 'giftCard'
     })
   }

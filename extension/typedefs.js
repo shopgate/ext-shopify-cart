@@ -14,6 +14,7 @@
  * @property {string} shopifyShopDomain
  * @property {string} shopifyAccessToken
  * @property {string} shopifyHeadlessStorefrontAccessToken
+ * @property {string} shopifyMultipassToken
  * @property {string} userRegistrationUrl
  * @property {string} userDataCacheTtl
  * @property {string} stage
@@ -119,6 +120,7 @@
  * @property {ShopifyCartLineCost?} cost
  * @property {{ discountedAmount: { amount: number } }[]?} discountAllocations
  * @property {ShopifyCartLineProductVariant?} merchandise
+ * @property {ShopifyCartLineSellingPlanAllocation?} sellingPlanAllocation
  */
 
 /**
@@ -151,6 +153,16 @@
  * @property {string} id
  * @property {string} name
  * @property {{ id: string, name: string }[]} optionValues
+ */
+
+/**
+ * @typedef ShopifyCartLineSellingPlanAllocation
+ * @property {ShopifyCartLineSellingPlan} sellingPlan
+
+ /**
+ * @typedef ShopifyCartLineSellingPlan
+ * @property {string} id
+ * @property {string} name
  */
 
 /**
@@ -194,6 +206,7 @@
  * @property {string} id
  * @property {string} type
  * @property {number} quantity
+ * @property {ShopgateCartItemSubscription} subscription
  * @property {ShopgateCartItemProduct} product
  */
 
@@ -205,4 +218,10 @@
  * @property {{ unit: number, default: number, special: number|null }} price
  * @property {{ type: string, label: string, value: any }[]} properties
  * @property {{ label: string, value: any }[]} additionalInfo
+ */
+
+/**
+ * @typedef ShopgateCartItemSubscription
+ * @property {string} id
+ * @property {string} name
  */

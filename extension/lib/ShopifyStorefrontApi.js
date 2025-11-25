@@ -1,7 +1,7 @@
 const request = require('request-promise-native')
 
 const queries = require('./queries/index')
-const CartError = require("../models/Errors/CartError");
+const CartError = require('../models/Errors/CartError')
 
 class ShopifyStorefrontApi {
   /**
@@ -11,7 +11,7 @@ class ShopifyStorefrontApi {
    * @param {SDKContextLog} logger A generic logger instance, e.g. current step context's .log property.
    * @param {string?} apiVersion
    */
-  constructor(shopUrl, buyerIp, tokenManager, logger, apiVersion = '2025-01') {
+  constructor (shopUrl, buyerIp, tokenManager, logger, apiVersion = '2025-01') {
     this.apiUrl = new URL(`/api/${apiVersion}/graphql.json`, shopUrl).toString()
     this.buyerIp = buyerIp
     this.tokenManager = tokenManager
@@ -79,7 +79,7 @@ class ShopifyStorefrontApi {
   }
 
   async addCartLines (cartId, lines) {
-    const response = await this._request(queries.addCartLines, {cartId, lines})
+    const response = await this._request(queries.addCartLines, { cartId, lines })
 
     await this._handleCartUserErrors(response, 'cartLinesAdd', lines, cartId)
 
@@ -94,7 +94,7 @@ class ShopifyStorefrontApi {
     return response
   }
 
-  async deleteCartLines (cartId, lineIds){
+  async deleteCartLines (cartId, lineIds) {
     const response = await this._request(queries.deleteCartLines, { cartId, lineIds })
 
     await this._handleCartUserErrors(response, 'cartLinesRemove', lineIds, cartId)

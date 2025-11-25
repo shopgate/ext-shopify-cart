@@ -1,5 +1,5 @@
-import { connect } from 'react-redux'
-import { getGiftCards } from '../../selectors'
+import { connect } from 'react-redux';
+import { getGiftCards } from '../../selectors';
 
 /**
  * @param {Object} state state
@@ -7,6 +7,6 @@ import { getGiftCards } from '../../selectors'
  */
 const mapStateToProps = state => ({
   giftCards: getGiftCards(state),
-})
+});
 
 export default connect(mapStateToProps);
