@@ -206,7 +206,7 @@
  * @property {string} id
  * @property {string} type
  * @property {number} quantity
- * @property {{ id: string, name: string }} subscription
+ * @property {ShopgateCartItemSubscription} subscription
  * @property {ShopgateCartItemProduct} product
  */
 
@@ -218,4 +218,10 @@
  * @property {{ unit: number, default: number, special: number|null }} price
  * @property {{ type: string, label: string, value: any }[]} properties
  * @property {{ label: string, value: any }[]} additionalInfo
+ */
+
+/**
+ * @typedef ShopgateCartItemSubscription
+ * @property {string} id
+ * @property {string} name
  */
