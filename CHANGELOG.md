@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [3.5.1] - 2025-12-11
 ### Added
 - support for line item attributes from extensions that hook into `shopgate.cart.addProducts.v1::beforeAddProductsToCart`
 
@@ -182,7 +184,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - logging request duration and other info when requesting the Shopify API
 
-[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v3.5.0...HEAD
+[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v3.5.1...HEAD
+[3.5.1]: https://github.com/shopgate/ext-shopify-cart/compare/v3.5.0...v3.5.1
 [3.5.0]: https://github.com/shopgate/ext-shopify-cart/compare/v3.4.0...v3.5.0
 [3.4.0]: https://github.com/shopgate/ext-shopify-cart/compare/v3.3.1...v3.4.0
 [3.3.1]: https://github.com/shopgate/ext-shopify-cart/compare/v3.3.0...v3.3.1
