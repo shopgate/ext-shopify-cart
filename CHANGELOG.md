@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- support for line item attributes from extensions that hook into `shopgate.cart.addProducts.v1::beforeAddProductsToCart`
 
 ## [3.5.0] - 2025-11-25
 ### Added
