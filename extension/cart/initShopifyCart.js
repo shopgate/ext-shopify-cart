@@ -35,7 +35,7 @@ module.exports = async (context, input) => {
   }
 
   // update company location
-  if (shopifyCartId && input.storefrontApiCustomerAccessToken) {
+  if (shopifyCartId && input.storefrontApiCustomerAccessToken && context.config.usesCompanyContacts) {
     try {
       await storefrontApi.updateCartBuyerIdentity(shopifyCartId, input.storefrontApiCustomerAccessToken, companyLocationId)
     } catch (err) {
