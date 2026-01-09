@@ -29,6 +29,27 @@
         "output": [{"key":  "storefrontApiCustomerAccessToken", "id": "2000", "optional": true}]
       },
       {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/getUsesCompanyContacts.js",
+        "input": [],
+        "output": [
+          {"key": "usesCompanyContacts", "id": "2002"}
+        ]
+      },
+      {
+        "type": "conditional",
+        "input": [{"key": "usesCompanyContacts", "id": "2002", "optional": true}],
+        "expression": {"ok": [{"name": "usesCompanyContacts"}]},
+        "then": {
+          "type": "pipeline",
+          "id": "shopgate.user.getUser.v1",
+          "trusted": true,
+          "input": [],
+          "output": [{"key":  "customAttributes", "id": "2001", "optional": true}]
+        }
+      },
+      {
         "type": "pipeline",
         "id": "shopgate.user.getUser.v1",
         "trusted": true,

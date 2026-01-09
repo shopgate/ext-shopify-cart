@@ -1,5 +1,5 @@
 {
-  "version": "3.5.1",
+  "version": "3.5.2-beta.4",
   "id": "@shopgate/shopify-cart",
   "steps": [
   ],
@@ -61,6 +61,15 @@
       "params": {
         "type": "checkbox",
         "label": "Uses Shopgate Shopify Live Products"
+      },
+      "default": false
+    },
+    "usesCompanyContacts": {
+      "type": "admin",
+      "destination": "backend",
+      "params": {
+        "type": "checkbox",
+        "label": "Uses Shopify company contacts to update location on cart"
       },
       "default": false
     },
