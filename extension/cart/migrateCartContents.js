@@ -44,7 +44,9 @@ module.exports = async (context, { sgxsMeta }) => {
     if (addProducts.length > 0) await storefrontApi.addCartLines(userCartId, addProducts)
     if (deleteCartLines.length > 0) await storefrontApi.deleteCartLines(deviceCartId, deleteCartLines)
   } catch (err) {
+    // schedule carts for validation on the next action, at least one of them seems to be invalid
+    context.storage.device.set('cartMayBeInvalid', true)
+    context.storage.user.set('cartMayBeInvalid', true)
     context.log.error({ errorMessage: err.message, cartErrors: err.errors, statusCode: err.statusCode, code: err.code }, 'Error merging carts upon log-in')
-    throw new UnknownError()
   }
 }
