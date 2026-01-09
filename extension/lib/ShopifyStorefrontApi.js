@@ -11,7 +11,7 @@ class ShopifyStorefrontApi {
    * @param {SDKContextLog} logger A generic logger instance, e.g. current step context's .log property.
    * @param {string?} apiVersion
    */
-  constructor (shopUrl, buyerIp, tokenManager, logger, apiVersion = '2025-01') {
+  constructor (shopUrl, buyerIp, tokenManager, logger, apiVersion = '2026-01') {
     this.apiUrl = new URL(`/api/${apiVersion}/graphql.json`, shopUrl).toString()
     this.buyerIp = buyerIp
     this.tokenManager = tokenManager

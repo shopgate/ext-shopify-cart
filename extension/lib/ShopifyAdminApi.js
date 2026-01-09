@@ -8,7 +8,7 @@ class ShopifyAdminApi {
    * @param {SDKContextLog} logger
    * @param {string?} apiVersion
    */
-  constructor (shopUrl, accessToken, logger, apiVersion = '2025-01') {
+  constructor (shopUrl, accessToken, logger, apiVersion = '2026-01') {
     this.apiUrl = new URL(`/admin/api/${apiVersion}/`, shopUrl).toString()
     this.accessToken = accessToken
     this.logger = logger
