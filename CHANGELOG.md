@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Fixed
 - unable to log in due to expired guest or anonymous cart
+- long loading times on changing quantities in cart (only when not using B2B features)
 
 ### Changed
 - uses Shopify Admin REST API 2026-01
