@@ -18,69 +18,11 @@
     ],
     "steps": [
       {
-        "type": "staticValue",
-        "input": [],
-        "output": [
-          {"id": "2050", "key": "scopeId"}
-        ],
-        "values": [
-          {"key": "scopeId", "value": "shopgate.shopify-user.getStorefrontApiCustomerAccessToken.v1"}
-        ]
-      },
-      {
-        "type": "extension",
-        "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/startTimer.js",
-        "input": [
-          {"key": "scopeId", "id": "2050"}
-        ],
-        "output": [
-          {"key": "pipelineId", "id": "2049"},
-          {"key": "scopeId", "id": "2050"},
-          {"key": "startTime", "id": "2051"}
-        ]
-      },
-      {
         "type": "pipeline",
         "id": "shopgate.shopify-user.getStorefrontApiCustomerAccessToken.v1",
         "trusted": true,
         "input": [],
         "output": [{"key":  "storefrontApiCustomerAccessToken", "id": "2000", "optional": true}]
-      },
-      {
-        "type": "extension",
-        "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/stopTimer.js",
-        "input": [
-          {"key": "pipelineId", "id": "2049"},
-          {"key": "scopeId", "id": "2050"},
-          {"key": "startTime", "id": "2051"}
-        ],
-        "output": []
-      },
-      {
-        "type": "staticValue",
-        "input": [],
-        "output": [
-          {"id": "2050", "key": "scopeId"}
-        ],
-        "values": [
-          {"key": "scopeId", "value": "shopgate.user.getUser.v1"}
-        ]
-      },
-      {
-        "type": "extension",
-        "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/startTimer.js",
-        "input": [
-          {"key": "pipelineId", "id": "2049"},
-          {"key": "scopeId", "id": "2050"}
-        ],
-        "output": [
-          {"key": "pipelineId", "id": "2049"},
-          {"key": "scopeId", "id": "2050"},
-          {"key": "startTime", "id": "2051"}
-        ]
       },
       {
         "type": "extension",
@@ -104,46 +46,11 @@
         }
       },
       {
-        "type": "extension",
-        "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/stopTimer.js",
-        "input": [
-          {"key": "pipelineId", "id": "2049"},
-          {"key": "scopeId", "id": "2050"},
-          {"key": "startTime", "id": "2051"}
-        ],
-        "output": []
-      },
-      {
         "type": "errorCatchExtension",
         "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/ignoreUserNotLoggedIn.js",
         "input": [],
         "output": []
-      },
-      {
-        "type": "staticValue",
-        "input": [],
-        "output": [
-          {"id": "2050", "key": "scopeId"}
-        ],
-        "values": [
-          {"key": "scopeId", "value": "@shopgate/shopify-cart/cart/initShopifyCart.js"}
-        ]
-      },
-      {
-        "type": "extension",
-        "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/startTimer.js",
-        "input": [
-          {"key": "pipelineId", "id": "2049"},
-          {"key": "scopeId", "id": "2050"}
-        ],
-        "output": [
-          {"key": "pipelineId", "id": "2049"},
-          {"key": "scopeId", "id": "2050"},
-          {"key": "startTime", "id": "2051"}
-        ]
       },
       {
         "type": "extension",
@@ -155,42 +62,6 @@
           {"key": "customAttributes", "id": "2001", "optional": true}
         ],
         "output": [{"key": "shopifyCartId", "id": "2010"}]
-      },
-      {
-        "type": "extension",
-        "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/stopTimer.js",
-        "input": [
-          {"key": "pipelineId", "id": "2049"},
-          {"key": "scopeId", "id": "2050"},
-          {"key": "startTime", "id": "2051"}
-        ],
-        "output": []
-      },
-      {
-        "type": "staticValue",
-        "input": [],
-        "output": [
-
-          {"id": "2050", "key": "scopeId"}
-        ],
-        "values": [
-          {"key": "scopeId", "value": "afterInitShopifyCart"}
-        ]
-      },
-      {
-        "type": "extension",
-        "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/startTimer.js",
-        "input": [
-          {"key": "pipelineId", "id": "2049"},
-          {"key": "scopeId", "id": "2050"}
-        ],
-        "output": [
-          {"key": "pipelineId", "id": "2049"},
-          {"key": "scopeId", "id": "2050"},
-          {"key": "startTime", "id": "2051"}
-        ]
       },
       {
         "id": "afterInitShopifyCart",
@@ -205,41 +76,6 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/stopTimer.js",
-        "input": [
-          {"key": "pipelineId", "id": "2049"},
-          {"key": "scopeId", "id": "2050"},
-          {"key": "startTime", "id": "2051"}
-        ],
-        "output": []
-      },
-      {
-        "type": "staticValue",
-        "input": [],
-        "output": [
-          {"id": "2050", "key": "scopeId"}
-        ],
-        "values": [
-          {"key": "scopeId", "value": "@shopgate/shopify-cart/cart/fetchShopifyCart.js"}
-        ]
-      },
-      {
-        "type": "extension",
-        "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/startTimer.js",
-        "input": [
-          {"key": "pipelineId", "id": "2049"},
-          {"key": "scopeId", "id": "2050"}
-        ],
-        "output": [
-          {"key": "pipelineId", "id": "2049"},
-          {"key": "scopeId", "id": "2050"},
-          {"key": "startTime", "id": "2051"}
-        ]
-      },
-      {
-        "type": "extension",
-        "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/cart/fetchShopifyCart.js",
         "input": [
           {"key": "sgxsMeta", "id": "750"},
@@ -248,17 +84,6 @@
           {"key": "customAttributes", "id": "2001", "optional": true}
         ],
         "output": [{"key": "shopifyCart", "id": "2020"}]
-      },
-      {
-        "type": "extension",
-        "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/stopTimer.js",
-        "input": [
-          {"key": "pipelineId", "id": "2049"},
-          {"key": "scopeId", "id": "2050"},
-          {"key": "startTime", "id": "2051"}
-        ],
-        "output": []
       },
       {
         "type": "extension",
@@ -279,30 +104,6 @@
         "output": [{ "key": "productIds", "id": "3000" }]
       },
       {
-        "type": "staticValue",
-        "input": [],
-        "output": [
-          {"id": "2050", "key": "scopeId"}
-        ],
-        "values": [
-          {"key": "scopeId", "value": "shopgate.catalog.getProductsByIds.v1"}
-        ]
-      },
-      {
-        "type": "extension",
-        "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/startTimer.js",
-        "input": [
-          {"key": "pipelineId", "id": "2049"},
-          {"key": "scopeId", "id": "2050"}
-        ],
-        "output": [
-          {"key": "pipelineId", "id": "2049"},
-          {"key": "scopeId", "id": "2050"},
-          {"key": "startTime", "id": "2051"}
-        ]
-      },
-      {
         "type": "pipeline",
         "id": "shopgate.catalog.getProductsByIds.v1",
         "trusted": false,
@@ -312,44 +113,9 @@
       {
         "type": "extension",
         "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/stopTimer.js",
-        "input": [
-          {"key": "pipelineId", "id": "2049"},
-          {"key": "scopeId", "id": "2050"},
-          {"key": "startTime", "id": "2051"}
-        ],
-        "output": []
-      },
-      {
-        "type": "extension",
-        "id": "@shopgate/shopify-cart",
         "path": "@shopgate/shopify-cart/products/extractChildProductIds.js",
         "input": [{"key": "productIdSets", "id": "102"}],
         "output": [{ "key": "productIds", "id": "3001" }]
-      },
-      {
-        "type": "staticValue",
-        "input": [],
-        "output": [
-          {"id": "2050", "key": "scopeId"}
-        ],
-        "values": [
-          {"key": "scopeId", "value": "shopgate.catalog.getProductsByIds.v1 (children)"}
-        ]
-      },
-      {
-        "type": "extension",
-        "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/startTimer.js",
-        "input": [
-          {"key": "pipelineId", "id": "2049"},
-          {"key": "scopeId", "id": "2050"}
-        ],
-        "output": [
-          {"key": "pipelineId", "id": "2049"},
-          {"key": "scopeId", "id": "2050"},
-          {"key": "startTime", "id": "2051"}
-        ]
       },
       {
         "type": "pipeline",
@@ -357,17 +123,6 @@
         "trusted": false,
         "input": [{ "key": "productIds", "id": "3001" }, {"key": "sgxsMeta", "id": "750"}],
         "output": [{"key":  "products", "id": "104"}]
-      },
-      {
-        "type": "extension",
-        "id": "@shopgate/shopify-cart",
-        "path": "@shopgate/shopify-cart/cart/stopTimer.js",
-        "input": [
-          {"key": "pipelineId", "id": "2049"},
-          {"key": "scopeId", "id": "2050"},
-          {"key": "startTime", "id": "2051"}
-        ],
-        "output": []
       },
       {
         "type": "extension",
