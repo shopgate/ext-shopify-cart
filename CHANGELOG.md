@@ -14,7 +14,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 - uses Shopify Admin REST API 2026-01
 - uses Shopify Storefront API 2026-01
-- uses Shopify Customer Accounts API 2026-01
 
 ## [3.5.1] - 2025-12-11
 ### Added
