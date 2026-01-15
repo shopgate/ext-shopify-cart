@@ -27,7 +27,7 @@ module.exports = async (context, { sgxsMeta }) => {
       return
     } catch (err) {
       await context.storage.device.del('shopifyCartId')
-      this.log.error({ errorMessage: err.message, statusCode: err.statusCode, code: err.code }, 'Error creating new device cart')
+      context.log.error({ errorMessage: err.message, statusCode: err.statusCode, code: err.code }, 'Error creating new device cart')
       throw new UnknownError()
     }
   }
