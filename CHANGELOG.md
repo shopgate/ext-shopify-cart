@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+- fix error logging, where the actual error was masked by "Cannot read properties of undefined (reading 'error')"
 
 ## [3.5.2] - 2026-01-13
 ### Fixed
