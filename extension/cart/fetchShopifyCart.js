@@ -18,7 +18,7 @@ module.exports = async (context, { shopifyCartId, sgxsMeta, storefrontApiCustome
   try {
     shopifyCart = await storefrontApi.getCart(shopifyCartId)
   } catch (err) {
-    this.log.error({ errorMessage: err.message, statusCode: err.statusCode, code: err.code }, 'Error fetching shopify cart')
+    context.log.error({ errorMessage: err.message, statusCode: err.statusCode, code: err.code }, 'Error fetching shopify cart')
     throw new UnknownError()
   }
 
@@ -45,7 +45,7 @@ module.exports = async (context, { shopifyCartId, sgxsMeta, storefrontApiCustome
       await storage.set('shopifyCartId', newCartId)
     } catch (err) {
       await storage.del('shopifyCartId')
-      this.log.error({ errorMessage: err.message, statusCode: err.statusCode, code: err.code }, 'Error creating new device cart')
+      context.log.error({ errorMessage: err.message, statusCode: err.statusCode, code: err.code }, 'Error creating new device cart')
       throw new UnknownError()
     }
   }
