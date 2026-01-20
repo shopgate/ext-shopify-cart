@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [3.5.3] - 2026-01-20
 ### Fixed
 - a bug in internal error logging when loading the cart, making it impossible for developers or customer success to investigate further on such errors
 
@@ -195,7 +197,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - logging request duration and other info when requesting the Shopify API
 
-[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v3.5.2...HEAD
+[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v3.5.3...HEAD
+[3.5.3]: https://github.com/shopgate/ext-shopify-cart/compare/v3.5.2...v3.5.3
 [3.5.2]: https://github.com/shopgate/ext-shopify-cart/compare/v3.5.1...v3.5.2
 [3.5.1]: https://github.com/shopgate/ext-shopify-cart/compare/v3.5.0...v3.5.1
 [3.5.0]: https://github.com/shopgate/ext-shopify-cart/compare/v3.4.0...v3.5.0
