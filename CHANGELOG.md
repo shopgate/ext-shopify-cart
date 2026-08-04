@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+**THIS RELEASE CONTAINS BREAKING CHANGES**
+
+### Changed
+- all config settings are now set via Next Admin; Guru settings will be ignored
+- the `shopifyHeadlessStorefrontAccessToken` is required now; Admin API credentials won't be used to fetch a Storefront API access token anymore
+- the config setting `languageId` has been renamed to more suitable `localeCode`
+
 ## [3.5.3] - 2026-01-20
 ### Fixed
 - a bug in internal error logging when loading the cart, making it impossible for developers or customer success to investigate further on such errors
