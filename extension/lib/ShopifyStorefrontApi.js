@@ -127,30 +127,20 @@ class ShopifyStorefrontApi {
   /**
    * @param {string} query
    * @param {object} variables
-   * @param {number} retryCount
    * @returns {Promise<object>}
    * @private
    */
-  async _request (query, variables = {}, retryCount = 0) {
+  async _request (query, variables = {}) {
     const headers = { 'x-shopify-storefront-access-token': this.headlessStorefrontAccessToken }
     if (this.buyerIp) headers['Shopify-Storefront-Buyer-IP'] = this.buyerIp
 
-    try {
-      return await request({
-        method: 'post',
-        uri: this.apiUrl,
-        headers,
-        body: { query, variables },
-        json: true
-      })
-    } catch (err) {
-      if ((err.statusCode === 401 || err.statusCode === 403) && retryCount === 0) {
-        // try a new access token
-        return this._request(query, variables, retryCount + 1)
-      }
-
-      throw err
-    }
+    return await request({
+      method: 'post',
+      uri: this.apiUrl,
+      headers,
+      body: { query, variables },
+      json: true
+    })
   }
 
   /**
