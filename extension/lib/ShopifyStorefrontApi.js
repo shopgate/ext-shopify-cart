@@ -7,16 +7,15 @@ class ShopifyStorefrontApi {
   /**
    * @param {string} shopUrl
    * @param {string} buyerIp
-   * @param {ShopifyApiTokenManager} tokenManager
+   * @param {string} headlessStorefrontAccessToken
    * @param {SDKContextLog} logger A generic logger instance, e.g. current step context's .log property.
    * @param {string?} apiVersion
    */
-  constructor (shopUrl, buyerIp, tokenManager, logger, apiVersion = '2026-01') {
+  constructor (shopUrl, buyerIp, headlessStorefrontAccessToken, logger, apiVersion = '2026-01') {
     this.apiUrl = new URL(`/api/${apiVersion}/graphql.json`, shopUrl).toString()
     this.buyerIp = buyerIp
-    this.tokenManager = tokenManager
+    this.headlessStorefrontAccessToken = headlessStorefrontAccessToken
     this.logger = logger
-    this.storefrontApiAccessToken = null
 
     if (!buyerIp) logger.warn('No buyer IP passed')
   }
@@ -128,35 +127,20 @@ class ShopifyStorefrontApi {
   /**
    * @param {string} query
    * @param {object} variables
-   * @param {number} retryCount
    * @returns {Promise<object>}
    * @private
    */
-  async _request (query, variables = {}, retryCount = 0) {
-    if (!this.storefrontApiAccessToken) {
-      this.storefrontApiAccessToken = await this.tokenManager.getStorefrontApiAccessToken()
-    }
-
-    const headers = { 'x-shopify-storefront-access-token': this.storefrontApiAccessToken }
+  async _request (query, variables = {}) {
+    const headers = { 'x-shopify-storefront-access-token': this.headlessStorefrontAccessToken }
     if (this.buyerIp) headers['Shopify-Storefront-Buyer-IP'] = this.buyerIp
 
-    try {
-      return await request({
-        method: 'post',
-        uri: this.apiUrl,
-        headers,
-        body: { query, variables },
-        json: true
-      })
-    } catch (err) {
-      if ((err.statusCode === 401 || err.statusCode === 403) && retryCount === 0) {
-        // try a new access token
-        this.storefrontApiAccessToken = await this.tokenManager.getStorefrontApiAccessToken(false)
-        return this._request(query, variables, retryCount + 1)
-      }
-
-      throw err
-    }
+    return await request({
+      method: 'post',
+      uri: this.apiUrl,
+      headers,
+      body: { query, variables },
+      json: true
+    })
   }
 
   /**

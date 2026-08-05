@@ -1,87 +1,61 @@
 {
-  "version": "3.5.3",
+  "version": "4.0.0-beta.2",
   "id": "@shopgate/shopify-cart",
   "steps": [
   ],
   "configuration": {
     "shopifyShopAlias": {
-      "type": "bigApi",
+      "type": "admin",
       "destination" : "backend",
       "default": null,
       "params": {
-        "method":  "GET",
-        "service": "config",
-        "path": "/v1/shop/%(shopId)s/checkout_web_checkout_shopify?parsed=true",
-        "key": "value.frontend.alias"
+        "type":  "text",
+        "label": "Shopify Shop Alias",
+        "description": "The part of your Shopify domain that comes before .myshopify.com; e.g. if your Shopify domain is https://myshop.myshopify.com, your alias is myshop.",
+        "required": true
       }
     },
     "shopifyShopDomain": {
-      "type": "bigApi",
+      "type": "admin",
       "destination" : "backend",
       "default": null,
       "params": {
-        "method":  "GET",
-        "service": "config",
-        "path": "/v1/shop/%(shopId)s/checkout_web_checkout_shopify?parsed=true",
-        "key": "value.frontend.domain"
-      }
-    },
-    "shopifyAccessToken": {
-      "type": "bigApi",
-      "destination" : "backend",
-      "default": null,
-      "params": {
-        "method":  "GET",
-        "service": "config",
-        "path": "/v1/shop/%(shopId)s/checkout_web_checkout_shopify?parsed=true",
-        "key": "value.backend.shopifyAccessToken"
+        "type":  "text",
+        "label": "Shopify Shop Domain",
+        "description": "The full domain of your Shopify shop; e.g. myshop.com. This is optional and only needed if you have a custom domain for your Shopify shop.",
+        "required": false
       }
     },
     "shopifyHeadlessStorefrontAccessToken": {
-      "type": "bigApi",
+      "type": "admin",
       "destination" : "backend",
       "default": null,
       "params": {
-        "method":  "GET",
-        "service": "config",
-        "path": "/v1/shop/%(shopId)s/checkout_web_checkout_shopify?parsed=true",
-        "key": "value.backend.shopifyHeadlessStorefrontAccessToken"
+        "type":  "text",
+        "label": "Shopify Headless Storefront Access Token",
+        "description": "The access token for your Shopify headless storefront.",
+        "required": true
       }
     },
-    "enableCartCoupons" : {
-      "type" : "static",
-      "destination" : "backend",
-      "params" : {
-        "value" : false
-      }
-    },
-    "usesLiveProducts": {
+    "localeCode": {
       "type": "admin",
       "destination": "backend",
       "params": {
-        "type": "checkbox",
-        "label": "Uses Shopgate Shopify Live Products"
-      },
-      "default": false
+        "type":  "text",
+        "label": "Language",
+        "description": "The locale code, affecting the default language for stock warnings etc. in the cart; e.g., en-US for English, de-DE for German.",
+        "required": false
+      }
     },
     "usesCompanyContacts": {
       "type": "admin",
       "destination": "backend",
       "params": {
         "type": "checkbox",
-        "label": "Uses Shopify company contacts to update location on cart"
+        "label": "Use Shopify company contacts",
+        "description": "If checked, the extension will use Shopify company contacts to update the location on the cart."
       },
       "default": false
-    },
-    "languageId": {
-      "type": "bigApi",
-      "destination": "backend",
-      "params": {
-        "method": "GET",
-        "service": "shop",
-        "path": "/v1/%(shopId)s",
-        "key": "languageId"
-      }
     }
   },
   "components": [
