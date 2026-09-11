@@ -18,9 +18,6 @@
     "eslint-import-resolver-babel-module": "^5.3.2",
     "eslint-plugin-import": "^2.32.0"
   },
-  "peerDependencies": {
-    "@shopgate/engage": ">= 6.19.8"
-  },
   "dependencies": {
     "@shopgate/pwa-common-commerce": "^6.19.8",
     "@shopgate/pwa-core": "^6.19.8",
