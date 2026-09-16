@@ -40,7 +40,7 @@ module.exports = async (context, input) => {
 
   const checkoutUrl = new URL(input.shopifyCart.checkoutUrl)
   checkoutUrl.searchParams.append('logged_in', 'true')
-  if (context.config.languageId) checkoutUrl.searchParams.append('locale', context.config.languageId)
+  if (context.config.localeCode) checkoutUrl.searchParams.append('locale', context.config.localeCode)
 
   return { rawUrl: checkoutUrl.toString() }
 }

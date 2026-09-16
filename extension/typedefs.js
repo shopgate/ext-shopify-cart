@@ -12,20 +12,9 @@
  * @typedef ExtensionConfig
  * @property {string} shopifyShopAlias
  * @property {string} shopifyShopDomain
- * @property {string} shopifyAccessToken
  * @property {string} shopifyHeadlessStorefrontAccessToken
- * @property {string} shopifyMultipassToken
- * @property {string} userRegistrationUrl
- * @property {string} userDataCacheTtl
- * @property {string} stage
- * @property {Object} credentials
- * @property {string} credentials.baseDomain
- * @property {string} credentials.clientId
- * @property {string} credentials.clientSecret
- * @property {string} credentials.refreshToken
- * @property {Object} requestTimeout
- * @property {number} requestTimeout.token
- * @property {number} requestTimeout.bigApi
+ * @property {string} localeCode
+ * @property {boolean} usesCompanyContacts
  */
 
 /**
