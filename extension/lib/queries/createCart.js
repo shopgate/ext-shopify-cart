@@ -1,6 +1,6 @@
 module.exports = `
-mutation cartCreate {
-  cartCreate {
+mutation cartCreate($buyerIdentity: CartBuyerIdentityInput) {
+  cartCreate(input: { buyerIdentity: $buyerIdentity }) {
     cart {
       id
     }

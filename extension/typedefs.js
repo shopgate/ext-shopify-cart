@@ -13,6 +13,7 @@
  * @property {string} shopifyShopAlias
  * @property {string} shopifyShopDomain
  * @property {string} shopifyHeadlessStorefrontAccessToken
+ * @property {string?} countryCode
  * @property {string} localeCode
  * @property {boolean} usesCompanyContacts
  */

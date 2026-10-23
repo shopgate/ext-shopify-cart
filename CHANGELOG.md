@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- config setting `countryCode` to set the country (and thus currency) of carts via the Shopify buyer identity
+
+### Fixed
+- guest carts showing the wrong currency (e.g. CHF instead of EUR) when Shopify detected a different country by IP address
 
 **THIS RELEASE CONTAINS BREAKING CHANGES**
 

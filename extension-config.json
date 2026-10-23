@@ -47,6 +47,17 @@
         "required": false
       }
     },
+    "countryCode": {
+      "type": "admin",
+      "destination": "backend",
+      "params": {
+        "type": "text",
+        "label": "Country code for cart pricing",
+        "description": "ISO 3166-1 alpha-2 country code (e.g. DE) passed to Shopify when creating or updating carts. Determines the currency and prices of the cart. Leave empty to let Shopify detect the country by the buyer's IP address.",
+        "required": false
+      },
+      "default": null
+    },
     "usesCompanyContacts": {
       "type": "admin",
       "destination": "backend",
