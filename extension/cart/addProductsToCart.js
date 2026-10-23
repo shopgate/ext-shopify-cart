@@ -65,9 +65,15 @@ module.exports = async (context, input) => {
         return cartSubError
       })
 
-      // remove cart lines that are out of stock, those are not removed by Shopify anymore after they changed from errors to warnings
+      // remove cart lines that are completely out of stock, those are not removed by Shopify anymore after they changed from errors to warnings
       try {
-        await storefrontApi.deleteCartLines(input.shopifyCartId, err.errors.map(err => err.entityId))
+        await storefrontApi.deleteCartLines(
+          input.shopifyCartId,
+          err.errors
+            // do not remove errors that indicate insufficient stock, Shopify will auto-correct those line items
+            .filter(cartSubError => cartSubError.shopifyCode !== 'MERCHANDISE_NOT_ENOUGH_STOCK')
+            .map(err => err.entityId)
+        )
       } catch (deleteError) {
         context.log.error(deleteError)
       }
