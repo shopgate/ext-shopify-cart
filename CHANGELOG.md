@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [4.0.0] - 2026-10-23
+
 **THIS RELEASE CONTAINS BREAKING CHANGES**
 
 ### Changed
@@ -204,7 +206,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - logging request duration and other info when requesting the Shopify API
 
-[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v3.5.3...HEAD
+[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v4.0.0...HEAD
+[4.0.0]: https://github.com/shopgate/ext-shopify-cart/compare/v3.5.3...v4.0.0
 [3.5.3]: https://github.com/shopgate/ext-shopify-cart/compare/v3.5.2...v3.5.3
 [3.5.2]: https://github.com/shopgate/ext-shopify-cart/compare/v3.5.1...v3.5.2
 [3.5.1]: https://github.com/shopgate/ext-shopify-cart/compare/v3.5.0...v3.5.1
