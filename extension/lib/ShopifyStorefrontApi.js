@@ -10,10 +10,12 @@ class ShopifyStorefrontApi {
    * @param {string} headlessStorefrontAccessToken
    * @param {SDKContextLog} logger A generic logger instance, e.g. current step context's .log property.
    * @param {string?} apiVersion
+   * @param {string?} countryCode ISO 3166-1 alpha-2 code set on the cart's buyer identity; determines cart currency
    */
-  constructor (shopUrl, buyerIp, headlessStorefrontAccessToken, logger, apiVersion = '2026-01') {
+  constructor (shopUrl, buyerIp, headlessStorefrontAccessToken, logger, apiVersion = '2026-01', countryCode = null) {
     this.apiUrl = new URL(`/api/${apiVersion}/graphql.json`, shopUrl).toString()
     this.buyerIp = buyerIp
+    this.countryCode = countryCode
     this.headlessStorefrontAccessToken = headlessStorefrontAccessToken
     this.logger = logger
 
@@ -28,7 +30,7 @@ class ShopifyStorefrontApi {
   async createCartForCustomer (customerStorefrontApiAccessToken, companyLocationId) {
     const createCartResult = await this._request(
       queries.createCartForCustomer,
-      { buyerIdentity: { customerAccessToken: customerStorefrontApiAccessToken, companyLocationId } }
+      { buyerIdentity: this._buildBuyerIdentity({ customerAccessToken: customerStorefrontApiAccessToken, companyLocationId }) }
     )
 
     const cartId = ((((createCartResult || {}).data || {}).cartCreate || {}).cart || {}).id
@@ -44,7 +46,8 @@ class ShopifyStorefrontApi {
   async createCart () {
     let createCartResult
     try {
-      createCartResult = await this._request(queries.createCart)
+      const variables = this.countryCode ? { buyerIdentity: this._buildBuyerIdentity() } : {}
+      createCartResult = await this._request(queries.createCart, variables)
     } catch (err) {
       this.logger.error({ errorMessage: err.message, statusCode: err.statusCode, code: err.code }, 'Error creating an anonymous cart.')
       throw new Error('Error loading cart')
@@ -112,16 +115,32 @@ class ShopifyStorefrontApi {
       queries.updateCartBuyerIdentity,
       {
         cartId,
-        buyerIdentity: {
+        buyerIdentity: this._buildBuyerIdentity({
           customerAccessToken: (customerAccessToken || {}).accessToken || null,
           companyLocationId
-        }
+        })
       }
     )
 
     await this._handleCartUserErrors(response, 'cartBuyerIdentityUpdate', [], cartId)
 
     return response
+  }
+
+  /**
+   * Adds the configured country code to a buyer identity, so Shopify uses the right market and currency instead of
+   * guessing the country from the buyer's IP address.
+   *
+   * Skipped when a company location is set, because Shopify derives the country from the location in that case.
+   *
+   * @param {Object} buyerIdentity
+   * @returns {Object}
+   * @private
+   */
+  _buildBuyerIdentity (buyerIdentity = {}) {
+    if (!this.countryCode || buyerIdentity.companyLocationId) return buyerIdentity
+
+    return { ...buyerIdentity, countryCode: this.countryCode }
   }
 
   /**

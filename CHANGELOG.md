@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Fixed
 - line items cleared from the cart completely when trying to add more than in stock
+- guest carts showing the wrong currency (e.g. CHF instead of EUR) when Shopify detected a different country by IP address
+
+### Added
+- config setting `countryCode` to set the country (and thus currency) of carts via the Shopify buyer identity
 
 ## [4.0.0] - 2026-10-23
 
