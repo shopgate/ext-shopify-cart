@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [4.0.1] - 2026-10-26
 ### Fixed
 - line items cleared from the cart completely when trying to add more than in stock
 - guest carts showing the wrong currency (e.g. CHF instead of EUR) when Shopify detected a different country by IP address
@@ -212,7 +214,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - logging request duration and other info when requesting the Shopify API
 
-[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v4.0.0...HEAD
+[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v4.0.1...HEAD
+[4.0.1]: https://github.com/shopgate/ext-shopify-cart/compare/v4.0.0...v4.0.1
 [4.0.0]: https://github.com/shopgate/ext-shopify-cart/compare/v3.5.3...v4.0.0
 [3.5.3]: https://github.com/shopgate/ext-shopify-cart/compare/v3.5.2...v3.5.3
 [3.5.2]: https://github.com/shopgate/ext-shopify-cart/compare/v3.5.1...v3.5.2
