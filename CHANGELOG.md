@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [4.0.2] - 2026-11-02
 ### Fixed
-- "localeCode" in extension config failing deployment if not set due to missing default
+- "localeCode" in extension config now initialized automatically
 
 ## [4.0.1] - 2026-10-26
 ### Fixed
