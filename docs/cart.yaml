@@ -333,6 +333,11 @@ parameters:
             type: string
           quantity:
             type: number
+          attributes:
+            type: array
+            description: 'Optional. When set, replaces all attributes of the cart line; an empty array removes them. When not set, the cart line keeps its attributes.'
+            items:
+              $ref: '#/definitions/CartItemAttribute'
 
   cartItemIdsParam:
     name: cartItemIds
@@ -430,11 +435,28 @@ definitions:
         $ref: '#/definitions/CartItemCoupon'
       product:
         $ref: '#/definitions/CartItemProduct'
+      attributes:
+        type: array
+        description: 'Custom attributes of the cart line, including private ones (keys starting with an underscore).'
+        items:
+          $ref: '#/definitions/CartItemAttribute'
       messages:
         type: array
         description: 'All messages specific to the current cart item.'
         items:
           $ref: '#/definitions/Message'
+  CartItemAttribute:
+    type: object
+    required:
+      - key
+      - value
+    properties:
+      key:
+        type: string
+        example: '_warranty_pair_id'
+      value:
+        type: string
+        example: 'a84de7d7'
   CartItemCoupon:
     $ref: '#/definitions/AppliedDiscount'
   CartItemProduct:

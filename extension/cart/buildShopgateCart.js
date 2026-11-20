@@ -60,6 +60,7 @@ module.exports = async (context, input) => {
         subscription: sellingPlanId
           ? { id: sellingPlanId, name: line.sellingPlanAllocation.sellingPlan.name }
           : null,
+        attributes: line.attributes || [],
         messages: [],
         product: {
           id: isVariantProduct

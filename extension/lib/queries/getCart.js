@@ -41,6 +41,10 @@ query getCart($cartId: ID!) {
         node {
           id
           quantity
+          attributes {
+            key
+            value
+          }
           cost {
             amountPerQuantity {
               amount

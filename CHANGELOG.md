@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- line item attributes are returned on cart items (`cartItems[].attributes`)
+- `attributes` can be set per item in `shopgate.cart.updateProducts.v1`; if set, they replace all attributes of the line item (an empty array removes them)
+
+### Fixed
+- line item attributes and selling plans lost when the guest cart is merged into the customer cart on login
 
 ## [4.0.2] - 2026-11-02
 ### Fixed
