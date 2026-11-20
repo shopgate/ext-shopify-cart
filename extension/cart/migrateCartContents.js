@@ -36,7 +36,12 @@ module.exports = async (context, { sgxsMeta }) => {
   const addProducts = []
   for (const line of deviceCart.lines.edges) {
     deleteCartLines.push(line.node.id)
-    addProducts.push({ merchandiseId: line.node.merchandise.id, quantity: line.node.quantity })
+    addProducts.push({
+      merchandiseId: line.node.merchandise.id,
+      quantity: line.node.quantity,
+      attributes: line.node.attributes || [],
+      sellingPlanId: ((line.node.sellingPlanAllocation || {}).sellingPlan || {}).id
+    })
   }
 
   try {
