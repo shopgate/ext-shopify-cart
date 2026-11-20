@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 ### Added
+- cart line item attributes are now also updated, returned and retained upon guest / registered customer cart merge
+
+### Added
 - line item attributes are returned on cart items (`cartItems[].attributes`)
 - `attributes` can be set per item in `shopgate.cart.updateProducts.v1`; if set, they replace all attributes of the line item (an empty array removes them)
 
