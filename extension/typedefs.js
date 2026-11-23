@@ -111,6 +111,13 @@
  * @property {{ discountedAmount: { amount: number } }[]?} discountAllocations
  * @property {ShopifyCartLineProductVariant?} merchandise
  * @property {ShopifyCartLineSellingPlanAllocation?} sellingPlanAllocation
+ * @property {ShopifyCartLineAttribute[]?} attributes
+ */
+
+/**
+ * @typedef ShopifyCartLineAttribute
+ * @property {string} key
+ * @property {string|null} value
  */
 
 /**
@@ -197,6 +204,7 @@
  * @property {string} type
  * @property {number} quantity
  * @property {ShopgateCartItemSubscription} subscription
+ * @property {{ key: string, value: string|null }[]} attributes
  * @property {ShopgateCartItemProduct} product
  */
 

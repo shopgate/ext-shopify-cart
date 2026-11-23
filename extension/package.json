@@ -3,7 +3,7 @@
   "description": "",
   "scripts": {
     "lint": "eslint .",
-    "test": "./node_modules/.bin/_mocha --use_strict --recursive ./test/unit",
+    "test": "./node_modules/.bin/mocha --use_strict --recursive ./test/unit",
     "cover": "./node_modules/.bin/nyc npm test && ./node_modules/.bin/nyc report --reporter=text-lcov | coveralls",
     "newman": "./node_modules/.bin/newman run ./test/newman/collection.json --color on --environment ./test/newman/environment.json --globals ./test/newman/globals.json",
     "init-newman": "node ./test/newman/setup.js",
@@ -26,8 +26,10 @@
     "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-promise": "^6.1.1",
     "lint-staged": "^16.2.3",
+    "mocha": "^12.0.3",
     "npm-audit-resolver": "^2.3.1",
-    "nyc": "^14.1.0"
+    "nyc": "^14.1.0",
+    "sinon": "^22.1.0"
   },
   "standard": {
     "env": {
