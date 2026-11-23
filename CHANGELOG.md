@@ -5,12 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [4.1.0] - 2026-11-23
 ### Added
 - cart line item attributes are now also updated, returned and retained upon guest / registered customer cart merge
-
-### Added
-- line item attributes are returned on cart items (`cartItems[].attributes`)
-- `attributes` can be set per item in `shopgate.cart.updateProducts.v1`; if set, they replace all attributes of the line item (an empty array removes them)
 
 ### Fixed
 - line item attributes and selling plans lost when the guest cart is merged into the customer cart on login
@@ -227,7 +225,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - logging request duration and other info when requesting the Shopify API
 
-[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v4.0.2...HEAD
+[Unreleased]: https://github.com/shopgate/ext-shopify-cart/compare/v4.1.0...HEAD
+[4.1.0]: https://github.com/shopgate/ext-shopify-cart/compare/v4.0.2...v4.1.0
 [4.0.2]: https://github.com/shopgate/ext-shopify-cart/compare/v4.0.1...v4.0.2
 [4.0.1]: https://github.com/shopgate/ext-shopify-cart/compare/v4.0.0...v4.0.1
 [4.0.0]: https://github.com/shopgate/ext-shopify-cart/compare/v3.5.3...v4.0.0
