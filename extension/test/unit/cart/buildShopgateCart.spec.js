@@ -54,6 +54,22 @@ const buildShopifyCart = lines => ({
 })
 
 describe('buildShopgateCart', () => {
+  it('should map the cart attributes', async () => {
+    const attributes = [{ key: 'customer_type', value: 'b2c' }, { key: '_private', value: 'x' }]
+
+    const shopgateCart = await buildShopgateCart({}, { shopifyCart: { ...buildShopifyCart([buildLine()]), attributes } })
+
+    assert.deepStrictEqual(shopgateCart.attributes, attributes)
+  })
+
+  it('should return an empty array if the cart has no attributes', async () => {
+    const withoutAttributes = await buildShopgateCart({}, { shopifyCart: buildShopifyCart([]) })
+    const withNullAttributes = await buildShopgateCart({}, { shopifyCart: { ...buildShopifyCart([]), attributes: null } })
+
+    assert.deepStrictEqual(withoutAttributes.attributes, [])
+    assert.deepStrictEqual(withNullAttributes.attributes, [])
+  })
+
   it('should map line item attributes onto the cart item, including private ones', async () => {
     const attributes = [
       { key: '_warranty_pair_id', value: 'abc-123' },

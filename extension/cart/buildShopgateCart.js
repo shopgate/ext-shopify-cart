@@ -15,6 +15,7 @@ module.exports = async (context, input) => {
     currency: shopifyCart.cost.totalAmount.currencyCode || null, // not set when no items in the cart
     messages: [],
     text: '',
+    attributes: shopifyCart.attributes || [],
     cartItems: shopifyCart.lines.edges.map(edge => {
       const line = edge.node
 
