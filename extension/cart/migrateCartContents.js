@@ -1,5 +1,6 @@
 const UnknownError = require('../models/Errors/UnknownError')
 const ApiFactory = require('../lib/ShopifyApiFactory')
+const { normalizeAttributes, addMissingAttributes, attributesEqual } = require('../helper/attributes')
 
 /**
  * @param {SDKContext} context
@@ -39,7 +40,8 @@ module.exports = async (context, { sgxsMeta }) => {
     addProducts.push({
       merchandiseId: line.node.merchandise.id,
       quantity: line.node.quantity,
-      attributes: line.node.attributes || [],
+      // Shopify doesn't accept null as attribute value when adding lines
+      attributes: normalizeAttributes(line.node.attributes),
       sellingPlanId: ((line.node.sellingPlanAllocation || {}).sellingPlan || {}).id
     })
   }
@@ -53,5 +55,44 @@ module.exports = async (context, { sgxsMeta }) => {
     context.storage.device.set('cartMayBeInvalid', true)
     context.storage.user.set('cartMayBeInvalid', true)
     context.log.error({ errorMessage: err.message, cartErrors: err.errors, statusCode: err.statusCode, code: err.code }, 'Error merging carts upon log-in')
+  }
+
+  await migrateCartAttributes(context, storefrontApi, deviceCart, deviceCartId, userCartId)
+}
+
+/**
+ * Adds the attributes of the guest cart to the customer cart and removes them from the guest cart.
+ *
+ * The customer cart wins: attributes it already has keep their values, only keys it doesn't have are added.
+ *
+ * Failing to migrate attributes doesn't fail the log-in and doesn't affect the migration of the cart lines.
+ *
+ * @param {SDKContext} context
+ * @param {ShopifyStorefrontApi} storefrontApi
+ * @param {ShopifyCart} deviceCart
+ * @param {string} deviceCartId
+ * @param {string} userCartId
+ */
+const migrateCartAttributes = async (context, storefrontApi, deviceCart, deviceCartId, userCartId) => {
+  const guestAttributes = normalizeAttributes(deviceCart.attributes)
+  if (guestAttributes.length === 0) return
+
+  try {
+    const userCart = await storefrontApi.getCart(userCartId)
+    if (!userCart) {
+      context.log.warn('Shopify API returned null when getting the user cart, skipping the migration of cart attributes')
+      return
+    }
+
+    const userAttributes = normalizeAttributes(userCart.attributes)
+    const mergedAttributes = addMissingAttributes(userAttributes, guestAttributes)
+    if (!attributesEqual(userAttributes, mergedAttributes)) {
+      await storefrontApi.updateCartAttributes(userCartId, mergedAttributes)
+    }
+
+    // sequential so we don't clear the guest cart if merging failed
+    await storefrontApi.updateCartAttributes(deviceCartId, [])
+  } catch (err) {
+    context.log.error({ errorMessage: err.message, cartErrors: err.errors, statusCode: err.statusCode, code: err.code }, 'Error merging cart attributes upon log-in')
   }
 }

@@ -290,9 +290,89 @@ paths:
                 code: 'EUNKNOWN'
                 message: 'An internal error occured.'
 
+  /shopgate.shopify-cart.updateCartAttributes.v1:
+    post:
+      tags:
+        - Cart Attributes
+      operationId: 'pipelines/shopgate.shopify-cart.updateCartAttributes.v1'
+      summary: 'Adds, changes or removes attributes of the Shopify cart.'
+      description: |-
+        Merges the given attributes into the attributes of the Shopify cart (`cart.attributes`), which Shopify passes on
+        to the checkout and the order. Keys that are not given keep their values, a `null` value removes a key. If a key
+        is given more than once, the last one wins.
+
+        Cart attributes are kept when the guest cart is merged into the customer cart on log-in; if both carts have the
+        same key, the value of the customer cart is kept.
+
+        _Note: Shopify passes attributes with keys starting with an underscore to the checkout, but doesn't show them there._
+      parameters:
+        - $ref: '#/parameters/cartAttributesParam'
+      responses:
+        'ok':
+          description: 'Returns all attributes of the cart after the update.'
+          schema:
+            $ref: '#/definitions/CartAttributesResult'
+          examples:
+            application/json:
+              output:
+                attributes:
+                  - key: 'customer_type'
+                    value: 'b2c'
+        'EINVALIDCALL':
+          description: 'The input is invalid, e.g. a key is empty or a value is not a string or `null`.'
+          schema:
+            $ref: '#/definitions/UnknownError'
+          examples:
+            application/json:
+              error:
+                code: 'EINVALIDCALL'
+                message: '"attributes[0].value" must be a string or null.'
+        'ECART':
+          description: 'Shopify rejected the attributes, e.g. because a value is too long.'
+          schema:
+            $ref: '#/definitions/UnknownError'
+          examples:
+            application/json:
+              error:
+                code: 'ECART'
+                errors:
+                  - shopifyCode: 'INVALID'
+                    message: 'Value is too long'
+        'EUNKNOWN':
+          description: 'An internal error occured.'
+          schema:
+            $ref: '#/definitions/UnknownError'
+          examples:
+            application/json:
+              error:
+                code: 'EUNKNOWN'
+                message: 'An internal error occured.'
+
 
 
 parameters:
+
+  cartAttributesParam:
+    name: attributes
+    in: body
+    required: true
+    schema:
+      type: array
+      items:
+        type: object
+        required:
+          - key
+          - value
+        properties:
+          key:
+            type: string
+            description: 'Must not be empty.'
+            example: 'customer_type'
+          value:
+            type: string
+            description: 'The new value; `null` removes the key from the cart.'
+            x-nullable: true
+            example: 'b2c'
 
   addProductsParam:
     name: products
@@ -409,6 +489,37 @@ definitions:
         $ref: '#/definitions/CartText'
       flags:
         $ref: '#/definitions/CartFlags'
+      attributes:
+        type: array
+        description: 'Custom attributes of the Shopify cart, including private ones (keys starting with an underscore).'
+        items:
+          $ref: '#/definitions/CartAttribute'
+  CartAttribute:
+    type: object
+    required:
+      - key
+      - value
+    properties:
+      key:
+        type: string
+        example: 'customer_type'
+      value:
+        type: string
+        example: 'b2c'
+  CartAttributesResult:
+    type: object
+    required:
+      - output
+    properties:
+      output:
+        type: object
+        required:
+          - attributes
+        properties:
+          attributes:
+            type: array
+            items:
+              $ref: '#/definitions/CartAttribute'
   CartItem:
     type: object
     description: 'The cart item can be a product OR a coupon. The property `type` defines which one it is. The key `coupon` is not set if the type is `product` and vice versa.'

@@ -74,6 +74,7 @@
  * @property {{ applicable: boolean, code: string }[]} discountCodes
  * @property {{ lastCharacters: string, presentmentAmountUsed: ShopifyCartAmount }[]} appliedGiftCards
  * @property {{ edges: { node: ShopifyDeliveryGroup }[] }} deliveryGroups
+ * @property {ShopifyAttribute[]?} attributes
  */
 
 /**
@@ -111,11 +112,13 @@
  * @property {{ discountedAmount: { amount: number } }[]?} discountAllocations
  * @property {ShopifyCartLineProductVariant?} merchandise
  * @property {ShopifyCartLineSellingPlanAllocation?} sellingPlanAllocation
- * @property {ShopifyCartLineAttribute[]?} attributes
+ * @property {ShopifyAttribute[]?} attributes
  */
 
 /**
- * @typedef ShopifyCartLineAttribute
+ * Attribute of a cart or a cart line.
+ *
+ * @typedef ShopifyAttribute
  * @property {string} key
  * @property {string|null} value
  */
@@ -193,6 +196,7 @@
  * @property {string|null} currency
  * @property {{ code: string, message: string, type: string }[]} messages
  * @property {string} text
+ * @property {{ key: string, value: string|null }[]} attributes
  * @property {ShopgateCartItem[]} cartItems
  * @property {{ label: string, amount: number, type: string}[]} totals
  * @property {{ orderable: boolean }} flags

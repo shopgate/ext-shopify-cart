@@ -128,6 +128,25 @@ class ShopifyStorefrontApi {
   }
 
   /**
+   * Replaces all attributes of a cart.
+   *
+   * @param {string} cartId
+   * @param {{ key: string, value: string }[]} attributes the complete list; an empty array removes all attributes
+   * @returns {Promise<ShopifyAttribute[]>} the attributes of the cart after the update
+   */
+  async updateCartAttributes (cartId, attributes) {
+    const response = await this._request(queries.updateCartAttributes, { cartId, attributes })
+
+    await this._handleCartUserErrors(response, 'cartAttributesUpdate', [], cartId)
+
+    const cart = (((response || {}).data || {}).cartAttributesUpdate || {}).cart
+    if (cart) return cart.attributes || []
+
+    this.logger.error({ response: JSON.stringify(response) }, 'Error updating cart attributes')
+    throw new Error('Error updating cart attributes')
+  }
+
+  /**
    * Adds the configured country code to a buyer identity, so Shopify uses the right market and currency instead of
    * guessing the country from the buyer's IP address.
    *

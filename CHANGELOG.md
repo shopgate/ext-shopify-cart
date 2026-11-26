@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- pipeline `shopgate.shopify-cart.updateCartAttributes.v1` to add, change or remove cart attributes, e.g. to pass a `customer_type` to the checkout
+- cart attributes are now returned by `shopgate.cart.getCart.v1` (`attributes`)
+
+### Fixed
+- cart attributes lost when the guest cart is merged into the customer cart on login; the values of the customer cart win
+- line item attributes with an empty (`null`) value breaking the merge of the guest cart into the customer cart on login
 
 ## [4.1.0] - 2026-11-23
 ### Added

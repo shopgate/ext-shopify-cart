@@ -1,0 +1,92 @@
+{
+  "version": "1",
+  "pipeline": {
+    "id": "shopgate.shopify-cart.updateCartAttributes.v1",
+    "public": true,
+    "input": [
+      {"key": "sgxsMeta", "id": "750"},
+      {"key": "attributes", "id": "1000"}
+    ],
+    "output": [
+      {"key": "attributes", "id": "1010"}
+    ],
+    "steps": [
+      {
+        "type": "pipeline",
+        "id": "shopgate.shopify-user.getStorefrontApiCustomerAccessToken.v1",
+        "trusted": true,
+        "input": [],
+        "output": [
+          {"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true}
+        ]
+      },
+      {
+        "type": "pipeline",
+        "id": "shopgate.user.getUser.v1",
+        "trusted": true,
+        "input": [],
+        "output": [
+          {"key": "customAttributes", "id": "2001", "optional": true}
+        ]
+      },
+      {
+        "type": "errorCatchExtension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/ignoreUserNotLoggedIn.js",
+        "input": [],
+        "output": []
+      },
+      {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/initShopifyCart.js",
+        "input": [
+          {"key": "sgxsMeta", "id": "750"},
+          {"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true},
+          {"key": "customAttributes", "id": "2001", "optional": true}
+        ],
+        "output": [
+          {"key": "shopifyCartId", "id": "2010"}
+        ]
+      },
+      {
+        "id": "afterInitShopifyCart",
+        "type": "hook",
+        "input": [
+          {"key": "sgxsMeta", "id": "750"},
+          {"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true},
+          {"key": "shopifyCartId", "id": "2010"}
+        ],
+        "output": []
+      },
+      {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/fetchShopifyCart.js",
+        "input": [
+          {"key": "sgxsMeta", "id": "750"},
+          {"key": "shopifyCartId", "id": "2010"},
+          {"key": "storefrontApiCustomerAccessToken", "id": "2000", "optional": true},
+          {"key": "customAttributes", "id": "2001", "optional": true}
+        ],
+        "output": [
+          {"key": "shopifyCart", "id": "2020"}
+        ]
+      },
+      {
+        "type": "extension",
+        "id": "@shopgate/shopify-cart",
+        "path": "@shopgate/shopify-cart/cart/updateCartAttributes.js",
+        "input": [
+          {"key": "sgxsMeta", "id": "750"},
+          {"key": "shopifyCartId", "id": "2010"},
+          {"key": "shopifyCart", "id": "2020"},
+          {"key": "attributes", "id": "1000"}
+        ],
+        "output": [
+          {"key": "attributes", "id": "1010"}
+        ]
+      }
+    ]
+  }
+}
